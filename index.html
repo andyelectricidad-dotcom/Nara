@@ -33,7 +33,6 @@
         /* Banner Stock y Botones Extra */
         .stock-banner { background: #1976D2; color: white; padding: 10px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4); }
         .stock-banner:active { transform: scale(0.98); }
-        .btn-migrate { background: #9C27B0; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
         .btn-invite { background: #4CAF50; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
 
         /* Header */
@@ -124,6 +123,18 @@
 </head>
 <body>
 
+    <!-- LÓGICA DE DETECCIÓN DE ENLACE MÁGICO -->
+    <script>
+        // Capturar invitación por URL antes de cargar nada
+        const urlParams = new URLSearchParams(window.location.search);
+        const inviteCode = urlParams.get('invite');
+        if(inviteCode) {
+            localStorage.setItem('pending_invite', inviteCode);
+            // Limpiamos la URL para que quede bonita
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
+
     <!-- PANTALLA DE LOGIN / REGISTRO -->
     <div id="authScreen" class="container auth-container">
         <div class="auth-logo">🍼</div>
@@ -159,16 +170,13 @@
                     <input type="number" id="weightInput" class="styled-input" step="0.1" placeholder="Ej: 5.5" style="margin-bottom:0;">
                 </div>
             </div>
+            
             <div class="stock-banner" id="stockBanner" onclick="openStockModal()">
                 📦 Cargando stock de leche...
             </div>
             
-            <div style="display: flex; gap: 10px;">
-                <!-- BOTÓN INVITAR -->
-                <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Invitar a padre/madre</button>
-                <!-- BOTÓN RECUPERAR (Mantiene su función) -->
-                <button class="btn-migrate" id="btnMigrate" onclick="migrateOldData()">🔄 Datos antiguos</button>
-            </div>
+            <!-- BOTÓN INVITAR -->
+            <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Invitar a padre/madre</button>
         </div>
 
         <div class="header">
@@ -215,29 +223,24 @@
         <ul class="history-list" id="historyList"></ul>
 
         <!-- Botón para cerrar sesión -->
-        <button onclick="logout()" style="background: transparent; color: #666; border: none; padding: 15px; width: 100%; margin-top: 30px; font-weight: bold; cursor: pointer;">Cerrar sesión</button>
+        <button onclick="logout()" style="background: transparent; color: #666; border: none; padding: 15px; width: 100%; margin-top: 30px; font-weight: bold; cursor: pointer;">Cerrar sesión familiar</button>
     </div>
 
     <!-- Modal Invitación Familia -->
     <div class="modal-overlay" id="inviteModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">👨‍👩‍👧 Familia</div>
+                <div class="modal-title">👨‍👩‍👧 Invitar Familiar</div>
                 <button class="close-btn" onclick="closeModal('inviteModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="color:#ccc; font-size:14px;">Para compartir la app, el otro familiar debe iniciar sesión y pegar este código abajo:</p>
+                <p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente para ver los mismos biberones:</p>
                 
-                <div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:16px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">
-                    Cargando código...
+                <div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:12px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">
+                    Cargando enlace...
                 </div>
 
-                <div class="divider"></div>
-
-                <p style="margin-top:10px; font-weight:bold;">¿Tienes una invitación?</p>
-                <p style="color:#ccc; font-size:14px;">Si tu pareja ya ha creado la familia, pega aquí su código para vincularte:</p>
-                <input type="text" id="joinCodeInput" class="form-control" placeholder="Pega el código aquí">
-                <button class="btn-save" style="margin-top: 10px; font-size: 16px; padding: 12px;" onclick="joinFamily()">Vincular cuentas</button>
+                <button class="btn-save" id="btnCopyInvite" style="background: #4CAF50; font-size: 16px; padding: 12px; margin-bottom: 0;">📲 Compartir Enlace</button>
             </div>
         </div>
     </div>
@@ -323,7 +326,7 @@
         let currentAmount = 120;
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-        // --- SISTEMA AUTH ---
+        // --- SISTEMA AUTH Y ACEPTACIÓN DE INVITACIONES ---
         auth.getRedirectResult().catch(error => {
             if(document.getElementById('authError')) {
                 document.getElementById('authError').innerText = "Error con Google: " + error.message;
@@ -336,17 +339,23 @@
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('appScreen').style.display = 'block';
                 
-                // Buscar si este usuario pertenece a otra familia vinculada
-                db.ref('usuarios/' + user.uid + '/familyId').once('value').then(snap => {
-                    currentFamilyId = snap.val() || user.uid; // Si no hay vínculo, su propia familia
-                    
-                    dbRef = db.ref('familias/' + currentFamilyId + '/registros');
-                    vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d');
-                    stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
-                    
-                    initDatabaseListeners();
-                    initLocalSettings();
-                });
+                // Comprobar si hay una invitación mágica pendiente
+                const pendingInvite = localStorage.getItem('pending_invite');
+                
+                if(pendingInvite) {
+                    // Procesar la invitación
+                    db.ref('usuarios/' + user.uid + '/familyId').set(pendingInvite).then(() => {
+                        localStorage.removeItem('pending_invite');
+                        alert("¡Enlace de invitación aceptado! Cuentas vinculadas con éxito.");
+                        loadFamilyData(user, pendingInvite);
+                    });
+                } else {
+                    // Carga normal
+                    db.ref('usuarios/' + user.uid + '/familyId').once('value').then(snap => {
+                        let fId = snap.val() || user.uid;
+                        loadFamilyData(user, fId);
+                    });
+                }
 
             } else {
                 currentUser = null;
@@ -359,6 +368,16 @@
                 if(stockRef) stockRef.off();
             }
         });
+
+        function loadFamilyData(user, fId) {
+            currentFamilyId = fId;
+            dbRef = db.ref('familias/' + currentFamilyId + '/registros');
+            vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d');
+            stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
+            
+            initDatabaseListeners();
+            initLocalSettings();
+        }
 
         function login() {
             const email = document.getElementById('emailInput').value;
@@ -390,39 +409,27 @@
 
         function logout() { auth.signOut(); }
 
-        // --- SISTEMA FAMILIAR (INVITACIONES) ---
+        // --- SISTEMA FAMILIAR (ENLACE MÁGICO) ---
         function openInviteModal() {
-            document.getElementById('myFamilyCode').innerText = currentFamilyId || currentUser.uid;
+            const inviteLink = window.location.origin + window.location.pathname + "?invite=" + (currentFamilyId || currentUser.uid);
+            document.getElementById('myFamilyCode').innerText = inviteLink;
+            
+            // Función nativa para compartir del móvil
+            document.getElementById('btnCopyInvite').onclick = () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Biberones App',
+                        text: '🍼 Únete a mi familia en la app de Biberones para llevar el control juntos:',
+                        url: inviteLink
+                    }).catch(console.error);
+                } else {
+                    // Fallback para ordenadores
+                    navigator.clipboard.writeText(inviteLink);
+                    alert("¡Enlace copiado al portapapeles!");
+                }
+            };
+            
             document.getElementById('inviteModal').style.display = 'flex';
-        }
-
-        function joinFamily() {
-            const code = document.getElementById('joinCodeInput').value.trim();
-            if(!code) return;
-            if(confirm("¿Seguro que quieres unirte a esta familia? Dejarás de ver tu historial actual y empezarás a ver el suyo.")) {
-                db.ref('usuarios/' + currentUser.uid + '/familyId').set(code).then(() => {
-                    alert("¡Cuentas vinculadas con éxito! Cargando los datos de la familia...");
-                    location.reload(); // Recargar para aplicar los cambios de base de datos
-                });
-            }
-        }
-
-        function migrateOldData() {
-            if(!currentUser || !currentFamilyId) return;
-            if(confirm("¿Seguro que quieres recuperar los datos antiguos de Nara?")) {
-                
-                db.ref('registros_nara').once('value').then(snap => {
-                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/registros').update(snap.val());
-                });
-                db.ref('vitamina_d_nara').once('value').then(snap => {
-                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/vitamina_d').update(snap.val());
-                });
-                db.ref('stock_leche_nara').once('value').then(snap => {
-                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/stock_leche').update(snap.val());
-                    alert("¡Tus datos antiguos se han copiado con éxito!");
-                    document.getElementById('btnMigrate').style.display = 'none';
-                });
-            }
         }
 
         // --- INICIALIZACIÓN Y LOGICA APP ---
