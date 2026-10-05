@@ -6,45 +6,100 @@
     <meta name="theme-color" content="#121212">
     <title>Biberones Nara</title>
     <style>
-        body { background-color: #121212; color: #ffffff; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        body { 
+            background-color: #121212; color: #ffffff; 
+            font-family: system-ui, -apple-system, sans-serif; 
+            margin: 0; padding: 15px; 
+            display: flex; flex-direction: column; align-items: center; 
+        }
         .container { width: 100%; max-width: 400px; }
-        .top-settings { background: #1e1e1e; padding: 12px 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .top-settings label { font-size: 15px; font-weight: 500; color: #ddd; }
-        .styled-select { background: #333; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 15px; font-weight: bold; }
+        
+        /* Top Settings */
+        .top-settings {
+            background: #1e1e1e; padding: 12px 16px; border-radius: 16px; margin-bottom: 20px;
+        }
+        .settings-grid {
+            display: flex; gap: 15px; width: 100%;
+        }
+        .settings-col { flex: 1; display: flex; flex-direction: column; }
+        .settings-col label { font-size: 14px; font-weight: 500; color: #ddd; margin-bottom: 5px;}
+        .styled-input { background: #333; color: white; border: none; padding: 10px; border-radius: 8px; font-size: 15px; font-weight: bold; width: 100%; box-sizing: border-box;}
+
+        /* Header */
         .header { text-align: center; margin-bottom: 10px; }
         .total-text { font-size: 40px; font-weight: bold; margin-bottom: 5px; transition: color 0.3s; }
-        .glass-container { width: 100%; height: 20px; background-color: #2a2a2a; border-radius: 10px; position: relative; overflow: hidden; margin: 10px 0; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        
+        /* Glass */
+        .glass-container {
+            width: 100%; height: 20px; background-color: #2a2a2a; border-radius: 10px;
+            position: relative; overflow: hidden; margin: 10px 0; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
         .glass-fill { height: 100%; background-color: #EF5350; width: 0%; transition: width 0.5s ease-out, background-color 0.3s; border-radius: 10px; }
         .target-info { font-size: 14px; color: #a0a0a0; margin-bottom: 15px; }
         .timer-text { font-size: 15px; color: #e0e0e0; background: #1e1e1e; padding: 8px 14px; border-radius: 12px; display: inline-block;}
         .divider { height: 1px; background: #333; margin: 20px 0; }
+        
+        /* Controls */
         .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .btn-adjust { background: transparent; border: 2px solid #555; color: white; border-radius: 50%; width: 60px; height: 60px; font-size: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; touch-action: manipulation; }
+        .btn-adjust { 
+            background: transparent; border: 2px solid #555; color: white; border-radius: 50%; 
+            width: 60px; height: 60px; font-size: 32px; display: flex; justify-content: center; align-items: center; 
+            cursor: pointer; touch-action: manipulation;
+        }
         .btn-adjust:active { background: #333; }
         .amount-text { font-size: 48px; font-weight: bold; text-align: center; flex-grow: 1; }
-        .btn-save { background: #1976D2; color: white; border: none; border-radius: 16px; width: 100%; padding: 20px; font-size: 22px; font-weight: bold; cursor: pointer; touch-action: manipulation; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4); margin-bottom: 10px; }
+        
+        /* Action Buttons */
+        .btn-save { 
+            background: #1976D2; color: white; border: none; border-radius: 16px; 
+            width: 100%; padding: 20px; font-size: 22px; font-weight: bold; cursor: pointer; 
+            touch-action: manipulation; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4); margin-bottom: 10px;
+        }
         .btn-save:active { background: #1565C0; transform: scale(0.98); }
+        
         .secondary-actions { display: flex; gap: 10px; margin-bottom: 15px; }
-        .btn-secondary { flex: 1; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: bold; color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-secondary {
+            flex: 1; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: bold; color: white;
+            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
         .btn-poop { background: #795548; }
         .btn-manual { background: #424242; }
         .btn-secondary:active { transform: scale(0.96); filter: brightness(0.8); }
+
+        /* Calendar */
         .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #e0e0e0; display: flex; justify-content: space-between; align-items: center;}
         .legend { font-size: 11px; display: flex; gap: 8px; font-weight: normal;}
         .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; }
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; color: #888; margin-bottom: 8px; font-weight: bold; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 10px; }
-        .day-cell { aspect-ratio: 1; background-color: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+        .day-cell {
+            aspect-ratio: 1; background-color: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
+        }
         .day-fill { position: absolute; bottom: 0; left: 0; width: 100%; transition: height 0.5s, background-color 0.3s; z-index: 1; opacity: 0.9; }
         .day-text { position: relative; z-index: 2; font-size: 14px; font-weight: bold; text-shadow: 0px 1px 3px rgba(0,0,0,0.9); }
         .day-ml { position: relative; z-index: 2; font-size: 10px; color: #eee; text-shadow: 0px 1px 3px rgba(0,0,0,0.9); margin-top: -2px; }
+
+        /* History */
         .history-list { list-style: none; padding: 0; margin: 0; }
-        .history-item { background: #1e1e1e; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .history-item { 
+            background: #1e1e1e; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; 
+            display: flex; justify-content: space-between; align-items: center;
+        }
         .history-amount { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 10px;}
         .history-time { color: #a0a0a0; font-size: 14px; }
         .btn-delete { background: transparent; border: none; color: #EF5350; font-size: 18px; cursor: pointer; padding: 5px; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(3px); }
-        .modal-content { background: #121212; width: 100%; max-width: 360px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 80vh; display: flex; flex-direction: column; border: 1px solid #333; }
+
+        /* Modals */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: #121212; width: 100%; max-width: 360px; border-radius: 20px; padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 80vh; display: flex; flex-direction: column; border: 1px solid #333;
+        }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-title { font-size: 22px; font-weight: bold; }
         .close-btn { background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1; }
@@ -57,28 +112,44 @@
 </head>
 <body>
     <div class="container">
+        <!-- Configurador de Edad y Peso -->
         <div class="top-settings">
-            <label for="ageSelect">Edad de Nara:</label>
-            <select id="ageSelect" class="styled-select"></select>
+            <div class="settings-grid">
+                <div class="settings-col">
+                    <label for="ageSelect">Edad:</label>
+                    <select id="ageSelect" class="styled-input"></select>
+                </div>
+                <div class="settings-col">
+                    <label for="weightInput">Peso (kg):</label>
+                    <input type="number" id="weightInput" class="styled-input" step="0.1" placeholder="Ej: 5.5">
+                </div>
+            </div>
         </div>
+
         <div class="header">
             <div class="total-text" id="totalText">Cargando...</div>
             <div class="glass-container"><div class="glass-fill" id="dailyProgressFill"></div></div>
             <div class="target-info" id="targetInfoText">Conectando a la nube ☁️...</div>
             <div class="timer-text" id="timerText">Buscando datos...</div>
         </div>
+        
         <div class="divider"></div>
+        
         <div class="controls">
             <button class="btn-adjust" onclick="adjustAmount(-10)">-</button>
             <div class="amount-text" id="amountText">120<span style="font-size: 24px"> ml</span></div>
             <button class="btn-adjust" onclick="adjustAmount(10)">+</button>
         </div>
+        
         <button class="btn-save" onclick="saveFeeding(null, currentAmount)">🍼 Guardar Toma Ahora</button>
+        
         <div class="secondary-actions">
             <button class="btn-secondary btn-manual" onclick="openManualModal()">🕒 Toma pasada</button>
             <button class="btn-secondary btn-poop" onclick="savePoop()">💩 Caca</button>
         </div>
+        
         <div class="divider"></div>
+        
         <div class="section-title">
             <span id="monthTitle">Mes</span>
             <div class="legend">
@@ -87,10 +158,12 @@
                 <span><span class="dot" style="background:#EF5350"></span> Bajo</span>
             </div>
         </div>
+        
         <div class="calendar-header">
             <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
         </div>
         <div class="calendar-grid" id="calendarGrid"></div>
+        
         <div class="divider"></div>
         <div class="section-title">Historial de hoy</div>
         <ul class="history-list" id="historyList"></ul>
@@ -128,10 +201,12 @@
         </div>
     </div>
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
+        // ¡Atención! Si cambiaste de Firebase, pega aquí tus claves de config. Estas son las del proyecto nara-46b1b
         const firebaseConfig = {
             apiKey: "AIzaSyB2J3CM_LXaeS-e_qXExdl8KmNrKqKK8gc",
             authDomain: "nara-46b1b.firebaseapp.com",
@@ -148,41 +223,48 @@
 
         let records = [];
         let currentAmount = 120;
-        const ageRecommendations = { 0: 600, 1: 700, 2: 800, 3: 850, 4: 900, 5: 950, 6: 900, 7: 850, 8: 800, 9: 750, 10: 700, 11: 650, 12: 500 };
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
         function initApp() {
+            // Inicializar Edad
             const selectEl = document.getElementById('ageSelect');
             let savedAge = localStorage.getItem('nara_age_months');
-            if (savedAge === null) savedAge = 2;
+            if (savedAge === null) savedAge = 2; // Nara tiene aprox 2 meses
             
             for (let i = 0; i <= 12; i++) {
                 const option = document.createElement('option');
-                option.value = ageRecommendations[i]; option.dataset.month = i;
+                option.value = i; 
                 option.text = i === 12 ? '12+ meses' : `${i} mes${i !== 1 ? 'es' : ''}`;
                 if (i == savedAge) option.selected = true;
                 selectEl.appendChild(option);
             }
+            
+            // Inicializar Peso
+            const weightInput = document.getElementById('weightInput');
+            let savedWeight = localStorage.getItem('nara_weight_kg');
+            if (savedWeight) weightInput.value = savedWeight;
+
+            // Escuchar cambios
             selectEl.addEventListener('change', (e) => {
-                localStorage.setItem('nara_age_months', e.target.options[e.target.selectedIndex].dataset.month);
+                localStorage.setItem('nara_age_months', e.target.value);
+                updateUI();
+            });
+            weightInput.addEventListener('input', (e) => {
+                localStorage.setItem('nara_weight_kg', e.target.value);
                 updateUI();
             });
 
+            // Cerrar modales tocando fuera
             document.querySelectorAll('.modal-overlay').forEach(modal => {
                 modal.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
             });
 
+            // Sincronización Firebase
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 records = [];
                 if (data) {
                     for (let key in data) { records.push({ dbKey: key, ...data[key] }); }
-                }
-                const oldLocalData = JSON.parse(localStorage.getItem('biberones_app_data')) || [];
-                if (oldLocalData.length > 0) {
-                    oldLocalData.forEach(r => { if(!r.type) r.type = 'milk'; dbRef.push(r); });
-                    localStorage.removeItem('biberones_app_data');
-                    alert("¡Sincronizado a la nube!");
                 }
                 updateUI();
             });
@@ -190,7 +272,30 @@
             setInterval(updateTimer, 60000);
         }
 
+        // --- CÁLCULO PEDIÁTRICO INTELIGENTE ---
+        function calculateTarget() {
+            const age = parseInt(document.getElementById('ageSelect').value);
+            const weight = parseFloat(document.getElementById('weightInput').value);
+            let target = 0;
+
+            if (age >= 12) {
+                // A partir del año, la recomendación es 470-710ml. Fijamos un promedio seguro.
+                target = 600;
+            } else if (weight > 0 && !isNaN(weight)) {
+                // Cálculo estandar: 150ml por Kg
+                target = Math.round(weight * 150);
+                // Tope de seguridad: a partir de 6 meses no superar 1 litro (1000ml)
+                if (age >= 6 && target > 1000) target = 1000; 
+            } else {
+                // Si no se introduce peso, usamos aproximaciones estándar por mes
+                const fallbacks = {0: 600, 1: 820, 2: 850, 3: 850, 4: 900, 5: 900, 6: 900, 7: 850, 8: 800, 9: 750, 10: 700, 11: 650};
+                target = fallbacks[age] || 600;
+            }
+            return target;
+        }
+
         function getTodayString() { const now = new Date(); return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`; }
+        
         function getColorForAmount(amount, target) {
             if (amount === 0) return 'transparent'; 
             if (amount >= target) return '#4CAF50'; 
@@ -202,7 +307,7 @@
             const todayStr = getTodayString();
             const todayRecords = records.filter(r => r.date === todayStr);
             const totalMl = todayRecords.filter(r => r.type === 'milk').reduce((sum, r) => sum + r.amount, 0);
-            const target = parseInt(document.getElementById('ageSelect').value);
+            const target = calculateTarget();
             
             const fillBar = document.getElementById('dailyProgressFill');
             fillBar.style.width = `${Math.min((totalMl / target) * 100, 100)}%`;
@@ -214,7 +319,7 @@
 
             updateTimer();
             renderList(todayRecords, document.getElementById('historyList'));
-            renderCalendar();
+            renderCalendar(target);
         }
 
         function renderList(recordArray, container) {
@@ -236,9 +341,8 @@
             });
         }
 
-        function renderCalendar() {
+        function renderCalendar(target) {
             const now = new Date(); const year = now.getFullYear(); const month = now.getMonth();
-            const target = parseInt(document.getElementById('ageSelect').value);
             document.getElementById('monthTitle').innerText = `${monthNames[month]} ${year}`;
 
             const firstDay = new Date(year, month, 1); const lastDay = new Date(year, month + 1, 0);
