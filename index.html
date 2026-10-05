@@ -173,11 +173,43 @@
         
         <div class="secondary-actions">
             <button class="btn-secondary btn-manual" onclick="openManualModal()">🕒 Toma pasada</button>
-            
-list" id="modalHistoryList"></ul></div>
+            <button class="btn-secondary btn-poop" onclick="savePoop()">💩 Caca</button>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="section-title">
+            <span id="monthTitle">Mes</span>
+            <div class="legend">
+                <span><span class="dot" style="background:#4CAF50"></span> Bien</span>
+                <span><span class="dot" style="background:#FFC107"></span> Justo</span>
+                <span><span class="dot" style="background:#EF5350"></span> Bajo</span>
+            </div>
+        </div>
+        
+        <div class="calendar-header">
+            <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        
+        <div class="divider"></div>
+        <div class="section-title">Historial de hoy</div>
+        <ul class="history-list" id="historyList"></ul>
+    </div>
+
+    <!-- Modal Historial del Día -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Fecha</div>
+                <button class="close-btn" onclick="closeModal('historyModal')">&times;</button>
+            </div>
+            <div class="modal-subtitle" id="modalSubtitle"></div>
+            <div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div>
         </div>
     </div>
 
+    <!-- Modal Toma Manual -->
     <div class="modal-overlay" id="manualModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -198,12 +230,29 @@ list" id="modalHistoryList"></ul></div>
         </div>
     </div>
 
+    <!-- Modal Gestor de Stock -->
+    <div class="modal-overlay" id="stockModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📦 Stock de Leche</div>
+                <button class="close-btn" onclick="closeModal('stockModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="display:flex; gap:10px; margin-bottom: 25px;">
+                    <input type="number" id="stockPriceInput" class="form-control" placeholder="Precio (€)" step="0.01" style="flex:1;">
+                    <button class="btn-save" style="margin-bottom:0; padding:12px; font-size:16px; width:auto;" onclick="saveNewStock()">+ Bote Nuevo</button>
+                </div>
+                <div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Historial de botes:</div>
+                <ul class="history-list" id="stockListContainer"></ul>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // ¡Atención! Si cambiaste de Firebase, pega aquí tus claves de config. Estas son las del proyecto nara-46b1b
         const firebaseConfig = {
             apiKey: "AIzaSyB2J3CM_LXaeS-e_qXExdl8KmNrKqKK8gc",
             authDomain: "nara-46b1b.firebaseapp.com",
@@ -217,16 +266,18 @@ list" id="modalHistoryList"></ul></div>
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const dbRef = db.ref('registros_nara');
+        const vitRef = db.ref('vitamina_d_nara');
+        const stockRef = db.ref('stock_leche_nara');
 
         let records = [];
+        let stockRecords = [];
         let currentAmount = 120;
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
         function initApp() {
-            // Inicializar Edad
             const selectEl = document.getElementById('ageSelect');
             let savedAge = localStorage.getItem('nara_age_months');
-            if (savedAge === null) savedAge = 2; // Nara tiene aprox 2 meses
+            if (savedAge === null) savedAge = 2;
             
             for (let i = 0; i <= 12; i++) {
                 const option = document.createElement('option');
@@ -236,55 +287,49 @@ list" id="modalHistoryList"></ul></div>
                 selectEl.appendChild(option);
             }
             
-            // Inicializar Peso
             const weightInput = document.getElementById('weightInput');
             let savedWeight = localStorage.getItem('nara_weight_kg');
             if (savedWeight) weightInput.value = savedWeight;
 
-            // Escuchar cambios
-            selectEl.addEventListener('change', (e) => {
-                localStorage.setItem('nara_age_months', e.target.value);
-                updateUI();
-            });
-            weightInput.addEventListener('input', (e) => {
-                localStorage.setItem('nara_weight_kg', e.target.value);
-                updateUI();
-            });
+            selectEl.addEventListener('change', (e) => { localStorage.setItem('nara_age_months', e.target.value); updateUI(); });
+            weightInput.addEventListener('input', (e) => { localStorage.setItem('nara_weight_kg', e.target.value); updateUI(); });
 
-            // Cerrar modales tocando fuera
             document.querySelectorAll('.modal-overlay').forEach(modal => {
                 modal.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
             });
 
-            // Sincronización Firebase
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 records = [];
-                if (data) {
-                    for (let key in data) { records.push({ dbKey: key, ...data[key] }); }
-                }
+                if (data) { for (let key in data) { records.push({ dbKey: key, ...data[key] }); } }
                 updateUI();
+            });
+
+            vitRef.on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                const todayStr = getTodayString();
+                document.getElementById('vitDCheckbox').checked = !!data[todayStr];
+            });
+
+            stockRef.on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                stockRecords = Object.keys(data).map(key => ({ dbKey: key, ...data[key] }));
+                stockRecords.sort((a,b) => b.timestamp - a.timestamp); 
+                updateStockUI();
             });
 
             setInterval(updateTimer, 60000);
         }
 
-        // --- CÁLCULO PEDIÁTRICO INTELIGENTE ---
         function calculateTarget() {
             const age = parseInt(document.getElementById('ageSelect').value);
             const weight = parseFloat(document.getElementById('weightInput').value);
             let target = 0;
-
-            if (age >= 12) {
-                // A partir del año, la recomendación es 470-710ml. Fijamos un promedio seguro.
-                target = 600;
-            } else if (weight > 0 && !isNaN(weight)) {
-                // Cálculo estandar: 150ml por Kg
+            if (age >= 12) { target = 600; } 
+            else if (weight > 0 && !isNaN(weight)) {
                 target = Math.round(weight * 150);
-                // Tope de seguridad: a partir de 6 meses no superar 1 litro (1000ml)
                 if (age >= 6 && target > 1000) target = 1000; 
             } else {
-                // Si no se introduce peso, usamos aproximaciones estándar por mes
                 const fallbacks = {0: 600, 1: 820, 2: 850, 3: 850, 4: 900, 5: 900, 6: 900, 7: 850, 8: 800, 9: 750, 10: 700, 11: 650};
                 target = fallbacks[age] || 600;
             }
@@ -292,12 +337,87 @@ list" id="modalHistoryList"></ul></div>
         }
 
         function getTodayString() { const now = new Date(); return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`; }
-        
         function getColorForAmount(amount, target) {
             if (amount === 0) return 'transparent'; 
             if (amount >= target) return '#4CAF50'; 
             if (amount >= target * 0.75) return '#FFC107'; 
             return '#EF5350'; 
+        }
+
+        function toggleVitD(checked) {
+            const todayStr = getTodayString();
+            if (checked) vitRef.child(todayStr).set(true);
+            else vitRef.child(todayStr).remove();
+        }
+
+        function updateStockUI() {
+            const banner = document.getElementById('stockBanner');
+            if (stockRecords.length === 0) {
+                banner.innerHTML = "📦 Toca aquí para añadir tu primer bote de leche";
+                banner.style.background = "#424242";
+                return;
+            }
+            const lastBote = stockRecords[0];
+            const daysDiff = Math.floor((new Date() - new Date(lastBote.timestamp)) / (1000 * 60 * 60 * 24));
+            banner.style.background = daysDiff > 7 ? "#EF5350" : "#1976D2"; 
+            banner.innerHTML = `📦 Bote actual en uso desde hace ${daysDiff} día${daysDiff !== 1 ? 's' : ''}`;
+        }
+
+        function openStockModal() {
+            const container = document.getElementById('stockListContainer');
+            container.innerHTML = '';
+            
+            if (stockRecords.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Aún no hay botes registrados</div>';
+            } else {
+                stockRecords.forEach((r, index) => {
+                    const li = document.createElement('li'); li.className = 'history-item';
+                    
+                    let duracionText = "";
+                    if (index < stockRecords.length - 1) {
+                        const boteAnterior = stockRecords[index + 1];
+                        const diffDays = Math.floor((r.timestamp - boteAnterior.timestamp) / (1000 * 60 * 60 * 24));
+                        duracionText = `<span style="font-size:13px; color:#4CAF50;">Duró ${diffDays} días</span>`;
+                    } else {
+                        duracionText = `<span style="font-size:13px; color:#a0a0a0;">Primer bote</span>`;
+                    }
+                    
+                    if(index === 0) duracionText = `<span style="font-size:13px; color:#FFC107;">En uso actualmente</span>`;
+
+                    li.innerHTML = `
+                        <div>
+                            <div style="font-weight:bold; font-size:16px;">${r.dateStr}</div>
+                            ${duracionText}
+                        </div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="font-size:18px; font-weight:bold; color:#e0e0e0;">${r.price}€</span>
+                            <button class="btn-delete" onclick="deleteStock('${r.dbKey}', event)">🗑️</button>
+                        </div>`;
+                    container.appendChild(li);
+                });
+            }
+            document.getElementById('stockModal').style.display = 'flex';
+        }
+
+        function saveNewStock() {
+            const priceVal = document.getElementById('stockPriceInput').value;
+            if(!priceVal || priceVal <= 0) { alert("Por favor, introduce un precio válido."); return; }
+            
+            const now = new Date();
+            stockRef.push({
+                timestamp: now.getTime(),
+                dateStr: now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }),
+                price: parseFloat(priceVal).toFixed(2)
+            });
+            document.getElementById('stockPriceInput').value = '';
+        }
+
+        function deleteStock(dbKey, event) {
+            if(event) event.stopPropagation(); 
+            if(confirm("¿Seguro que quieres borrar este bote de leche del historial?")) {
+                stockRef.child(dbKey).remove();
+                closeModal('stockModal');
+            }
         }
 
         function updateUI() {
