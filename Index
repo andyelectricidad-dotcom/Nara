@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#121212">
+    <title>Biberones Nara</title>
+    <style>
+        body { background-color: #121212; color: #ffffff; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 400px; }
+        .top-settings { background: #1e1e1e; padding: 12px 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .top-settings label { font-size: 15px; font-weight: 500; color: #ddd; }
+        .styled-select { background: #333; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 15px; font-weight: bold; }
+        .header { text-align: center; margin-bottom: 10px; }
+        .total-text { font-size: 40px; font-weight: bold; margin-bottom: 5px; transition: color 0.3s; }
+        .glass-container { width: 100%; height: 20px; background-color: #2a2a2a; border-radius: 10px; position: relative; overflow: hidden; margin: 10px 0; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        .glass-fill { height: 100%; background-color: #EF5350; width: 0%; transition: width 0.5s ease-out, background-color 0.3s; border-radius: 10px; }
+        .target-info { font-size: 14px; color: #a0a0a0; margin-bottom: 15px; }
+        .timer-text { font-size: 15px; color: #e0e0e0; background: #1e1e1e; padding: 8px 14px; border-radius: 12px; display: inline-block;}
+        .divider { height: 1px; background: #333; margin: 20px 0; }
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .btn-adjust { background: transparent; border: 2px solid #555; color: white; border-radius: 50%; width: 60px; height: 60px; font-size: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; touch-action: manipulation; }
+        .btn-adjust:active { background: #333; }
+        .amount-text { font-size: 48px; font-weight: bold; text-align: center; flex-grow: 1; }
+        .btn-save { background: #1976D2; color: white; border: none; border-radius: 16px; width: 100%; padding: 20px; font-size: 22px; font-weight: bold; cursor: pointer; touch-action: manipulation; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4); margin-bottom: 10px; }
+        .btn-save:active { background: #1565C0; transform: scale(0.98); }
+        .secondary-actions { display: flex; gap: 10px; margin-bottom: 15px; }
+        .btn-secondary { flex: 1; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: bold; color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-poop { background: #795548; }
+        .btn-manual { background: #424242; }
+        .btn-secondary:active { transform: scale(0.96); filter: brightness(0.8); }
+        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #e0e0e0; display: flex; justify-content: space-between; align-items: center;}
+        .legend { font-size: 11px; display: flex; gap: 8px; font-weight: normal;}
+        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; color: #888; margin-bottom: 8px; font-weight: bold; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 10px; }
+        .day-cell { aspect-ratio: 1; background-color: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+        .day-fill { position: absolute; bottom: 0; left: 0; width: 100%; transition: height 0.5s, background-color 0.3s; z-index: 1; opacity: 0.9; }
+        .day-text { position: relative; z-index: 2; font-size: 14px; font-weight: bold; text-shadow: 0px 1px 3px rgba(0,0,0,0.9); }
+        .day-ml { position: relative; z-index: 2; font-size: 10px; color: #eee; text-shadow: 0px 1px 3px rgba(0,0,0,0.9); margin-top: -2px; }
+        .history-list { list-style: none; padding: 0; margin: 0; }
+        .history-item { background: #1e1e1e; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .history-amount { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 10px;}
+        .history-time { color: #a0a0a0; font-size: 14px; }
+        .btn-delete { background: transparent; border: none; color: #EF5350; font-size: 18px; cursor: pointer; padding: 5px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(3px); }
+        .modal-content { background: #121212; width: 100%; max-width: 360px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 80vh; display: flex; flex-direction: column; border: 1px solid #333; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-title { font-size: 22px; font-weight: bold; }
+        .close-btn { background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1; }
+        .modal-subtitle { font-size: 14px; color: #4CAF50; margin-bottom: 20px; font-weight: bold; }
+        .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #aaa; font-size: 14px;}
+        .form-control { width: 100%; padding: 12px; background: #222; border: 1px solid #444; border-radius: 8px; color: white; font-size: 16px; box-sizing: border-box;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-settings">
+            <label for="ageSelect">Edad de Nara:</label>
+            <select id="ageSelect" class="styled-select"></select>
+        </div>
+        <div class="header">
+            <div class="total-text" id="totalText">Cargando...</div>
+            <div class="glass-container"><div class="glass-fill" id="dailyProgressFill"></div></div>
+            <div class="target-info" id="targetInfoText">Conectando a la nube ☁️...</div>
+            <div class="timer-text" id="timerText">Buscando datos...</div>
+        </div>
+        <div class="divider"></div>
+        <div class="controls">
+            <button class="btn-adjust" onclick="adjustAmount(-10)">-</button>
+            <div class="amount-text" id="amountText">120<span style="font-size: 24px"> ml</span></div>
+            <button class="btn-adjust" onclick="adjustAmount(10)">+</button>
+        </div>
+        <button class="btn-save" onclick="saveFeeding(null, currentAmount)">🍼 Guardar Toma Ahora</button>
+        <div class="secondary-actions">
+            <button class="btn-secondary btn-manual" onclick="openManualModal()">🕒 Toma pasada</button>
+            <button class="btn-secondary btn-poop" onclick="savePoop()">💩 Caca</button>
+        </div>
+        <div class="divider"></div>
+        <div class="section-title">
+            <span id="monthTitle">Mes</span>
+            <div class="legend">
+                <span><span class="dot" style="background:#4CAF50"></span> Bien</span>
+                <span><span class="dot" style="background:#FFC107"></span> Justo</span>
+                <span><span class="dot" style="background:#EF5350"></span> Bajo</span>
+            </div>
+        </div>
+        <div class="calendar-header">
+            <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="divider"></div>
+        <div class="section-title">Historial de hoy</div>
+        <ul class="history-list" id="historyList"></ul>
+    </div>
+
+    <!-- Modales -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Fecha</div>
+                <button class="close-btn" onclick="closeModal('historyModal')">&times;</button>
+            </div>
+            <div class="modal-subtitle" id="modalSubtitle"></div>
+            <div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="manualModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Añadir toma pasada</div>
+                <button class="close-btn" onclick="closeModal('manualModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Hora de la toma:</label>
+                    <input type="time" id="manualTime" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Cantidad (ml):</label>
+                    <input type="number" id="manualAmountValue" class="form-control" value="120" step="10">
+                </div>
+                <button class="btn-save" style="margin-top: 10px;" onclick="saveManualFeeding()">Guardar Toma</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2J3CM_LXaeS-e_qXExdl8KmNrKqKK8gc",
+            authDomain: "nara-46b1b.firebaseapp.com",
+            databaseURL: "https://nara-46b1b-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "nara-46b1b",
+            storageBucket: "nara-46b1b.firebasestorage.app",
+            messagingSenderId: "1043620818022",
+            appId: "1:1043620818022:web:e38e9079564e2d4d81d1a7"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const dbRef = db.ref('registros_nara');
+
+        let records = [];
+        let currentAmount = 120;
+        const ageRecommendations = { 0: 600, 1: 700, 2: 800, 3: 850, 4: 900, 5: 950, 6: 900, 7: 850, 8: 800, 9: 750, 10: 700, 11: 650, 12: 500 };
+        const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        function initApp() {
+            const selectEl = document.getElementById('ageSelect');
+            let savedAge = localStorage.getItem('nara_age_months');
+            if (savedAge === null) savedAge = 2;
+            
+            for (let i = 0; i <= 12; i++) {
+                const option = document.createElement('option');
+                option.value = ageRecommendations[i]; option.dataset.month = i;
+                option.text = i === 12 ? '12+ meses' : `${i} mes${i !== 1 ? 'es' : ''}`;
+                if (i == savedAge) option.selected = true;
+                selectEl.appendChild(option);
+            }
+            selectEl.addEventListener('change', (e) => {
+                localStorage.setItem('nara_age_months', e.target.options[e.target.selectedIndex].dataset.month);
+                updateUI();
+            });
+
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
+            });
+
+            dbRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                records = [];
+                if (data) {
+                    for (let key in data) { records.push({ dbKey: key, ...data[key] }); }
+                }
+                const oldLocalData = JSON.parse(localStorage.getItem('biberones_app_data')) || [];
+                if (oldLocalData.length > 0) {
+                    oldLocalData.forEach(r => { if(!r.type) r.type = 'milk'; dbRef.push(r); });
+                    localStorage.removeItem('biberones_app_data');
+                    alert("¡Sincronizado a la nube!");
+                }
+                updateUI();
+            });
+
+            setInterval(updateTimer, 60000);
+        }
+
+        function getTodayString() { const now = new Date(); return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`; }
+        function getColorForAmount(amount, target) {
+            if (amount === 0) return 'transparent'; 
+            if (amount >= target) return '#4CAF50'; 
+            if (amount >= target * 0.75) return '#FFC107'; 
+            return '#EF5350'; 
+        }
+
+        function updateUI() {
+            const todayStr = getTodayString();
+            const todayRecords = records.filter(r => r.date === todayStr);
+            const totalMl = todayRecords.filter(r => r.type === 'milk').reduce((sum, r) => sum + r.amount, 0);
+            const target = parseInt(document.getElementById('ageSelect').value);
+            
+            const fillBar = document.getElementById('dailyProgressFill');
+            fillBar.style.width = `${Math.min((totalMl / target) * 100, 100)}%`;
+            fillBar.style.backgroundColor = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : '#EF5350';
+            
+            document.getElementById('totalText').innerText = `${totalMl} ml`;
+            document.getElementById('totalText').style.color = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : '#ffffff';
+            document.getElementById('targetInfoText').innerText = `Recomendado: ${target} ml al día`;
+
+            updateTimer();
+            renderList(todayRecords, document.getElementById('historyList'));
+            renderCalendar();
+        }
+
+        function renderList(recordArray, container) {
+            container.innerHTML = '';
+            if(recordArray.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Sin registros</div>';
+                return;
+            }
+            [...recordArray].sort((a,b) => b.timestamp - a.timestamp).forEach(r => {
+                const li = document.createElement('li'); li.className = 'history-item';
+                let iconAndText = r.type === 'poop' ? `💩 Caca` : `🍼 ${r.amount} ml`;
+                li.innerHTML = `
+                    <span class="history-amount">${iconAndText}</span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="history-time">${r.time}</span>
+                        <button class="btn-delete" onclick="deleteRecord('${r.dbKey}', event)">🗑️</button>
+                    </div>`;
+                container.appendChild(li);
+            });
+        }
+
+        function renderCalendar() {
+            const now = new Date(); const year = now.getFullYear(); const month = now.getMonth();
+            const target = parseInt(document.getElementById('ageSelect').value);
+            document.getElementById('monthTitle').innerText = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1); const lastDay = new Date(year, month + 1, 0);
+            let startDayOfWeek = firstDay.getDay() - 1; if (startDayOfWeek === -1) startDayOfWeek = 6;
+            
+            const calendarGrid = document.getElementById('calendarGrid'); calendarGrid.innerHTML = '';
+            
+            for (let i = 0; i < startDayOfWeek; i++) calendarGrid.appendChild(document.createElement('div'));
+            
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateStr = `${year}-${month + 1}-${day}`;
+                const dayRecords = records.filter(r => r.date === dateStr);
+                const totalMl = dayRecords.filter(r => r.type === 'milk').reduce((sum, r) => sum + r.amount, 0);
+                const hasPoop = dayRecords.some(r => r.type === 'poop');
+                
+                const cell = document.createElement('div'); cell.className = 'day-cell';
+                let dayColor = totalMl > 0 ? getColorForAmount(totalMl, target) : 'transparent';
+                
+                if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) cell.style.boxShadow = 'inset 0 0 0 2px #555';
+                
+                cell.innerHTML = `
+                    <div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div>
+                    <div class="day-text">${day}</div>
+                    ${totalMl > 0 ? `<div class="day-ml">${totalMl}</div>` : ''}
+                    ${hasPoop ? `<div style="position: absolute; top: 2px; right: 2px; font-size: 8px;">💩</div>` : ''}
+                `;
+                cell.onclick = () => openCalendarModal(dateStr, day, monthNames[month], totalMl, dayRecords);
+                calendarGrid.appendChild(cell);
+            }
+        }
+
+        function deleteRecord(dbKey, event) {
+            if(event) event.stopPropagation(); 
+            if(confirm("¿Seguro que quieres borrar este registro?")) {
+                dbRef.child(dbKey).remove(); closeModal('historyModal');
+            }
+        }
+
+        function saveFeeding(customDateObj = null, amount = 120) {
+            const dateToUse = customDateObj || new Date();
+            dbRef.push({
+                timestamp: dateToUse.getTime(),
+                date: `${dateToUse.getFullYear()}-${dateToUse.getMonth() + 1}-${dateToUse.getDate()}`,
+                time: dateToUse.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                type: 'milk', amount: parseInt(amount)
+            });
+        }
+
+        function savePoop() {
+            const now = new Date();
+            dbRef.push({
+                timestamp: now.getTime(), date: getTodayString(),
+                time: now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                type: 'poop'
+            });
+        }
+
+        function saveManualFeeding() {
+            const timeVal = document.getElementById('manualTime').value;
+            const amountVal = document.getElementById('manualAmountValue').value;
+            if(!timeVal) { alert("Por favor, selecciona una hora."); return; }
+            
+            const [hours, minutes] = timeVal.split(':');
+            const manualDate = new Date(); manualDate.setHours(hours, minutes, 0, 0);
+            if (manualDate > new Date()) manualDate.setDate(manualDate.getDate() - 1);
+            
+            saveFeeding(manualDate, amountVal); closeModal('manualModal');
+        }
+
+        function openManualModal() {
+            const now = new Date();
+            document.getElementById('manualTime').value = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+            document.getElementById('manualAmountValue').value = currentAmount;
+            document.getElementById('manualModal').style.display = 'flex';
+        }
+
+        function openCalendarModal(dateStr, day, monthName, totalMl, dayRecords) {
+            document.getElementById('modalTitle').innerText = `${day} de ${monthName}`;
+            const milkRecords = dayRecords.filter(r => r.type === 'milk');
+            const poopCount = dayRecords.filter(r => r.type === 'poop').length;
+            
+            let subtitleText = '';
+            if (milkRecords.length > 0) subtitleText += `${milkRecords.length} tomas • ${totalMl} ml`;
+            if (poopCount > 0) subtitleText += (subtitleText ? ' | ' : '') + `${poopCount} cacas 💩`;
+            
+            document.getElementById('modalSubtitle').innerText = subtitleText || 'Sin registros';
+            document.getElementById('modalSubtitle').style.color = subtitleText ? '#4CAF50' : '#a0a0a0';
+            
+            renderList(dayRecords, document.getElementById('modalHistoryList'));
+            document.getElementById('historyModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+
+        function updateTimer() {
+            const milkRecords = records.filter(r => r.type === 'milk');
+            if (milkRecords.length === 0) { document.getElementById('timerText').innerText = `Aún no hay biberones`; return; }
+            const lastTime = new Date(Math.max(...milkRecords.map(r => r.timestamp)));
+            const diffSeconds = Math.floor((new Date() - lastTime) / 1000);
+            document.getElementById('timerText').innerText = `⏱ Último biberón hace: ${Math.floor(diffSeconds / 3600)}h ${Math.floor((diffSeconds % 3600) / 60)}m`;
+        }
+
+        function adjustAmount(delta) {
+            currentAmount = Math.max(10, currentAmount + delta);
+            document.getElementById('amountText').innerHTML = `${currentAmount}<span style="font-size: 24px"> ml</span>`;
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
