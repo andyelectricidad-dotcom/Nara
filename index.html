@@ -14,36 +14,37 @@
         }
         .container { width: 100%; max-width: 400px; }
         
-        /* AUTH SCREEN */
-        .auth-container { display: flex; flex-direction: column; justify-content: center; height: 90vh; }
+        /* AUTH & SETUP SCREENS */
+        .full-screen-center { display: flex; flex-direction: column; justify-content: center; height: 90vh; }
         .auth-logo { text-align: center; font-size: 50px; margin-bottom: 10px; }
         .auth-title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 5px; color: #1976D2; }
-        .auth-subtitle { text-align: center; font-size: 14px; color: #aaa; margin-bottom: 30px; }
+        .auth-subtitle { text-align: center; font-size: 14px; color: #aaa; margin-bottom: 25px; }
         
-        /* Top Settings & Extras */
-        .top-settings {
-            background: #1e1e1e; padding: 12px 16px; border-radius: 16px; margin-bottom: 15px;
-            display: flex; flex-direction: column; gap: 15px;
-        }
-        .settings-grid { display: flex; gap: 15px; width: 100%; }
-        .settings-col { flex: 1; display: flex; flex-direction: column; }
-        .settings-col label { font-size: 13px; font-weight: bold; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
+        /* Invite Banner */
+        .invite-banner { background: #4CAF50; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); border: 2px solid #81C784;}
+        .invite-banner h3 { margin: 0 0 5px 0; font-size: 18px; }
+        .invite-banner p { margin: 0; font-size: 13px; }
+
+        /* Form Inputs */
+        .form-group label { font-size: 13px; font-weight: bold; color: #aaa; margin-bottom: 5px; text-transform: uppercase; display: block;}
         .styled-input { background: #333; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; box-sizing: border-box; margin-bottom: 15px;}
         
-        /* Banner Stock y Botones Extra */
+        /* Settings & Extras (Main App) */
+        .top-settings { background: #1e1e1e; padding: 12px 16px; border-radius: 16px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .settings-grid { display: flex; gap: 15px; width: 100%; }
+        .settings-col { flex: 1; display: flex; flex-direction: column; }
+        
+        /* Banners & Buttons */
         .stock-banner { background: #1976D2; color: white; padding: 10px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4); }
         .stock-banner:active { transform: scale(0.98); }
         .btn-invite { background: #4CAF50; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
 
-        /* Header */
+        /* App Header */
         .header { text-align: center; margin-bottom: 10px; }
         .total-text { font-size: 40px; font-weight: bold; margin-bottom: 5px; transition: color 0.3s; }
         
         /* Glass */
-        .glass-container {
-            width: 100%; height: 20px; background-color: #2a2a2a; border-radius: 10px;
-            position: relative; overflow: hidden; margin: 10px 0; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-        }
+        .glass-container { width: 100%; height: 20px; background-color: #2a2a2a; border-radius: 10px; position: relative; overflow: hidden; margin: 10px 0; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .glass-fill { height: 100%; background-color: #EF5350; width: 0%; transition: width 0.5s ease-out, background-color 0.3s; border-radius: 10px; }
         .target-info { font-size: 14px; color: #a0a0a0; margin-bottom: 15px; }
         .timer-text { font-size: 15px; color: #e0e0e0; background: #1e1e1e; padding: 8px 14px; border-radius: 12px; display: inline-block;}
@@ -51,27 +52,16 @@
         
         /* Controls */
         .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .btn-adjust { 
-            background: transparent; border: 2px solid #555; color: white; border-radius: 50%; 
-            width: 60px; height: 60px; font-size: 32px; display: flex; justify-content: center; align-items: center; 
-            cursor: pointer; touch-action: manipulation;
-        }
+        .btn-adjust { background: transparent; border: 2px solid #555; color: white; border-radius: 50%; width: 60px; height: 60px; font-size: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; touch-action: manipulation; }
         .btn-adjust:active { background: #333; }
         .amount-text { font-size: 48px; font-weight: bold; text-align: center; flex-grow: 1; }
         
         /* Action Buttons */
-        .btn-save { 
-            background: #1976D2; color: white; border: none; border-radius: 16px; 
-            width: 100%; padding: 20px; font-size: 22px; font-weight: bold; cursor: pointer; 
-            touch-action: manipulation; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4); margin-bottom: 10px;
-        }
+        .btn-save { background: #1976D2; color: white; border: none; border-radius: 16px; width: 100%; padding: 20px; font-size: 22px; font-weight: bold; cursor: pointer; touch-action: manipulation; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4); margin-bottom: 10px; }
         .btn-save:active { background: #1565C0; transform: scale(0.98); }
         
         .secondary-actions { display: flex; gap: 8px; margin-bottom: 15px; }
-        .btn-secondary {
-            flex: 1; padding: 12px 5px; border-radius: 12px; border: none; font-size: 14px; font-weight: bold; color: white;
-            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 5px; transition: background 0.3s;
-        }
+        .btn-secondary { flex: 1; padding: 12px 5px; border-radius: 12px; border: none; font-size: 14px; font-weight: bold; color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 5px; transition: background 0.3s; }
         .btn-poop { background: #795548; }
         .btn-manual { background: #424242; }
         .btn-vitd { background: #F57F17; } 
@@ -83,60 +73,50 @@
         .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; }
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; color: #888; margin-bottom: 8px; font-weight: bold; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 10px; }
-        .day-cell {
-            aspect-ratio: 1; background-color: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
-        }
+        .day-cell { aspect-ratio: 1; background-color: #1a1a1a; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
         .day-fill { position: absolute; bottom: 0; left: 0; width: 100%; transition: height 0.5s, background-color 0.3s; z-index: 1; opacity: 0.9; }
         .day-text { position: relative; z-index: 2; font-size: 14px; font-weight: bold; text-shadow: 0px 1px 3px rgba(0,0,0,0.9); }
         .day-ml { position: relative; z-index: 2; font-size: 10px; color: #eee; text-shadow: 0px 1px 3px rgba(0,0,0,0.9); margin-top: -2px; }
 
         /* History */
         .history-list { list-style: none; padding: 0; margin: 0; }
-        .history-item { 
-            background: #1e1e1e; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; 
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        .history-item { background: #1e1e1e; padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
         .history-amount { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 10px;}
         .history-time { color: #a0a0a0; font-size: 14px; }
         .btn-delete { background: transparent; border: none; color: #EF5350; font-size: 18px; cursor: pointer; padding: 5px; }
 
         /* Modals */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center;
-            padding: 20px; box-sizing: border-box; backdrop-filter: blur(3px);
-        }
-        .modal-content {
-            background: #121212; width: 100%; max-width: 360px; border-radius: 20px; padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 80vh; display: flex; flex-direction: column; border: 1px solid #333;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(3px); }
+        .modal-content { background: #121212; width: 100%; max-width: 360px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-height: 80vh; display: flex; flex-direction: column; border: 1px solid #333; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-title { font-size: 22px; font-weight: bold; }
         .close-btn { background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1; }
-        .modal-subtitle { font-size: 14px; color: #4CAF50; margin-bottom: 20px; font-weight: bold; }
         .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #aaa; font-size: 14px;}
-        .form-control { width: 100%; padding: 12px; background: #222; border: 1px solid #444; border-radius: 8px; color: white; font-size: 16px; box-sizing: border-box;}
     </style>
 </head>
 <body>
 
-    <!-- LÓGICA DE DETECCIÓN DE ENLACE MÁGICO -->
+    <!-- LÓGICA DE ENLACE MÁGICO (Carga antes de dibujar) -->
     <script>
-        // Capturar invitación por URL antes de cargar nada
         const urlParams = new URLSearchParams(window.location.search);
         const inviteCode = urlParams.get('invite');
+        const inviteName = urlParams.get('name');
         if(inviteCode) {
             localStorage.setItem('pending_invite', inviteCode);
-            // Limpiamos la URL para que quede bonita
+            if(inviteName) localStorage.setItem('pending_name', inviteName);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     </script>
 
     <!-- PANTALLA DE LOGIN / REGISTRO -->
-    <div id="authScreen" class="container auth-container">
+    <div id="authScreen" class="container full-screen-center">
+        
+        <!-- Banner dinámico de Invitación -->
+        <div id="inviteBanner" class="invite-banner">
+            <h3>💌 ¡Tienes una invitación!</h3>
+            <p>Inicia sesión para unirte al registro de <b id="inviteBabyName">la familia</b>.</p>
+        </div>
+
         <div class="auth-logo">🍼</div>
         <div class="auth-title">Biberones App</div>
         <div class="auth-subtitle">Gestor familiar sincronizado</div>
@@ -144,7 +124,7 @@
         <input type="email" id="emailInput" class="styled-input" placeholder="Correo electrónico">
         <input type="password" id="passInput" class="styled-input" placeholder="Contraseña (mínimo 6 caracteres)">
         
-        <button class="btn-save" onclick="login()">Iniciar sesión con Email</button>
+        <button class="btn-save" style="padding: 15px; font-size: 18px;" onclick="login()">Iniciar sesión</button>
         <button class="btn-secondary btn-manual" style="margin-top: 5px; padding: 15px; width: 100%;" onclick="register()">Crear cuenta nueva</button>
         
         <div style="text-align: center; margin: 15px 0; color: #aaa;">- o -</div>
@@ -152,31 +132,51 @@
         <button class="btn-secondary" style="background: white; color: #333; padding: 15px; width: 100%; font-size: 16px;" onclick="loginGoogle()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" style="margin-right: 10px;"> Continuar con Google
         </button>
+        <p style="text-align: center; color: #666; font-size: 11px; margin-top: 10px;">(Si falla, abre este enlace en Safari/Chrome)</p>
         
-        <p id="authError" style="color: #EF5350; text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold;"></p>
+        <p id="authError" style="color: #EF5350; text-align: center; margin-top: 10px; font-size: 14px; font-weight: bold;"></p>
+    </div>
+
+    <!-- PANTALLA DE CONFIGURACIÓN INICIAL (Solo nuevos bebés) -->
+    <div id="setupScreen" class="container full-screen-center" style="display: none;">
+        <div class="auth-logo">👶</div>
+        <div class="auth-title">¡Bienvenido!</div>
+        <div class="auth-subtitle">Vamos a configurar el perfil de tu bebé.</div>
+        
+        <div class="form-group">
+            <label>Nombre del bebé</label>
+            <input type="text" id="setupName" class="styled-input" placeholder="Ej: Nara">
+        </div>
+        <div class="form-group">
+            <label>Edad inicial</label>
+            <select id="setupAge" class="styled-input"></select>
+        </div>
+        <div class="form-group">
+            <label>Peso (kg)</label>
+            <input type="number" id="setupWeight" class="styled-input" step="0.1" placeholder="Ej: 5.5">
+        </div>
+        
+        <button class="btn-save" onclick="saveInitialProfile()">Guardar y Empezar</button>
     </div>
 
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="appScreen" class="container" style="display: none;">
         
+        <!-- Configurador Dinámico -->
         <div class="top-settings">
             <div class="settings-grid">
                 <div class="settings-col">
-                    <label for="ageSelect">Edad del bebé</label>
+                    <label id="labelAgeApp">Edad</label>
                     <select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select>
                 </div>
                 <div class="settings-col">
-                    <label for="weightInput">Peso (kg)</label>
-                    <input type="number" id="weightInput" class="styled-input" step="0.1" placeholder="Ej: 5.5" style="margin-bottom:0;">
+                    <label>Peso (kg)</label>
+                    <input type="number" id="weightInput" class="styled-input" step="0.1" style="margin-bottom:0;">
                 </div>
             </div>
             
-            <div class="stock-banner" id="stockBanner" onclick="openStockModal()">
-                📦 Cargando stock de leche...
-            </div>
-            
-            <!-- BOTÓN INVITAR -->
-            <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Invitar a padre/madre</button>
+            <div class="stock-banner" id="stockBanner" onclick="openStockModal()">📦 Cargando stock de leche...</div>
+            <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Enviar invitación a pareja</button>
         </div>
 
         <div class="header">
@@ -223,10 +223,10 @@
         <ul class="history-list" id="historyList"></ul>
 
         <!-- Botón para cerrar sesión -->
-        <button onclick="logout()" style="background: transparent; color: #666; border: none; padding: 15px; width: 100%; margin-top: 30px; font-weight: bold; cursor: pointer;">Cerrar sesión familiar</button>
+        <button onclick="logout()" style="background: transparent; color: #666; border: none; padding: 15px; width: 100%; margin-top: 30px; font-weight: bold; cursor: pointer;">Cerrar sesión de la cuenta</button>
     </div>
 
-    <!-- Modal Invitación Familia -->
+    <!-- Modal Invitación (Compartir enlace) -->
     <div class="modal-overlay" id="inviteModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -234,66 +234,22 @@
                 <button class="close-btn" onclick="closeModal('inviteModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente para ver los mismos biberones:</p>
+                <p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p>
                 
                 <div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:12px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">
                     Cargando enlace...
                 </div>
-
-                <button class="btn-save" id="btnCopyInvite" style="background: #4CAF50; font-size: 16px; padding: 12px; margin-bottom: 0;">📲 Compartir Enlace</button>
+                <button class="btn-save" id="btnCopyInvite" style="background: #4CAF50; font-size: 16px; padding: 12px; margin-bottom: 0;">📲 Compartir Enlace por WhatsApp</button>
             </div>
         </div>
     </div>
 
     <!-- Otros Modales -->
-    <div class="modal-overlay" id="historyModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" id="modalTitle">Fecha</div>
-                <button class="close-btn" onclick="closeModal('historyModal')">&times;</button>
-            </div>
-            <div class="modal-subtitle" id="modalSubtitle"></div>
-            <div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="manualModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Añadir toma pasada</div>
-                <button class="close-btn" onclick="closeModal('manualModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Hora de la toma:</label>
-                    <input type="time" id="manualTime" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Cantidad (ml):</label>
-                    <input type="number" id="manualAmountValue" class="form-control" value="120" step="10">
-                </div>
-                <button class="btn-save" style="margin-top: 10px;" onclick="saveManualFeeding()">Guardar Toma</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="stockModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">📦 Stock y Gastos</div>
-                <button class="close-btn" onclick="closeModal('stockModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="stockSummary"></div>
-                <div class="form-group" style="display:flex; gap:10px; margin-bottom: 25px;">
-                    <input type="number" id="stockPriceInput" class="form-control" placeholder="Precio (€)" step="0.01" style="flex:1;">
-                    <button class="btn-save" style="margin-bottom:0; padding:12px; font-size:16px; width:auto;" onclick="saveNewStock()">+ Bote Nuevo</button>
-                </div>
-                <div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Historial de botes:</div>
-                <ul class="history-list" id="stockListContainer"></ul>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="historyModal"><div class="modal-content"><div class="modal-header"><div class="modal-title" id="modalTitle">Fecha</div><button class="close-btn" onclick="closeModal('historyModal')">&times;</button></div><div style="font-size: 14px; color: #4CAF50; margin-bottom: 20px; font-weight: bold;" id="modalSubtitle"></div><div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div></div></div>
+    
+    <div class="modal-overlay" id="manualModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">Añadir toma pasada</div><button class="close-btn" onclick="closeModal('manualModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>Hora de la toma:</label><input type="time" id="manualTime" class="styled-input"></div><div class="form-group"><label>Cantidad (ml):</label><input type="number" id="manualAmountValue" class="styled-input" value="120" step="10"></div><button class="btn-save" style="margin-top: 10px;" onclick="saveManualFeeding()">Guardar Toma</button></div></div></div>
+    
+    <div class="modal-overlay" id="stockModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">📦 Stock y Gastos</div><button class="close-btn" onclick="closeModal('stockModal')">&times;</button></div><div class="modal-body"><div id="stockSummary"></div><div class="form-group" style="display:flex; gap:10px; margin-bottom: 25px;"><input type="number" id="stockPriceInput" class="styled-input" placeholder="Precio (€)" step="0.01" style="flex:1; margin-bottom:0;"><button class="btn-save" style="margin-bottom:0; padding:12px; font-size:16px; width:auto;" onclick="saveNewStock()">+ Bote Nuevo</button></div><div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Historial de botes:</div><ul class="history-list" id="stockListContainer"></ul></div></div></div>
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -316,9 +272,10 @@
         const auth = firebase.auth();
         const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-        let dbRef, vitRef, stockRef;
+        let dbRef, vitRef, stockRef, profileRef;
         let currentUser = null;
         let currentFamilyId = null;
+        let babyProfile = { nombre: 'Bebé', edad: 2, peso: 4.5 };
 
         let records = [];
         let stockRecords = [];
@@ -326,167 +283,195 @@
         let currentAmount = 120;
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-        // --- SISTEMA AUTH Y ACEPTACIÓN DE INVITACIONES ---
+        // --- GESTIÓN DE INTERFAZ INICIAL ---
+        const pendingCheck = localStorage.getItem('pending_invite');
+        const pendingName = localStorage.getItem('pending_name');
+        if(pendingCheck) {
+            document.getElementById('inviteBanner').style.display = 'block';
+            if(pendingName) document.getElementById('inviteBabyName').innerText = pendingName;
+        }
+
+        // Poblar Selectores de edad
+        function populateAgeSelects() {
+            const selects = [document.getElementById('setupAge'), document.getElementById('ageSelect')];
+            selects.forEach(select => {
+                select.innerHTML = '';
+                for (let i = 0; i <= 12; i++) {
+                    const option = document.createElement('option');
+                    option.value = i; option.text = i === 12 ? '12+ meses' : `${i} mes${i !== 1 ? 'es' : ''}`;
+                    select.appendChild(option);
+                }
+            });
+        }
+        populateAgeSelects();
+
+        // --- SISTEMA AUTH ---
         auth.getRedirectResult().catch(error => {
-            if(document.getElementById('authError')) {
-                document.getElementById('authError').innerText = "Error con Google: " + error.message;
-            }
+            if(document.getElementById('authError')) document.getElementById('authError').innerText = "Error con Google: " + error.message;
         });
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
-                document.getElementById('authScreen').style.display = 'none';
-                document.getElementById('appScreen').style.display = 'block';
                 
-                // Comprobar si hay una invitación mágica pendiente
+                // Comprobar si hay una invitación mágica pendiente tras iniciar sesión
                 const pendingInvite = localStorage.getItem('pending_invite');
                 
-                if(pendingInvite) {
-                    // Procesar la invitación
-                    db.ref('usuarios/' + user.uid + '/familyId').set(pendingInvite).then(() => {
-                        localStorage.removeItem('pending_invite');
-                        alert("¡Enlace de invitación aceptado! Cuentas vinculadas con éxito.");
-                        loadFamilyData(user, pendingInvite);
-                    });
-                } else {
-                    // Carga normal
-                    db.ref('usuarios/' + user.uid + '/familyId').once('value').then(snap => {
-                        let fId = snap.val() || user.uid;
-                        loadFamilyData(user, fId);
-                    });
-                }
+                db.ref('usuarios/' + user.uid + '/familyId').once('value').then(snap => {
+                    let fId = snap.val();
+                    
+                    if (pendingInvite && pendingInvite !== fId) {
+                        // Aceptar la invitación
+                        db.ref('usuarios/' + user.uid + '/familyId').set(pendingInvite).then(() => {
+                            localStorage.removeItem('pending_invite');
+                            localStorage.removeItem('pending_name');
+                            alert("¡Invitación aceptada! Cuentas vinculadas con éxito.");
+                            loadFamilyData(pendingInvite);
+                        });
+                    } else {
+                        // Usuario normal sin invitacion pendiente
+                        if(!fId) {
+                            fId = user.uid; // Es nuevo, su familia es su propio UID
+                            db.ref('usuarios/' + user.uid + '/familyId').set(fId);
+                        }
+                        loadFamilyData(fId);
+                    }
+                });
 
             } else {
-                currentUser = null;
-                currentFamilyId = null;
+                // Usuario no logueado
+                currentUser = null; currentFamilyId = null;
                 document.getElementById('authScreen').style.display = 'flex';
+                document.getElementById('setupScreen').style.display = 'none';
                 document.getElementById('appScreen').style.display = 'none';
                 
-                if(dbRef) dbRef.off();
-                if(vitRef) vitRef.off();
-                if(stockRef) stockRef.off();
+                if(dbRef) { dbRef.off(); vitRef.off(); stockRef.off(); profileRef.off(); }
             }
         });
 
-        function loadFamilyData(user, fId) {
+        function loadFamilyData(fId) {
             currentFamilyId = fId;
+            profileRef = db.ref('familias/' + currentFamilyId + '/perfil');
             dbRef = db.ref('familias/' + currentFamilyId + '/registros');
             vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d');
             stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
             
-            initDatabaseListeners();
-            initLocalSettings();
+            // Primero, comprobar si esta familia tiene configurado el perfil del bebé
+            profileRef.once('value').then(snap => {
+                if(!snap.exists()) {
+                    // Mostrar pantalla de setup
+                    document.getElementById('authScreen').style.display = 'none';
+                    document.getElementById('appScreen').style.display = 'none';
+                    document.getElementById('setupScreen').style.display = 'flex';
+                } else {
+                    // Todo listo, arrancar app
+                    document.getElementById('authScreen').style.display = 'none';
+                    document.getElementById('setupScreen').style.display = 'none';
+                    document.getElementById('appScreen').style.display = 'block';
+                    initDatabaseListeners();
+                }
+            });
         }
 
+        // --- PANTALLA SETUP NUEVO BEBE ---
+        function saveInitialProfile() {
+            const name = document.getElementById('setupName').value.trim() || 'Bebé';
+            const age = document.getElementById('setupAge').value;
+            const weight = document.getElementById('setupWeight').value || 0;
+            
+            profileRef.set({ nombre: name, edad: parseInt(age), peso: parseFloat(weight) }).then(() => {
+                document.getElementById('setupScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                initDatabaseListeners();
+            });
+        }
+
+        // --- ACCIONES LOGIN ---
         function login() {
             const email = document.getElementById('emailInput').value;
             const pass = document.getElementById('passInput').value;
             document.getElementById('authError').innerText = "Conectando...";
-            auth.signInWithEmailAndPassword(email, pass)
-                .catch(error => document.getElementById('authError').innerText = "Error: Email o contraseña incorrectos.");
+            auth.signInWithEmailAndPassword(email, pass).catch(e => document.getElementById('authError').innerText = "Error: Email o contraseña incorrectos.");
         }
-
         function loginGoogle() {
             document.getElementById('authError').innerText = "Redirigiendo a Google...";
             auth.signInWithRedirect(googleProvider);
         }
-
         function register() {
             const email = document.getElementById('emailInput').value;
             const pass = document.getElementById('passInput').value;
-            if (pass.length < 6) {
-                document.getElementById('authError').innerText = "La contraseña debe tener al menos 6 caracteres.";
-                return;
-            }
+            if (pass.length < 6) return document.getElementById('authError').innerText = "Contraseña mínimo 6 letras/números.";
             document.getElementById('authError').innerText = "Creando cuenta...";
-            auth.createUserWithEmailAndPassword(email, pass)
-                .catch(error => {
-                    if(error.code === 'auth/email-already-in-use') document.getElementById('authError').innerText = "Ese email ya está registrado.";
-                    else document.getElementById('authError').innerText = "Error al crear la cuenta.";
-                });
+            auth.createUserWithEmailAndPassword(email, pass).catch(e => document.getElementById('authError').innerText = "Ese email ya está en uso.");
         }
-
         function logout() { auth.signOut(); }
 
         // --- SISTEMA FAMILIAR (ENLACE MÁGICO) ---
         function openInviteModal() {
-            const inviteLink = window.location.origin + window.location.pathname + "?invite=" + (currentFamilyId || currentUser.uid);
+            const bName = encodeURIComponent(babyProfile.nombre);
+            const inviteLink = window.location.origin + window.location.pathname + "?invite=" + currentFamilyId + "&name=" + bName;
             document.getElementById('myFamilyCode').innerText = inviteLink;
             
-            // Función nativa para compartir del móvil
             document.getElementById('btnCopyInvite').onclick = () => {
                 if (navigator.share) {
-                    navigator.share({
-                        title: 'Biberones App',
-                        text: '🍼 Únete a mi familia en la app de Biberones para llevar el control juntos:',
-                        url: inviteLink
-                    }).catch(console.error);
+                    navigator.share({ title: 'Biberones App', text: `Únete para llevar el control de ${babyProfile.nombre} juntos:`, url: inviteLink }).catch(console.error);
                 } else {
-                    // Fallback para ordenadores
-                    navigator.clipboard.writeText(inviteLink);
-                    alert("¡Enlace copiado al portapapeles!");
+                    navigator.clipboard.writeText(inviteLink); alert("¡Enlace copiado!");
                 }
             };
-            
             document.getElementById('inviteModal').style.display = 'flex';
         }
 
-        // --- INICIALIZACIÓN Y LOGICA APP ---
-        function initLocalSettings() {
-            const selectEl = document.getElementById('ageSelect');
-            selectEl.innerHTML = '';
-            let savedAge = localStorage.getItem('nara_age_months');
-            if (savedAge === null) savedAge = 2;
-            
-            for (let i = 0; i <= 12; i++) {
-                const option = document.createElement('option');
-                option.value = i; option.text = i === 12 ? '12+ meses' : `${i} mes${i !== 1 ? 'es' : ''}`;
-                if (i == savedAge) option.selected = true;
-                selectEl.appendChild(option);
-            }
-            
-            const weightInput = document.getElementById('weightInput');
-            let savedWeight = localStorage.getItem('nara_weight_kg');
-            if (savedWeight) weightInput.value = savedWeight;
-
-            selectEl.onchange = (e) => { localStorage.setItem('nara_age_months', e.target.value); updateUI(); };
-            weightInput.oninput = (e) => { localStorage.setItem('nara_weight_kg', e.target.value); updateUI(); };
-
-            document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; };
-            });
-            setInterval(updateTimer, 60000);
-        }
-
+        // --- LOGICA PRINCIPAL (SYNC CON FIREBASE) ---
         function initDatabaseListeners() {
-            dbRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                records = [];
+            
+            // Sincronizar Perfil (Nombre, Edad, Peso)
+            profileRef.on('value', snap => {
+                if(snap.exists()) {
+                    babyProfile = snap.val();
+                    document.getElementById('labelAgeApp').innerText = `Edad de ${babyProfile.nombre}`;
+                    document.getElementById('ageSelect').value = babyProfile.edad;
+                    document.getElementById('weightInput').value = babyProfile.peso;
+                    updateUI(); // Recalcular meta si el otro padre cambió el peso
+                }
+            });
+
+            // Guardar cambios en el peso/edad desde la app principal
+            document.getElementById('ageSelect').onchange = (e) => profileRef.update({ edad: parseInt(e.target.value) });
+            document.getElementById('weightInput').onchange = (e) => profileRef.update({ peso: parseFloat(e.target.value) || 0 });
+
+            // Sincronizar Biberones
+            dbRef.on('value', snap => {
+                const data = snap.val(); records = [];
                 if (data) { for (let key in data) { records.push({ dbKey: key, ...data[key] }); } }
                 updateUI();
             });
 
-            vitRef.on('value', (snapshot) => {
-                vitDRecords = snapshot.val() || {};
-                updateVitDUI();
-                updateUI(); 
+            // Sincronizar Vitamina
+            vitRef.on('value', snap => {
+                vitDRecords = snap.val() || {};
+                updateVitDUI(); updateUI(); 
             });
 
-            stockRef.on('value', (snapshot) => {
-                const data = snapshot.val() || {};
+            // Sincronizar Stock
+            stockRef.on('value', snap => {
+                const data = snap.val() || {};
                 stockRecords = Object.keys(data).map(key => ({ dbKey: key, ...data[key] }));
                 stockRecords.sort((a,b) => b.timestamp - a.timestamp); 
                 updateStockUI();
             });
+
+            document.querySelectorAll('.modal-overlay').forEach(modal => { modal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; }; });
+            setInterval(updateTimer, 60000);
         }
 
+        // --- CÁLCULOS Y UI ---
         function calculateTarget() {
-            const age = parseInt(document.getElementById('ageSelect').value) || 0;
-            const weight = parseFloat(document.getElementById('weightInput').value);
+            const age = parseInt(babyProfile.edad) || 0;
+            const weight = parseFloat(babyProfile.peso) || 0;
             let target = 0;
             if (age >= 12) { target = 600; } 
-            else if (weight > 0 && !isNaN(weight)) {
+            else if (weight > 0) {
                 target = Math.round(weight * 150);
                 if (age >= 6 && target > 1000) target = 1000; 
             } else {
@@ -507,54 +492,35 @@
         function updateVitDUI() {
             const todayStr = getTodayString();
             const btn = document.getElementById('btnVitD');
-            if(vitDRecords[todayStr]) {
-                btn.innerHTML = "☀️ Vit D ✅";
-                btn.style.background = "#4CAF50"; 
-            } else {
-                btn.innerHTML = "☀️ Vit D";
-                btn.style.background = "#F57F17"; 
-            }
+            if(vitDRecords[todayStr]) { btn.innerHTML = "☀️ Vit D ✅"; btn.style.background = "#4CAF50"; } 
+            else { btn.innerHTML = "☀️ Vit D"; btn.style.background = "#F57F17"; }
         }
 
         function toggleVitD() {
-            if(!currentUser) return;
             const todayStr = getTodayString();
-            if (vitDRecords[todayStr]) {
-                if(confirm("¿Desmarcar la Vitamina D de hoy?")) vitRef.child(todayStr).remove();
-            } else {
-                vitRef.child(todayStr).set(true);
-            }
+            if (vitDRecords[todayStr]) { if(confirm("¿Desmarcar la Vitamina D de hoy?")) vitRef.child(todayStr).remove(); } 
+            else { vitRef.child(todayStr).set(true); }
         }
 
         function updateStockUI() {
             const banner = document.getElementById('stockBanner');
-            if (stockRecords.length === 0) {
-                banner.innerHTML = "📦 Toca aquí para añadir el primer bote";
-                banner.style.background = "#424242";
-                return;
-            }
+            if (stockRecords.length === 0) { banner.innerHTML = "📦 Toca aquí para añadir el primer bote"; banner.style.background = "#424242"; return; }
             const lastBote = stockRecords[0];
             const daysDiff = Math.floor((new Date() - new Date(lastBote.timestamp)) / (1000 * 60 * 60 * 24));
             banner.style.background = daysDiff > 7 ? "#EF5350" : "#1976D2"; 
-            banner.innerHTML = `📦 Bote actual abierto hace ${daysDiff} día${daysDiff !== 1 ? 's' : ''}`;
+            banner.innerHTML = `📦 Bote abierto hace ${daysDiff} día${daysDiff !== 1 ? 's' : ''}`;
         }
 
         function openStockModal() {
-            const container = document.getElementById('stockListContainer');
-            const summary = document.getElementById('stockSummary');
+            const container = document.getElementById('stockListContainer'); const summary = document.getElementById('stockSummary');
             container.innerHTML = '';
             
             if (stockRecords.length === 0) {
-                summary.innerHTML = '';
-                container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Aún no hay botes registrados</div>';
+                summary.innerHTML = ''; container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Aún no hay botes registrados</div>';
             } else {
-                const now = new Date();
-                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-                const dayOfWeek = now.getDay() || 7; 
-                const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1).getTime();
-
-                let spentThisMonth = 0;
-                let spentThisWeek = 0;
+                const now = new Date(); const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+                const dayOfWeek = now.getDay() || 7; const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1).getTime();
+                let spentThisMonth = 0; let spentThisWeek = 0;
 
                 stockRecords.forEach((r, index) => {
                     const price = parseFloat(r.price) || 0;
@@ -562,69 +528,33 @@
                     if(r.timestamp >= startOfWeek) spentThisWeek += price;
 
                     const li = document.createElement('li'); li.className = 'history-item';
-                    let duracionText = "";
-                    if (index < stockRecords.length - 1) {
-                        const boteAnterior = stockRecords[index + 1];
-                        const diffDays = Math.floor((r.timestamp - boteAnterior.timestamp) / (1000 * 60 * 60 * 24));
-                        duracionText = `<span style="font-size:13px; color:#4CAF50;">Duró ${diffDays} días</span>`;
-                    } else {
-                        duracionText = `<span style="font-size:13px; color:#a0a0a0;">Primer bote</span>`;
-                    }
+                    let duracionText = index < stockRecords.length - 1 ? `<span style="font-size:13px; color:#4CAF50;">Duró ${Math.floor((r.timestamp - stockRecords[index + 1].timestamp) / (1000 * 60 * 60 * 24))} días</span>` : `<span style="font-size:13px; color:#a0a0a0;">Primer bote</span>`;
                     if(index === 0) duracionText = `<span style="font-size:13px; color:#FFC107;">En uso actualmente</span>`;
 
-                    li.innerHTML = `
-                        <div>
-                            <div style="font-weight:bold; font-size:16px;">${r.dateStr}</div>
-                            ${duracionText}
-                        </div>
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <span style="font-size:18px; font-weight:bold; color:#e0e0e0;">${price.toFixed(2)}€</span>
-                            <button class="btn-delete" onclick="deleteStock('${r.dbKey}', event)">🗑️</button>
-                        </div>`;
+                    li.innerHTML = `<div><div style="font-weight:bold; font-size:16px;">${r.dateStr}</div>${duracionText}</div><div style="display:flex; align-items:center; gap:15px;"><span style="font-size:18px; font-weight:bold; color:#e0e0e0;">${price.toFixed(2)}€</span><button class="btn-delete" onclick="deleteStock('${r.dbKey}', event)">🗑️</button></div>`;
                     container.appendChild(li);
                 });
 
-                summary.innerHTML = `
-                    <div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #444;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                            <span style="color:#aaa;">Gasto esta semana:</span>
-                            <span style="font-weight:bold; font-size:16px;">${spentThisWeek.toFixed(2)} €</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between;">
-                            <span style="color:#aaa;">Gasto en ${monthNames[now.getMonth()]}:</span>
-                            <span style="font-weight:bold; font-size:16px; color:#1976D2;">${spentThisMonth.toFixed(2)} €</span>
-                        </div>
-                    </div>
-                `;
+                summary.innerHTML = `<div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #444;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#aaa;">Gasto esta semana:</span><span style="font-weight:bold; font-size:16px;">${spentThisWeek.toFixed(2)} €</span></div><div style="display:flex; justify-content:space-between;"><span style="color:#aaa;">Gasto en ${monthNames[now.getMonth()]}:</span><span style="font-weight:bold; font-size:16px; color:#1976D2;">${spentThisMonth.toFixed(2)} €</span></div></div>`;
             }
             document.getElementById('stockModal').style.display = 'flex';
         }
 
         function saveNewStock() {
-            if(!currentUser) return;
             const priceVal = document.getElementById('stockPriceInput').value;
-            if(!priceVal || priceVal <= 0) { alert("Por favor, introduce un precio válido."); return; }
-            
+            if(!priceVal || priceVal <= 0) return alert("Por favor, introduce un precio válido.");
             const now = new Date();
-            stockRef.push({
-                timestamp: now.getTime(),
-                dateStr: now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }),
-                price: parseFloat(priceVal).toFixed(2)
-            });
+            stockRef.push({ timestamp: now.getTime(), dateStr: now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }), price: parseFloat(priceVal).toFixed(2) });
             document.getElementById('stockPriceInput').value = '';
         }
 
         function deleteStock(dbKey, event) {
             if(event) event.stopPropagation(); 
-            if(confirm("¿Seguro que quieres borrar este bote de leche?")) {
-                stockRef.child(dbKey).remove();
-                closeModal('stockModal');
-            }
+            if(confirm("¿Borrar este bote de leche?")) { stockRef.child(dbKey).remove(); closeModal('stockModal'); }
         }
 
         function updateUI() {
-            const todayStr = getTodayString();
-            const todayRecords = records.filter(r => r.date === todayStr);
+            const todayStr = getTodayString(); const todayRecords = records.filter(r => r.date === todayStr);
             const totalMl = todayRecords.filter(r => r.type === 'milk').reduce((sum, r) => sum + r.amount, 0);
             const target = calculateTarget();
             
@@ -636,26 +566,16 @@
             document.getElementById('totalText').style.color = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : '#ffffff';
             document.getElementById('targetInfoText').innerText = `Recomendado: ${target} ml al día`;
 
-            updateTimer();
-            renderList(todayRecords, document.getElementById('historyList'));
-            renderCalendar(target);
+            updateTimer(); renderList(todayRecords, document.getElementById('historyList')); renderCalendar(target);
         }
 
         function renderList(recordArray, container) {
             container.innerHTML = '';
-            if(recordArray.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Sin registros</div>';
-                return;
-            }
+            if(recordArray.length === 0) return container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Sin registros</div>';
             [...recordArray].sort((a,b) => b.timestamp - a.timestamp).forEach(r => {
                 const li = document.createElement('li'); li.className = 'history-item';
                 let iconAndText = r.type === 'poop' ? `💩 Caca` : `🍼 ${r.amount} ml`;
-                li.innerHTML = `
-                    <span class="history-amount">${iconAndText}</span>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span class="history-time">${r.time}</span>
-                        <button class="btn-delete" onclick="deleteRecord('${r.dbKey}', event)">🗑️</button>
-                    </div>`;
+                li.innerHTML = `<span class="history-amount">${iconAndText}</span><div style="display: flex; align-items: center; gap: 15px;"><span class="history-time">${r.time}</span><button class="btn-delete" onclick="deleteRecord('${r.dbKey}', event)">🗑️</button></div>`;
                 container.appendChild(li);
             });
         }
@@ -668,16 +588,12 @@
             let startDayOfWeek = firstDay.getDay() - 1; if (startDayOfWeek === -1) startDayOfWeek = 6;
             
             const calendarGrid = document.getElementById('calendarGrid'); calendarGrid.innerHTML = '';
-            
             for (let i = 0; i < startDayOfWeek; i++) calendarGrid.appendChild(document.createElement('div'));
             
             for (let day = 1; day <= lastDay.getDate(); day++) {
-                const dateStr = `${year}-${month + 1}-${day}`;
-                const dayRecords = records.filter(r => r.date === dateStr);
+                const dateStr = `${year}-${month + 1}-${day}`; const dayRecords = records.filter(r => r.date === dateStr);
                 const totalMl = dayRecords.filter(r => r.type === 'milk').reduce((sum, r) => sum + r.amount, 0);
-                
-                const hasPoop = dayRecords.some(r => r.type === 'poop');
-                const hasVitD = !!vitDRecords[dateStr];
+                const hasPoop = dayRecords.some(r => r.type === 'poop'); const hasVitD = !!vitDRecords[dateStr];
                 
                 let iconsHtml = '';
                 if (hasVitD) iconsHtml += '<div style="font-size: 10px; line-height: 1;">☀️</div>';
@@ -685,15 +601,9 @@
                 
                 const cell = document.createElement('div'); cell.className = 'day-cell';
                 let dayColor = totalMl > 0 ? getColorForAmount(totalMl, target) : 'transparent';
-                
                 if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) cell.style.boxShadow = 'inset 0 0 0 2px #555';
                 
-                cell.innerHTML = `
-                    <div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div>
-                    <div class="day-text">${day}</div>
-                    ${totalMl > 0 ? `<div class="day-ml">${totalMl}</div>` : ''}
-                    ${iconsHtml ? `<div style="position: absolute; top: 3px; right: 3px; display:flex; flex-direction:column; gap:2px;">${iconsHtml}</div>` : ''}
-                `;
+                cell.innerHTML = `<div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div><div class="day-text">${day}</div>${totalMl > 0 ? `<div class="day-ml">${totalMl}</div>` : ''}${iconsHtml ? `<div style="position: absolute; top: 3px; right: 3px; display:flex; flex-direction:column; gap:2px;">${iconsHtml}</div>` : ''}`;
                 cell.onclick = () => openCalendarModal(dateStr, day, monthNames[month], totalMl, dayRecords);
                 calendarGrid.appendChild(cell);
             }
@@ -701,55 +611,35 @@
 
         function deleteRecord(dbKey, event) {
             if(event) event.stopPropagation(); 
-            if(confirm("¿Seguro que quieres borrar este registro?")) {
-                dbRef.child(dbKey).remove(); closeModal('historyModal');
-            }
+            if(confirm("¿Borrar este registro?")) { dbRef.child(dbKey).remove(); closeModal('historyModal'); }
         }
 
         function saveFeeding(customDateObj = null, amount = 120) {
-            if(!currentUser) return;
             const dateToUse = customDateObj || new Date();
-            dbRef.push({
-                timestamp: dateToUse.getTime(),
-                date: `${dateToUse.getFullYear()}-${dateToUse.getMonth() + 1}-${dateToUse.getDate()}`,
-                time: dateToUse.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                type: 'milk', amount: parseInt(amount)
-            });
+            dbRef.push({ timestamp: dateToUse.getTime(), date: `${dateToUse.getFullYear()}-${dateToUse.getMonth() + 1}-${dateToUse.getDate()}`, time: dateToUse.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), type: 'milk', amount: parseInt(amount) });
         }
 
         function savePoop() {
-            if(!currentUser) return;
             const now = new Date();
-            dbRef.push({
-                timestamp: now.getTime(), date: getTodayString(),
-                time: now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                type: 'poop'
-            });
+            dbRef.push({ timestamp: now.getTime(), date: getTodayString(), time: now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), type: 'poop' });
         }
 
         function saveManualFeeding() {
-            const timeVal = document.getElementById('manualTime').value;
-            const amountVal = document.getElementById('manualAmountValue').value;
-            if(!timeVal) { alert("Por favor, selecciona una hora."); return; }
-            
-            const [hours, minutes] = timeVal.split(':');
-            const manualDate = new Date(); manualDate.setHours(hours, minutes, 0, 0);
+            const timeVal = document.getElementById('manualTime').value; const amountVal = document.getElementById('manualAmountValue').value;
+            if(!timeVal) return alert("Selecciona una hora."); 
+            const [hours, minutes] = timeVal.split(':'); const manualDate = new Date(); manualDate.setHours(hours, minutes, 0, 0);
             if (manualDate > new Date()) manualDate.setDate(manualDate.getDate() - 1);
-            
             saveFeeding(manualDate, amountVal); closeModal('manualModal');
         }
 
         function openManualModal() {
-            const now = new Date();
-            document.getElementById('manualTime').value = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
-            document.getElementById('manualAmountValue').value = currentAmount;
-            document.getElementById('manualModal').style.display = 'flex';
+            document.getElementById('manualTime').value = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+            document.getElementById('manualAmountValue').value = currentAmount; document.getElementById('manualModal').style.display = 'flex';
         }
 
         function openCalendarModal(dateStr, day, monthName, totalMl, dayRecords) {
             document.getElementById('modalTitle').innerText = `${day} de ${monthName}`;
-            const milkRecords = dayRecords.filter(r => r.type === 'milk');
-            const poopCount = dayRecords.filter(r => r.type === 'poop').length;
+            const milkRecords = dayRecords.filter(r => r.type === 'milk'); const poopCount = dayRecords.filter(r => r.type === 'poop').length;
             const vitD = vitDRecords[dateStr] ? ' | 1 Vitamina ☀️' : '';
             
             let subtitleText = '';
@@ -758,17 +648,14 @@
             subtitleText += vitD;
             
             document.getElementById('modalSubtitle').innerText = subtitleText || 'Sin registros';
-            document.getElementById('modalSubtitle').style.color = subtitleText ? '#4CAF50' : '#a0a0a0';
-            
-            renderList(dayRecords, document.getElementById('modalHistoryList'));
-            document.getElementById('historyModal').style.display = 'flex';
+            renderList(dayRecords, document.getElementById('modalHistoryList')); document.getElementById('historyModal').style.display = 'flex';
         }
 
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
         function updateTimer() {
             const milkRecords = records.filter(r => r.type === 'milk');
-            if (milkRecords.length === 0) { document.getElementById('timerText').innerText = `Aún no hay biberones hoy`; return; }
+            if (milkRecords.length === 0) return document.getElementById('timerText').innerText = `Aún no hay biberones hoy`; 
             const lastTime = new Date(Math.max(...milkRecords.map(r => r.timestamp)));
             const diffSeconds = Math.floor((new Date() - lastTime) / 1000);
             document.getElementById('timerText').innerText = `⏱ Último biberón hace: ${Math.floor(diffSeconds / 3600)}h ${Math.floor((diffSeconds % 3600) / 60)}m`;
