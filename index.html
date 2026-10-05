@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#121212">
-    <title>Biberones Nara</title>
+    <title>Biberones App</title>
     <style>
         body { 
             background-color: #121212; color: #ffffff; 
@@ -14,6 +14,12 @@
         }
         .container { width: 100%; max-width: 400px; }
         
+        /* AUTH SCREEN */
+        .auth-container { display: flex; flex-direction: column; justify-content: center; height: 90vh; }
+        .auth-logo { text-align: center; font-size: 50px; margin-bottom: 10px; }
+        .auth-title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 5px; color: #1976D2; }
+        .auth-subtitle { text-align: center; font-size: 14px; color: #aaa; margin-bottom: 30px; }
+        
         /* Top Settings & Extras */
         .top-settings {
             background: #1e1e1e; padding: 12px 16px; border-radius: 16px; margin-bottom: 15px;
@@ -22,11 +28,14 @@
         .settings-grid { display: flex; gap: 15px; width: 100%; }
         .settings-col { flex: 1; display: flex; flex-direction: column; }
         .settings-col label { font-size: 13px; font-weight: bold; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .styled-input { background: #333; color: white; border: none; padding: 10px; border-radius: 8px; font-size: 15px; font-weight: bold; width: 100%; box-sizing: border-box;}
+        .styled-input { background: #333; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; box-sizing: border-box; margin-bottom: 15px;}
         
         /* Banner Stock Leche */
         .stock-banner { background: #1976D2; color: white; padding: 10px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4); }
         .stock-banner:active { transform: scale(0.98); }
+        
+        /* Boton Migrar Datos */
+        .btn-migrate { background: #9C27B0; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; margin-top: 5px; }
 
         /* Header */
         .header { text-align: center; margin-bottom: 10px; }
@@ -67,7 +76,7 @@
         }
         .btn-poop { background: #795548; }
         .btn-manual { background: #424242; }
-        .btn-vitd { background: #F57F17; } /* Naranja */
+        .btn-vitd { background: #F57F17; } 
         .btn-secondary:active { transform: scale(0.96); filter: brightness(0.8); }
 
         /* Calendar */
@@ -115,25 +124,47 @@
     </style>
 </head>
 <body>
-    <div class="container">
+
+    <!-- PANTALLA DE LOGIN / REGISTRO -->
+    <div id="authScreen" class="container auth-container">
+        <div class="auth-logo">🍼</div>
+        <div class="auth-title">Biberones App</div>
+        <div class="auth-subtitle">Gestor familiar sincronizado</div>
         
-        <!-- Configurador y Stock -->
+        <input type="email" id="emailInput" class="styled-input" placeholder="Correo electrónico">
+        <input type="password" id="passInput" class="styled-input" placeholder="Contraseña (mínimo 6 letras/números)">
+        
+        <button class="btn-save" onclick="login()">Iniciar sesión con Email</button>
+        <button class="btn-secondary btn-manual" style="margin-top: 5px; padding: 15px; width: 100%;" onclick="register()">Crear cuenta nueva</button>
+        
+        <div style="text-align: center; margin: 15px 0; color: #aaa;">- o -</div>
+        
+        <button class="btn-secondary" style="background: white; color: #333; padding: 15px; width: 100%; font-size: 16px;" onclick="loginGoogle()">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" style="margin-right: 10px;"> Continuar con Google
+        </button>
+        
+        <p id="authError" style="color: #EF5350; text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold;"></p>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL (Oculta hasta iniciar sesión) -->
+    <div id="appScreen" class="container" style="display: none;">
+        
         <div class="top-settings">
             <div class="settings-grid">
                 <div class="settings-col">
-                    <label for="ageSelect">Edad de Nara</label>
-                    <select id="ageSelect" class="styled-input"></select>
+                    <label for="ageSelect">Edad del bebé</label>
+                    <select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select>
                 </div>
                 <div class="settings-col">
                     <label for="weightInput">Peso (kg)</label>
-                    <input type="number" id="weightInput" class="styled-input" step="0.1" placeholder="Ej: 5.5">
+                    <input type="number" id="weightInput" class="styled-input" step="0.1" placeholder="Ej: 5.5" style="margin-bottom:0;">
                 </div>
             </div>
-
-            <!-- Banner Stock -->
             <div class="stock-banner" id="stockBanner" onclick="openStockModal()">
                 📦 Cargando stock de leche...
             </div>
+            <!-- BOTÓN PARA RECUPERAR DATOS ANTIGUOS -->
+            <button class="btn-migrate" id="btnMigrate" onclick="migrateOldData()">🔄 Recuperar mis datos anteriores</button>
         </div>
 
         <div class="header">
@@ -178,9 +209,12 @@
         <div class="divider"></div>
         <div class="section-title">Historial de hoy</div>
         <ul class="history-list" id="historyList"></ul>
+
+        <!-- Botón para cerrar sesión -->
+        <button onclick="logout()" style="background: transparent; color: #666; border: none; padding: 15px; width: 100%; margin-top: 30px; font-weight: bold; cursor: pointer;">Cerrar sesión familiar</button>
     </div>
 
-    <!-- Modal Historial del Día -->
+    <!-- Modales (Historial, Toma Manual, Stock) -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -192,7 +226,6 @@
         </div>
     </div>
 
-    <!-- Modal Toma Manual -->
     <div class="modal-overlay" id="manualModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -213,7 +246,6 @@
         </div>
     </div>
 
-    <!-- Modal Gestor de Stock -->
     <div class="modal-overlay" id="stockModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -221,10 +253,7 @@
                 <button class="close-btn" onclick="closeModal('stockModal')">&times;</button>
             </div>
             <div class="modal-body">
-                
-                <!-- Resumen de Gastos -->
                 <div id="stockSummary"></div>
-
                 <div class="form-group" style="display:flex; gap:10px; margin-bottom: 25px;">
                     <input type="number" id="stockPriceInput" class="form-control" placeholder="Precio (€)" step="0.01" style="flex:1;">
                     <button class="btn-save" style="margin-bottom:0; padding:12px; font-size:16px; width:auto;" onclick="saveNewStock()">+ Bote Nuevo</button>
@@ -235,8 +264,9 @@
         </div>
     </div>
 
-    <!-- Firebase -->
+    <!-- Firebase (App, Auth, Database) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -252,9 +282,11 @@
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const dbRef = db.ref('registros_nara');
-        const vitRef = db.ref('vitamina_d_nara');
-        const stockRef = db.ref('stock_leche_nara');
+        const auth = firebase.auth();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+        let dbRef, vitRef, stockRef;
+        let currentUser = null;
 
         let records = [];
         let stockRecords = [];
@@ -262,15 +294,95 @@
         let currentAmount = 120;
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-        function initApp() {
+        // --- SISTEMA DE CUENTAS (AUTH) ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                
+                dbRef = db.ref('familias/' + user.uid + '/registros');
+                vitRef = db.ref('familias/' + user.uid + '/vitamina_d');
+                stockRef = db.ref('familias/' + user.uid + '/stock_leche');
+                
+                initDatabaseListeners();
+                initLocalSettings();
+            } else {
+                currentUser = null;
+                document.getElementById('authScreen').style.display = 'flex';
+                document.getElementById('appScreen').style.display = 'none';
+                
+                if(dbRef) dbRef.off();
+                if(vitRef) vitRef.off();
+                if(stockRef) stockRef.off();
+            }
+        });
+
+        function login() {
+            const email = document.getElementById('emailInput').value;
+            const pass = document.getElementById('passInput').value;
+            document.getElementById('authError').innerText = "Conectando...";
+            auth.signInWithEmailAndPassword(email, pass)
+                .catch(error => document.getElementById('authError').innerText = "Error: Email o contraseña incorrectos.");
+        }
+
+        function loginGoogle() {
+            document.getElementById('authError').innerText = "Abriendo Google...";
+            auth.signInWithPopup(googleProvider)
+                .catch(error => document.getElementById('authError').innerText = "Error con Google: " + error.message);
+        }
+
+        function register() {
+            const email = document.getElementById('emailInput').value;
+            const pass = document.getElementById('passInput').value;
+            if (pass.length < 6) {
+                document.getElementById('authError').innerText = "La contraseña debe tener al menos 6 caracteres.";
+                return;
+            }
+            document.getElementById('authError').innerText = "Creando cuenta...";
+            auth.createUserWithEmailAndPassword(email, pass)
+                .catch(error => {
+                    if(error.code === 'auth/email-already-in-use') document.getElementById('authError').innerText = "Ese email ya está registrado.";
+                    else document.getElementById('authError').innerText = "Error al crear la cuenta.";
+                });
+        }
+
+        function logout() {
+            auth.signOut();
+        }
+
+        // --- HERRAMIENTA DE RECUPERACIÓN DE DATOS ANTIGUOS ---
+        function migrateOldData() {
+            if(!currentUser) return;
+            if(confirm("¿Seguro que quieres recuperar los datos antiguos de Nara a tu nueva cuenta? (Solo necesitas hacerlo una vez)")) {
+                
+                // Mover Biberones y Cacas
+                db.ref('registros_nara').once('value').then(snap => {
+                    if(snap.exists()) dbRef.update(snap.val());
+                });
+                // Mover Vitamina D
+                db.ref('vitamina_d_nara').once('value').then(snap => {
+                    if(snap.exists()) vitRef.update(snap.val());
+                });
+                // Mover Stock de leche
+                db.ref('stock_leche_nara').once('value').then(snap => {
+                    if(snap.exists()) stockRef.update(snap.val());
+                    alert("¡Tus datos antiguos se han copiado con éxito!");
+                    document.getElementById('btnMigrate').style.display = 'none'; // Ocultar el botón
+                });
+            }
+        }
+
+        // --- INICIALIZACIÓN DE APP ---
+        function initLocalSettings() {
             const selectEl = document.getElementById('ageSelect');
+            selectEl.innerHTML = '';
             let savedAge = localStorage.getItem('nara_age_months');
             if (savedAge === null) savedAge = 2;
             
             for (let i = 0; i <= 12; i++) {
                 const option = document.createElement('option');
-                option.value = i; 
-                option.text = i === 12 ? '12+ meses' : `${i} mes${i !== 1 ? 'es' : ''}`;
+                option.value = i; option.text = i === 12 ? '12+ meses' : `${i} mes${i !== 1 ? 'es' : ''}`;
                 if (i == savedAge) option.selected = true;
                 selectEl.appendChild(option);
             }
@@ -279,14 +391,17 @@
             let savedWeight = localStorage.getItem('nara_weight_kg');
             if (savedWeight) weightInput.value = savedWeight;
 
-            selectEl.addEventListener('change', (e) => { localStorage.setItem('nara_age_months', e.target.value); updateUI(); });
-            weightInput.addEventListener('input', (e) => { localStorage.setItem('nara_weight_kg', e.target.value); updateUI(); });
+            selectEl.onchange = (e) => { localStorage.setItem('nara_age_months', e.target.value); updateUI(); };
+            weightInput.oninput = (e) => { localStorage.setItem('nara_weight_kg', e.target.value); updateUI(); };
 
             document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modal.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
+                modal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; };
             });
 
-            // Sync Biberones
+            setInterval(updateTimer, 60000);
+        }
+
+        function initDatabaseListeners() {
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 records = [];
@@ -294,27 +409,22 @@
                 updateUI();
             });
 
-            // Sync Vitamina D
             vitRef.on('value', (snapshot) => {
                 vitDRecords = snapshot.val() || {};
                 updateVitDUI();
-                updateUI(); // Forzar redibujar calendario
+                updateUI(); 
             });
 
-            // Sync Stock
             stockRef.on('value', (snapshot) => {
                 const data = snapshot.val() || {};
                 stockRecords = Object.keys(data).map(key => ({ dbKey: key, ...data[key] }));
                 stockRecords.sort((a,b) => b.timestamp - a.timestamp); 
                 updateStockUI();
             });
-
-            setInterval(updateTimer, 60000);
         }
 
-        // --- CALCULO META ---
         function calculateTarget() {
-            const age = parseInt(document.getElementById('ageSelect').value);
+            const age = parseInt(document.getElementById('ageSelect').value) || 0;
             const weight = parseFloat(document.getElementById('weightInput').value);
             let target = 0;
             if (age >= 12) { target = 600; } 
@@ -336,20 +446,20 @@
             return '#EF5350'; 
         }
 
-        // --- BOTÓN VITAMINA D ---
         function updateVitDUI() {
             const todayStr = getTodayString();
             const btn = document.getElementById('btnVitD');
             if(vitDRecords[todayStr]) {
                 btn.innerHTML = "☀️ Vit D ✅";
-                btn.style.background = "#4CAF50"; // Verde si ya se dio
+                btn.style.background = "#4CAF50"; 
             } else {
                 btn.innerHTML = "☀️ Vit D";
-                btn.style.background = "#F57F17"; // Naranja si falta
+                btn.style.background = "#F57F17"; 
             }
         }
 
         function toggleVitD() {
+            if(!currentUser) return;
             const todayStr = getTodayString();
             if (vitDRecords[todayStr]) {
                 if(confirm("¿Desmarcar la Vitamina D de hoy?")) vitRef.child(todayStr).remove();
@@ -358,7 +468,6 @@
             }
         }
 
-        // --- STOCK Y GASTOS ---
         function updateStockUI() {
             const banner = document.getElementById('stockBanner');
             if (stockRecords.length === 0) {
@@ -381,11 +490,8 @@
                 summary.innerHTML = '';
                 container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Aún no hay botes registrados</div>';
             } else {
-                // Calcular Gastos
                 const now = new Date();
                 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-                
-                // Lunes de la semana actual
                 const dayOfWeek = now.getDay() || 7; 
                 const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1).getTime();
 
@@ -420,7 +526,6 @@
                     container.appendChild(li);
                 });
 
-                // Panel Resumen de Gastos
                 summary.innerHTML = `
                     <div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #444;">
                         <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
@@ -438,6 +543,7 @@
         }
 
         function saveNewStock() {
+            if(!currentUser) return;
             const priceVal = document.getElementById('stockPriceInput').value;
             if(!priceVal || priceVal <= 0) { alert("Por favor, introduce un precio válido."); return; }
             
@@ -452,13 +558,12 @@
 
         function deleteStock(dbKey, event) {
             if(event) event.stopPropagation(); 
-            if(confirm("¿Seguro que quieres borrar este bote de leche del historial?")) {
+            if(confirm("¿Seguro que quieres borrar este bote de leche?")) {
                 stockRef.child(dbKey).remove();
                 closeModal('stockModal');
             }
         }
 
-        // --- ACTUALIZACION UI GENERAL ---
         function updateUI() {
             const todayStr = getTodayString();
             const todayRecords = records.filter(r => r.date === todayStr);
@@ -513,7 +618,6 @@
                 const dayRecords = records.filter(r => r.date === dateStr);
                 const totalMl = dayRecords.filter(r => r.type === 'milk').reduce((sum, r) => sum + r.amount, 0);
                 
-                // Comprobadores de iconos
                 const hasPoop = dayRecords.some(r => r.type === 'poop');
                 const hasVitD = !!vitDRecords[dateStr];
                 
@@ -545,6 +649,7 @@
         }
 
         function saveFeeding(customDateObj = null, amount = 120) {
+            if(!currentUser) return;
             const dateToUse = customDateObj || new Date();
             dbRef.push({
                 timestamp: dateToUse.getTime(),
@@ -555,6 +660,7 @@
         }
 
         function savePoop() {
+            if(!currentUser) return;
             const now = new Date();
             dbRef.push({
                 timestamp: now.getTime(), date: getTodayString(),
@@ -614,8 +720,6 @@
             currentAmount = Math.max(10, currentAmount + delta);
             document.getElementById('amountText').innerHTML = `${currentAmount}<span style="font-size: 24px"> ml</span>`;
         }
-
-        initApp();
     </script>
 </body>
 </html>
