@@ -30,12 +30,11 @@
         .settings-col label { font-size: 13px; font-weight: bold; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
         .styled-input { background: #333; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; width: 100%; box-sizing: border-box; margin-bottom: 15px;}
         
-        /* Banner Stock Leche */
+        /* Banner Stock y Botones Extra */
         .stock-banner { background: #1976D2; color: white; padding: 10px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4); }
         .stock-banner:active { transform: scale(0.98); }
-        
-        /* Boton Migrar Datos */
-        .btn-migrate { background: #9C27B0; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; margin-top: 5px; }
+        .btn-migrate { background: #9C27B0; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
+        .btn-invite { background: #4CAF50; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
 
         /* Header */
         .header { text-align: center; margin-bottom: 10px; }
@@ -132,7 +131,7 @@
         <div class="auth-subtitle">Gestor familiar sincronizado</div>
         
         <input type="email" id="emailInput" class="styled-input" placeholder="Correo electrónico">
-        <input type="password" id="passInput" class="styled-input" placeholder="Contraseña (mínimo 6 letras/números)">
+        <input type="password" id="passInput" class="styled-input" placeholder="Contraseña (mínimo 6 caracteres)">
         
         <button class="btn-save" onclick="login()">Iniciar sesión con Email</button>
         <button class="btn-secondary btn-manual" style="margin-top: 5px; padding: 15px; width: 100%;" onclick="register()">Crear cuenta nueva</button>
@@ -146,7 +145,7 @@
         <p id="authError" style="color: #EF5350; text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold;"></p>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL (Oculta hasta iniciar sesión) -->
+    <!-- APLICACIÓN PRINCIPAL -->
     <div id="appScreen" class="container" style="display: none;">
         
         <div class="top-settings">
@@ -163,8 +162,13 @@
             <div class="stock-banner" id="stockBanner" onclick="openStockModal()">
                 📦 Cargando stock de leche...
             </div>
-            <!-- BOTÓN PARA RECUPERAR DATOS ANTIGUOS -->
-            <button class="btn-migrate" id="btnMigrate" onclick="migrateOldData()">🔄 Recuperar mis datos anteriores</button>
+            
+            <div style="display: flex; gap: 10px;">
+                <!-- BOTÓN INVITAR -->
+                <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Invitar a padre/madre</button>
+                <!-- BOTÓN RECUPERAR (Mantiene su función) -->
+                <button class="btn-migrate" id="btnMigrate" onclick="migrateOldData()">🔄 Datos antiguos</button>
+            </div>
         </div>
 
         <div class="header">
@@ -211,10 +215,34 @@
         <ul class="history-list" id="historyList"></ul>
 
         <!-- Botón para cerrar sesión -->
-        <button onclick="logout()" style="background: transparent; color: #666; border: none; padding: 15px; width: 100%; margin-top: 30px; font-weight: bold; cursor: pointer;">Cerrar sesión familiar</button>
+        <button onclick="logout()" style="background: transparent; color: #666; border: none; padding: 15px; width: 100%; margin-top: 30px; font-weight: bold; cursor: pointer;">Cerrar sesión</button>
     </div>
 
-    <!-- Modales (Historial, Toma Manual, Stock) -->
+    <!-- Modal Invitación Familia -->
+    <div class="modal-overlay" id="inviteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">👨‍👩‍👧 Familia</div>
+                <button class="close-btn" onclick="closeModal('inviteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color:#ccc; font-size:14px;">Para compartir la app, el otro familiar debe iniciar sesión y pegar este código abajo:</p>
+                
+                <div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:16px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">
+                    Cargando código...
+                </div>
+
+                <div class="divider"></div>
+
+                <p style="margin-top:10px; font-weight:bold;">¿Tienes una invitación?</p>
+                <p style="color:#ccc; font-size:14px;">Si tu pareja ya ha creado la familia, pega aquí su código para vincularte:</p>
+                <input type="text" id="joinCodeInput" class="form-control" placeholder="Pega el código aquí">
+                <button class="btn-save" style="margin-top: 10px; font-size: 16px; padding: 12px;" onclick="joinFamily()">Vincular cuentas</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Otros Modales -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -264,7 +292,7 @@
         </div>
     </div>
 
-    <!-- Firebase (App, Auth, Database) -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -287,6 +315,7 @@
 
         let dbRef, vitRef, stockRef;
         let currentUser = null;
+        let currentFamilyId = null;
 
         let records = [];
         let stockRecords = [];
@@ -294,21 +323,34 @@
         let currentAmount = 120;
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-        // --- SISTEMA DE CUENTAS (AUTH) ---
+        // --- SISTEMA AUTH ---
+        auth.getRedirectResult().catch(error => {
+            if(document.getElementById('authError')) {
+                document.getElementById('authError').innerText = "Error con Google: " + error.message;
+            }
+        });
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('appScreen').style.display = 'block';
                 
-                dbRef = db.ref('familias/' + user.uid + '/registros');
-                vitRef = db.ref('familias/' + user.uid + '/vitamina_d');
-                stockRef = db.ref('familias/' + user.uid + '/stock_leche');
-                
-                initDatabaseListeners();
-                initLocalSettings();
+                // Buscar si este usuario pertenece a otra familia vinculada
+                db.ref('usuarios/' + user.uid + '/familyId').once('value').then(snap => {
+                    currentFamilyId = snap.val() || user.uid; // Si no hay vínculo, su propia familia
+                    
+                    dbRef = db.ref('familias/' + currentFamilyId + '/registros');
+                    vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d');
+                    stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
+                    
+                    initDatabaseListeners();
+                    initLocalSettings();
+                });
+
             } else {
                 currentUser = null;
+                currentFamilyId = null;
                 document.getElementById('authScreen').style.display = 'flex';
                 document.getElementById('appScreen').style.display = 'none';
                 
@@ -327,9 +369,8 @@
         }
 
         function loginGoogle() {
-            document.getElementById('authError').innerText = "Abriendo Google...";
-            auth.signInWithPopup(googleProvider)
-                .catch(error => document.getElementById('authError').innerText = "Error con Google: " + error.message);
+            document.getElementById('authError').innerText = "Redirigiendo a Google...";
+            auth.signInWithRedirect(googleProvider);
         }
 
         function register() {
@@ -347,33 +388,44 @@
                 });
         }
 
-        function logout() {
-            auth.signOut();
+        function logout() { auth.signOut(); }
+
+        // --- SISTEMA FAMILIAR (INVITACIONES) ---
+        function openInviteModal() {
+            document.getElementById('myFamilyCode').innerText = currentFamilyId || currentUser.uid;
+            document.getElementById('inviteModal').style.display = 'flex';
         }
 
-        // --- HERRAMIENTA DE RECUPERACIÓN DE DATOS ANTIGUOS ---
-        function migrateOldData() {
-            if(!currentUser) return;
-            if(confirm("¿Seguro que quieres recuperar los datos antiguos de Nara a tu nueva cuenta? (Solo necesitas hacerlo una vez)")) {
-                
-                // Mover Biberones y Cacas
-                db.ref('registros_nara').once('value').then(snap => {
-                    if(snap.exists()) dbRef.update(snap.val());
-                });
-                // Mover Vitamina D
-                db.ref('vitamina_d_nara').once('value').then(snap => {
-                    if(snap.exists()) vitRef.update(snap.val());
-                });
-                // Mover Stock de leche
-                db.ref('stock_leche_nara').once('value').then(snap => {
-                    if(snap.exists()) stockRef.update(snap.val());
-                    alert("¡Tus datos antiguos se han copiado con éxito!");
-                    document.getElementById('btnMigrate').style.display = 'none'; // Ocultar el botón
+        function joinFamily() {
+            const code = document.getElementById('joinCodeInput').value.trim();
+            if(!code) return;
+            if(confirm("¿Seguro que quieres unirte a esta familia? Dejarás de ver tu historial actual y empezarás a ver el suyo.")) {
+                db.ref('usuarios/' + currentUser.uid + '/familyId').set(code).then(() => {
+                    alert("¡Cuentas vinculadas con éxito! Cargando los datos de la familia...");
+                    location.reload(); // Recargar para aplicar los cambios de base de datos
                 });
             }
         }
 
-        // --- INICIALIZACIÓN DE APP ---
+        function migrateOldData() {
+            if(!currentUser || !currentFamilyId) return;
+            if(confirm("¿Seguro que quieres recuperar los datos antiguos de Nara?")) {
+                
+                db.ref('registros_nara').once('value').then(snap => {
+                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/registros').update(snap.val());
+                });
+                db.ref('vitamina_d_nara').once('value').then(snap => {
+                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/vitamina_d').update(snap.val());
+                });
+                db.ref('stock_leche_nara').once('value').then(snap => {
+                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/stock_leche').update(snap.val());
+                    alert("¡Tus datos antiguos se han copiado con éxito!");
+                    document.getElementById('btnMigrate').style.display = 'none';
+                });
+            }
+        }
+
+        // --- INICIALIZACIÓN Y LOGICA APP ---
         function initLocalSettings() {
             const selectEl = document.getElementById('ageSelect');
             selectEl.innerHTML = '';
@@ -397,7 +449,6 @@
             document.querySelectorAll('.modal-overlay').forEach(modal => {
                 modal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; };
             });
-
             setInterval(updateTimer, 60000);
         }
 
