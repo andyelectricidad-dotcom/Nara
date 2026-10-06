@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#121212">
     <title>Diario de Nara</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Semi+Condensed:wght@500;700;800&display=swap">
     
     <script>
         window.onerror = function(msg, url, line) {
@@ -114,9 +117,142 @@
         .close-btn { background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1; }
         .modal-subtitle { font-size: 14px; color: #4CAF50; margin-bottom: 20px; font-weight: bold; }
         .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+
+        /* ===== SELECTOR DE TEMAS (Ajustes) ===== */
+        .theme-title { font-size: 13px; font-weight: bold; color: #aaa; text-transform: uppercase; display: block; margin: 8px 0 8px; }
+        .theme-options { display: flex; gap: 8px; }
+        .theme-btn { flex: 1; padding: 13px 6px; border-radius: 10px; border: 2px solid #444; background: #222; color: #ddd; font-weight: bold; font-size: 14px; cursor: pointer; touch-action: manipulation; }
+        .theme-btn[aria-pressed="true"] { border-color: #4CAF50; color: #4CAF50; background: #1e2a1e; }
+
+        /* ===== TEMA POP ART (se activa con body.theme-pop) ===== */
+        body.theme-pop {
+            --ink: #14110F; --paper: #FFF1BF; --red: #E8212B; --yellow: #FFD60A; --blue: #1F5BFF; --cyan: #5ED6F7; --pink: #FF6FAE; --green: #00A86B;
+            --display: 'Bangers', 'Impact', 'Arial Narrow Bold', sans-serif;
+            --body: 'Barlow Semi Condensed', 'Arial Narrow', system-ui, sans-serif;
+            --shadow: 5px 5px 0 var(--ink); --shadow-sm: 3px 3px 0 var(--ink);
+            background-color: var(--paper);
+            background-image: radial-gradient(circle, rgba(232, 33, 43, 0.20) 1.6px, transparent 2.1px);
+            background-size: 10px 10px;
+            color: var(--ink); font-family: var(--body); font-weight: 500;
+        }
+        body.theme-pop button, body.theme-pop select, body.theme-pop input { font-family: var(--body); }
+        body.theme-pop [style*="#888"], body.theme-pop [style*="#aaa"], body.theme-pop [style*="#ccc"],
+        body.theme-pop [style*="#666"], body.theme-pop [style*="#a0a0a0"] { color: var(--ink) !important; }
+
+        /* Entrada y configuración inicial */
+        body.theme-pop .auth-logo { padding: 36px 0 28px; text-shadow: none; }
+        body.theme-pop .logo-wrapper { position: relative; isolation: isolate; }
+        body.theme-pop .logo-wrapper::before, body.theme-pop .logo-wrapper::after { content: ""; position: absolute; z-index: -1;
+            clip-path: polygon(100% 50%, 84.8% 59.3%, 93.3% 75%, 75.5% 75.5%, 75% 93.3%, 59.3% 84.8%, 50% 100%, 40.7% 84.8%, 25% 93.3%, 24.5% 75.5%, 6.7% 75%, 15.2% 59.3%, 0% 50%, 15.2% 40.7%, 6.7% 25%, 24.5% 24.5%, 25% 6.7%, 40.7% 15.2%, 50% 0%, 59.3% 15.2%, 75% 6.7%, 75.5% 24.5%, 93.3% 25%, 84.8% 40.7%); }
+        body.theme-pop .logo-wrapper::before { inset: -42px -46px; background: var(--ink); }
+        body.theme-pop .logo-wrapper::after { inset: -34px -38px; background-color: var(--yellow); background-image: radial-gradient(rgba(20,17,15,.26) 1.4px, transparent 1.9px); background-size: 7px 7px; }
+        body.theme-pop .auth-title { font-family: var(--display); font-weight: 400; font-size: 54px; letter-spacing: .04em; color: var(--red); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--ink); }
+        body.theme-pop .auth-subtitle { color: var(--ink); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; }
+        body.theme-pop .auth-btn { border: 3px solid var(--ink); border-radius: 4px; font-family: var(--display); font-weight: 400; font-size: 22px; letter-spacing: .05em; box-shadow: var(--shadow-sm); }
+        body.theme-pop .auth-btn:active { transform: translate(3px, 3px); box-shadow: none; filter: none; }
+        body.theme-pop .auth-btn-primary { background: var(--blue); color: #fff; box-shadow: var(--shadow-sm); }
+        body.theme-pop .auth-btn-outline { background: #fff; color: var(--ink); border: 3px solid var(--ink); }
+        body.theme-pop .auth-btn-google { background: var(--yellow); color: var(--ink); box-shadow: var(--shadow-sm); }
+        body.theme-pop .auth-divider .line { height: 4px; background: var(--ink); }
+        body.theme-pop .auth-divider span { color: var(--ink); font-weight: 800; }
+        body.theme-pop #authScreen p:not(#authError) { color: var(--ink) !important; font-weight: 700; }
+        body.theme-pop .invite-banner { background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); transform: rotate(-1.5deg); }
+        body.theme-pop .invite-banner h3 { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .04em; }
+        body.theme-pop .invite-banner p { font-weight: 700; font-size: 14px; }
+
+        /* Formularios */
+        body.theme-pop .form-group label { color: var(--ink); font-weight: 800; letter-spacing: .08em; }
+        body.theme-pop .styled-input { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; font-weight: 700; box-shadow: inset 3px 3px 0 rgba(20, 17, 15, .12); }
+        body.theme-pop .styled-input:focus { border-color: var(--blue); }
+        body.theme-pop .styled-input::placeholder { color: rgba(20, 17, 15, .55); }
+        body.theme-pop select.styled-input { appearance: none; -webkit-appearance: none; padding-right: 34px;
+            background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+            background-position: calc(100% - 20px) 55%, calc(100% - 14px) 55%; background-size: 6px 6px; background-repeat: no-repeat; }
+
+        /* Cabecera de la app */
+        body.theme-pop .header { background-color: var(--blue); background-image: radial-gradient(rgba(20,17,15,.28) 1.4px, transparent 1.9px); background-size: 7px 7px; color: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); padding: 14px; margin-top: 4px; }
+        body.theme-pop .total-text { font-family: var(--display); font-weight: 400; font-size: 76px; line-height: .95; letter-spacing: .04em; -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--ink); }
+        body.theme-pop .glass-container { height: 34px; background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); }
+        body.theme-pop .glass-fill { border-radius: 0; background-image: radial-gradient(rgba(20,17,15,.26) 1.4px, transparent 1.9px); background-size: 7px 7px; }
+        body.theme-pop .target-info { color: #fff !important; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+        body.theme-pop .timer-container { position: relative; background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 18px; box-shadow: var(--shadow-sm); margin-top: 8px; }
+        body.theme-pop .timer-container::before { content: ""; position: absolute; top: -13px; left: 26px; width: 20px; height: 20px; background: #fff; border-left: 3px solid var(--ink); border-top: 3px solid var(--ink); transform: rotate(45deg); }
+        body.theme-pop .timer-line { color: var(--ink); font-size: 17px; font-weight: 800; }
+        body.theme-pop .timer-next { font-size: 17px; font-weight: 800; }
+        body.theme-pop .divider { height: 4px; background: var(--ink); }
+
+        /* Controles */
+        body.theme-pop .btn-adjust { width: 68px; height: 68px; border: 3px solid var(--ink); color: #fff; font-family: var(--display); font-weight: 400; font-size: 44px; padding: 0 0 4px; box-shadow: var(--shadow-sm); }
+        body.theme-pop .controls .btn-adjust:first-child { background: var(--red); }
+        body.theme-pop .controls .btn-adjust:last-child { background: var(--blue); }
+        body.theme-pop .btn-adjust:active { transform: translate(3px, 3px); box-shadow: none; filter: none; }
+        body.theme-pop .amount-text { font-family: var(--display); font-weight: 400; font-size: 68px; line-height: 1; color: #fff; -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--ink); }
+        body.theme-pop .btn-save { background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; font-family: var(--display); font-weight: 400; font-size: 34px; letter-spacing: .05em; box-shadow: var(--shadow); transform: rotate(-1deg); }
+        body.theme-pop .btn-save:active { background: var(--yellow); transform: translate(3px, 3px) rotate(-1deg); box-shadow: none; }
+        body.theme-pop .btn-secondary { border: 3px solid var(--ink); border-radius: 4px; color: var(--ink); font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: .05em; box-shadow: var(--shadow-sm); }
+        body.theme-pop .btn-secondary:active { transform: translate(3px, 3px); box-shadow: none; filter: none; }
+        body.theme-pop .btn-poop { background: var(--pink); }
+        body.theme-pop .btn-manual { background: var(--cyan); }
+
+        /* Secciones, calendario e historial */
+        body.theme-pop .section-title { font-family: var(--display); font-weight: 400; font-size: 30px; letter-spacing: .04em; color: var(--ink); text-shadow: 2px 2px 0 var(--yellow); }
+        body.theme-pop #monthTitle { background: var(--ink); color: var(--yellow); text-shadow: none; padding: 2px 12px 0; transform: rotate(-1.5deg); display: inline-block; }
+        body.theme-pop .legend { font-family: var(--body); font-weight: 800; text-transform: uppercase; text-shadow: none; color: var(--ink); }
+        body.theme-pop .dot { border: 2px solid var(--ink); }
+        body.theme-pop .calendar-header { color: var(--yellow); gap: 5px; }
+        body.theme-pop .calendar-header div { background: var(--ink); border-radius: 3px; font-family: var(--display); font-size: 20px; font-weight: 400; padding-top: 3px; color: var(--yellow); }
+        body.theme-pop .calendar-grid { gap: 5px; }
+        body.theme-pop .day-cell { background: #fff; border: 2.5px solid var(--ink); border-radius: 4px; }
+        body.theme-pop .day-fill { opacity: 1; border-top: 2.5px solid var(--ink); background-image: radial-gradient(rgba(20,17,15,.26) 1.4px, transparent 1.9px); background-size: 7px 7px; }
+        body.theme-pop .day-text { font-family: var(--display); font-weight: 400; font-size: 22px; color: var(--ink); text-shadow: none; }
+        body.theme-pop .day-ml { color: var(--ink); font-weight: 800; text-shadow: none; }
+        body.theme-pop .day-cell.today { box-shadow: 0 0 0 3px var(--red) !important; z-index: 2; }
+        body.theme-pop .history-item { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); }
+        body.theme-pop .history-amount { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .04em; }
+        body.theme-pop .history-time { color: var(--ink); font-weight: 800; }
+        body.theme-pop .btn-delete { font-size: 18px; }
+
+        /* Ajustes */
+        body.theme-pop .settings-card { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); }
+        body.theme-pop .settings-col label { color: var(--ink); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+        body.theme-pop .stock-banner { border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: .05em; padding: 14px 10px; }
+        body.theme-pop .stock-banner:active { transform: translate(3px, 3px); box-shadow: none; }
+        body.theme-pop .btn-invite, body.theme-pop .btn-migrate { border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 22px; letter-spacing: .05em; padding: 13px 10px; }
+        body.theme-pop .btn-invite { background: var(--green); }
+        body.theme-pop .btn-migrate { background: var(--pink); color: var(--ink); }
+        body.theme-pop .settings-card > button[onclick="logout()"] { background: #fff !important; color: var(--red) !important; border: 3px solid var(--red) !important; border-radius: 4px !important; box-shadow: 3px 3px 0 var(--red); font-family: var(--display); font-weight: 400 !important; font-size: 22px; letter-spacing: .05em; }
+        body.theme-pop .theme-title { color: var(--ink); font-weight: 800; letter-spacing: .08em; }
+        body.theme-pop .theme-btn { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; font-family: var(--display); font-weight: 400; font-size: 21px; letter-spacing: .05em; box-shadow: var(--shadow-sm); }
+        body.theme-pop .theme-btn[aria-pressed="true"] { background: var(--red); color: #fff; border-color: var(--ink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+
+        /* Ventanas emergentes */
+        body.theme-pop .modal-content { background: var(--paper); border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); }
+        body.theme-pop .modal-title { font-family: var(--display); font-weight: 400; font-size: 28px; letter-spacing: .04em; }
+        body.theme-pop .close-btn { color: var(--ink); }
+        body.theme-pop #modalSubtitle { color: var(--ink) !important; font-weight: 800; }
+        body.theme-pop #myFamilyCode { background: #fff !important; color: var(--ink) !important; border: 3px dashed var(--ink) !important; border-radius: 4px !important; }
+        body.theme-pop #stockSummary > div { background: #fff !important; border: 3px solid var(--ink) !important; border-radius: 4px !important; box-shadow: var(--shadow-sm); }
+        body.theme-pop #stockSummary span, body.theme-pop #stockListContainer span { color: var(--ink) !important; }
+        body.theme-pop .modal-body p { color: var(--ink) !important; }
     </style>
 </head>
 <body>
+
+    <script>
+        /* TEMAS: 'dark' (clásico) o 'pop'. Se guarda en este dispositivo. */
+        function getTheme() { try { return localStorage.getItem('nara_theme') === 'pop' ? 'pop' : 'dark'; } catch (e) { return 'dark'; } }
+        function paintTheme(t) {
+            document.body.classList.toggle('theme-pop', t === 'pop');
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', t === 'pop' ? '#FFF1BF' : '#121212');
+            var d = document.getElementById('themeDark'), p = document.getElementById('themePop');
+            if (d) d.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
+            if (p) p.setAttribute('aria-pressed', t === 'pop' ? 'true' : 'false');
+        }
+        function setTheme(t) { try { localStorage.setItem('nara_theme', t); } catch (e) {} paintTheme(t); }
+        paintTheme(getTheme());
+        document.addEventListener('DOMContentLoaded', function () { paintTheme(getTheme()); });
+    </script>
 
     <script>
         try {
@@ -251,6 +387,14 @@
             <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Enviar invitación a pareja</button>
             <button class="btn-migrate" onclick="migrateOldData()" style="margin-top: 5px;">🔄 Recuperar datos antiguos</button>
             <button onclick="logout()" style="background: transparent; color: #EF5350; border: 1px solid #EF5350; border-radius: 10px; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px;">Cerrar sesión de la cuenta</button>
+
+            <div>
+                <span class="theme-title">🎨 Tema</span>
+                <div class="theme-options">
+                    <button type="button" class="theme-btn" id="themeDark" aria-pressed="true" onclick="setTheme('dark')">🌙 Clásico</button>
+                    <button type="button" class="theme-btn" id="themePop" aria-pressed="false" onclick="setTheme('pop')">💥 Pop art</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -560,7 +704,7 @@
                 
                 const cell = document.createElement('div'); cell.className = 'day-cell';
                 let dayColor = totalMl > 0 ? getColorForAmount(totalMl, target) : 'transparent';
-                if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) cell.style.boxShadow = 'inset 0 0 0 2px #555';
+                if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) { cell.style.boxShadow = 'inset 0 0 0 2px #555'; cell.classList.add('today'); }
                 
                 let displayTotal = currentUnit === 'oz' ? (Math.round(totalMl / 3) / 10).toFixed(1) : totalMl;
                 cell.innerHTML = `<div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div><div class="day-text">${day}</div>${totalMl > 0 ? `<div class="day-ml">${displayTotal}</div>` : ''}${iconsHtml ? `<div style="position: absolute; top: 3px; right: 3px; display:flex; flex-direction:column; gap:2px;">${iconsHtml}</div>` : ''}`;
