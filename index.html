@@ -335,6 +335,57 @@
 
         /* Panel de administrador en pop art */
         body.theme-pop .admin-row { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); }
+    
+        /* ===== NOMBRE DEL BEBÉ ===== */
+        .baby-name { font-size: 20px; font-weight: bold; letter-spacing: .02em; margin-bottom: 2px; color: #81C784; }
+        .baby-name:empty { display: none; }
+        body.theme-light .baby-name { color: #2E7D32; }
+        body.theme-neon .baby-name { color: #FF2BD6; font-family: 'Orbitron', system-ui, sans-serif; text-shadow: 0 0 10px #FF2BD6; }
+        body.theme-pop .baby-name { color: #fff; font-family: var(--display); font-weight: 400; font-size: 30px; letter-spacing: .06em; -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 2px 2px 0 var(--ink); }
+
+        /* ===== BLOQUES PERSONALIZABLES ===== */
+        .layout-bar { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; margin: 2px 0 10px; }
+        .layout-hint { display: none; flex: 1 1 100%; font-size: 12px; color: #aaa; margin: 0 0 2px; }
+        .layout-reset { display: none; }
+        .layout-btn { background: transparent; border: 1px solid #555; color: #bbb; border-radius: 20px; padding: 7px 14px; font-size: 12px; font-weight: bold; cursor: pointer; touch-action: manipulation; }
+        body.layout-editing .layout-hint { display: block; }
+        body.layout-editing .layout-reset { display: inline-block; }
+        body.layout-editing #layoutBtn { background: #4CAF50; border-color: #4CAF50; color: #fff; }
+        .block-handle { display: none; align-items: center; gap: 8px; background: #1e1e1e; border: 2px dashed #555; border-radius: 12px; padding: 8px 8px 8px 4px; }
+        .block-drag { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; padding: 6px 0; }
+        .block-grip { font-size: 26px; line-height: 1; padding: 0 8px; color: #888; }
+        .block-name { font-weight: bold; font-size: 15px; }
+        .block-handle button { flex: none; width: 38px; height: 38px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #eee; font-size: 17px; cursor: pointer; touch-action: manipulation; }
+        body.layout-editing .block-handle { display: flex; }
+        body.layout-editing .block-body { display: none; }
+        body.layout-editing .block { margin-bottom: 10px; }
+        .block.is-hidden { display: none; }
+        body.layout-editing .block.is-hidden { display: block; opacity: .5; }
+        .block.dragging .block-handle { border-style: solid; border-color: #4CAF50; box-shadow: 0 8px 20px rgba(0, 0, 0, .5); }
+
+        body.theme-light .layout-btn { border-color: #C9CDD3; color: #4B5563; }
+        body.theme-light .layout-hint { color: #6B7280; }
+        body.theme-light .block-handle { background: #fff; border-color: #C9CDD3; }
+        body.theme-light .block-handle button { background: #F1F3F5; border-color: #D8DBE0; color: #1B1D21; }
+        body.theme-light .block-grip { color: #9CA3AF; }
+        body.theme-light.layout-editing #layoutBtn { background: #2E7D32; border-color: #2E7D32; color: #fff; }
+
+        body.theme-neon .layout-btn { border-color: #A99BFF; color: #A99BFF; }
+        body.theme-neon .layout-hint { color: #A99BFF; }
+        body.theme-neon .block-handle { background: #0D0820; border-color: #A99BFF; }
+        body.theme-neon .block-handle button { background: #14092C; border-color: #2A1B5C; color: #EAF6FF; }
+        body.theme-neon .block-grip { color: #00F0FF; }
+        body.theme-neon.layout-editing #layoutBtn { background: #0D0820; border-color: #00F0FF; color: #00F0FF; box-shadow: 0 0 12px rgba(0, 240, 255, .6); }
+        body.theme-neon .block.dragging .block-handle { border-color: #00F0FF; box-shadow: 0 0 16px rgba(0, 240, 255, .6); }
+
+        body.theme-pop .layout-btn { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 16px; letter-spacing: .05em; }
+        body.theme-pop .layout-hint { color: var(--ink); font-weight: 700; }
+        body.theme-pop.layout-editing #layoutBtn { background: var(--red); color: #fff; }
+        body.theme-pop .block-handle { background: #fff; border: 3px dashed var(--ink); border-radius: 4px; }
+        body.theme-pop .block-handle button { background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; }
+        body.theme-pop .block-name { font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: .04em; }
+        body.theme-pop .block-grip { color: var(--ink); }
+        body.theme-pop .block.dragging .block-handle { border-style: solid; box-shadow: var(--shadow-sm); }
     </style>
 </head>
 <body>
@@ -409,7 +460,8 @@
     <!-- APP -->
     <div id="appScreen" class="container" style="display: none;">
         
-        <div class="header">
+        <div class="layout-bar"><span class="layout-hint">Arrastra ⠿ para ordenar los bloques. 👁 oculta o muestra cada bloque.</span><button type="button" class="layout-btn layout-reset" onclick="resetLayout()">Restablecer</button><button type="button" class="layout-btn" id="layoutBtn" onclick="toggleLayoutEdit()">✥ Personalizar</button></div><div id="blocks"><div class="block" data-block="resumen" data-title="📊 Resumen del día"><div class="block-body"><div class="header">
+            <div class="baby-name" id="babyNameText"></div>
             <div class="total-text" id="totalText">Cargando...</div>
             <div class="glass-container"><div class="glass-fill" id="dailyProgressFill"></div></div>
             <div class="target-info" id="targetInfoText">Calculando meta...</div>
@@ -419,7 +471,7 @@
             </div>
         </div>
         
-        <div class="controls">
+        </div></div><div class="block" data-block="toma" data-title="🍼 Guardar toma"><div class="block-body"><div class="controls">
             <button class="btn-adjust" onclick="adjustAmount(-1)">-</button>
             <div class="amount-text" id="amountText">120<span style="font-size: 24px"> ml</span></div>
             <button class="btn-adjust" onclick="adjustAmount(1)">+</button>
@@ -427,15 +479,15 @@
         
         <button class="btn-save" onclick="saveFeeding(null, currentAmount)">🍼 Guardar Toma</button>
         
-        <div class="secondary-actions">
+        </div></div><div class="block" data-block="acciones" data-title="⚡ Botones: Editar, Caca, Vit D"><div class="block-body"><div class="secondary-actions">
             <button class="btn-secondary btn-manual" onclick="openManualModal()">✏️ Editar</button>
             <button class="btn-secondary btn-poop" onclick="savePoop()">💩 Caca</button>
             <button class="btn-secondary btn-vitd" id="btnVitD" onclick="toggleVitD()">☀️ Vit D</button>
         </div>
         
-        <div class="divider"></div>
         
-        <div class="section-title">
+        
+        </div></div><div class="block" data-block="calendario" data-title="📅 Calendario"><div class="block-body"><div class="section-title">
             <span id="monthTitle">Mes</span>
             <div class="legend"><span><span class="dot" style="background:#4CAF50"></span> Bien</span><span><span class="dot" style="background:#FFC107"></span> Justo</span><span><span class="dot" style="background:#EF5350"></span> Bajo</span></div>
         </div>
@@ -443,13 +495,13 @@
         <div class="calendar-header"><div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div></div>
         <div class="calendar-grid" id="calendarGrid"></div>
         
-        <div class="divider"></div>
-        <div class="section-title">Historial de hoy</div>
+        
+        </div></div><div class="block" data-block="historial" data-title="📋 Historial de hoy"><div class="block-body"><div class="section-title">Historial de hoy</div>
         <ul class="history-list" id="historyList"></ul>
 
-        <div class="divider"></div>
+        
 
-        <div class="section-title">⚙️ Familia y Ajustes</div>
+        </div></div><div class="block" data-block="ajustes" data-title="⚙️ Ajustes"><div class="block-body"><div class="section-title">⚙️ Familia y Ajustes</div>
         <div class="settings-card">
             
             <div class="settings-grid">
@@ -490,14 +542,14 @@
 
             <div>
                 <div id="adminClaim" hidden>
-                    <span class="theme-title">👑 Administrador</span>
-                    <button type="button" class="theme-btn" style="width:100%; flex:none; margin-bottom:12px;" onclick="claimAdmin()">Hacerme administrador de la familia</button>
+                    <span class="theme-title">👑 Dueño de la app</span>
+                    <button type="button" class="theme-btn" style="width:100%; flex:none; margin-bottom:12px;" onclick="claimAdmin()">Hacerme dueño de la app</button>
                 </div>
                 <div id="adminPanel" hidden>
-                    <span class="theme-title">👑 Panel de administrador</span>
-                    <p style="font-size:12px; color:#aaa; margin:0 0 10px;">Marcado = visible para toda la familia. Desmarca una opción para quitarla.</p>
+                    <span class="theme-title">👑 Panel de dueño (master)</span>
+                    <p style="font-size:12px; color:#aaa; margin:0 0 10px;">Solo tú ves este panel. Marcado = visible para todos los usuarios de la app. Desmarca una opción para quitarla.</p>
                     <div id="adminToggles"></div>
-                    <button type="button" class="theme-btn" style="width:100%; flex:none; margin-bottom:12px;" onclick="releaseAdmin()">Dejar de ser administrador</button>
+                    
                 </div>
                 <span class="theme-title">🎨 Tema</span>
                 <div class="theme-options">
@@ -508,7 +560,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div></div></div></div>
 
     <!-- Modales -->
     <div class="modal-overlay" id="inviteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">👨‍👩‍👧 Invitar Familiar</div><button class="close-btn" onclick="closeModal('inviteModal')">&times;</button></div><div class="modal-body"><p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p><div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:12px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">Cargando enlace...</div><button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button></div></div></div>
@@ -537,7 +589,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database(); const auth = firebase.auth(); const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-        let dbRef, vitRef, stockRef, profileRef, diaperRef, settingsRef;
+        let dbRef, vitRef, stockRef, profileRef, diaperRef, settingsRef, ownerRef;
         let currentUser = null, currentFamilyId = null;
         let babyProfile = { nombre: 'Bebé', edad: 2, peso: 4.5 };
         let records = [], stockRecords = [], vitDRecords = {}, diaperRecords = [];
@@ -612,7 +664,7 @@
                 currentUser = null; currentFamilyId = null;
                 document.getElementById('authScreen').style.display = 'flex';
                 document.getElementById('setupScreen').style.display = 'none'; document.getElementById('appScreen').style.display = 'none';
-                if(dbRef) { dbRef.off(); vitRef.off(); stockRef.off(); profileRef.off(); diaperRef.off(); settingsRef.off(); }
+                if(dbRef) { dbRef.off(); vitRef.off(); stockRef.off(); profileRef.off(); diaperRef.off(); settingsRef.off(); ownerRef.off(); }
             }
         });
 
@@ -620,7 +672,7 @@
             currentFamilyId = fId;
             profileRef = db.ref('familias/' + currentFamilyId + '/perfil'); dbRef = db.ref('familias/' + currentFamilyId + '/registros');
             vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d'); stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
-            diaperRef = db.ref('familias/' + currentFamilyId + '/panales'); settingsRef = db.ref('familias/' + currentFamilyId + '/ajustes');
+            diaperRef = db.ref('familias/' + currentFamilyId + '/panales'); settingsRef = db.ref('sistema/ajustes'); ownerRef = db.ref('sistema/owner');
             
             profileRef.once('value').then(snap => {
                 if(!snap.exists()) {
@@ -674,7 +726,7 @@
         function initDatabaseListeners() {
             profileRef.on('value', snap => {
                 if(snap.exists()) {
-                    babyProfile = snap.val(); document.getElementById('labelAgeApp').innerText = `Edad de ${babyProfile.nombre}`;
+                    babyProfile = snap.val(); document.getElementById('babyNameText').innerText = babyProfile.nombre || ''; document.getElementById('labelAgeApp').innerText = `Edad de ${babyProfile.nombre}`;
                     document.getElementById('ageSelect').value = babyProfile.edad; document.getElementById('weightInput').value = babyProfile.peso;
                     updateUI(); 
                 }
@@ -700,7 +752,8 @@
                 diaperRecords = Object.keys(data).map(key => ({ dbKey: key, ...data[key] }));
                 diaperRecords.sort((a,b) => b.timestamp - a.timestamp); refreshStockModalIfOpen();
             });
-            settingsRef.on('value', snap => { appSettings = Object.assign({ admin: null, ocultar: {} }, snap.val() || {}); applySettings(); });
+            settingsRef.on('value', snap => { appSettings.ocultar = (snap.val() || {}).ocultar || {}; applySettings(); });
+            ownerRef.on('value', snap => { appSettings.owner = snap.val() || null; applySettings(); });
 
             document.querySelectorAll('.modal-overlay').forEach(modal => { modal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; }; });
             setInterval(updateTimer, 30000); 
@@ -928,7 +981,9 @@
             { key: 'invitar', label: '👨‍👩‍👧 Invitar a pareja' },
             { key: 'migrar',  label: '🔄 Recuperar datos antiguos' }
         ];
-        let appSettings = { admin: null, ocultar: {} };
+        let appSettings = { owner: null, ocultar: {} };
+        /* El botón para reclamar el master solo aparece si abres la app con ?master al final de la dirección */
+        const MASTER_LINK = new URLSearchParams(window.location.search).has('master');
 
         function buildAdminToggles() {
             const box = document.getElementById('adminToggles'); box.innerHTML = '';
@@ -947,23 +1002,124 @@
                 document.body.classList.toggle('hide-' + f.key, !!hidden[f.key]);
                 const cb = document.getElementById('adm_' + f.key); if (cb) cb.checked = !hidden[f.key];
             });
-            const isAdmin = !!currentUser && appSettings.admin === currentUser.uid;
-            document.getElementById('adminClaim').hidden = !!appSettings.admin;
-            document.getElementById('adminPanel').hidden = !isAdmin;
+            const isOwner = !!currentUser && !!appSettings.owner && appSettings.owner === currentUser.uid;
+            document.getElementById('adminClaim').hidden = !!appSettings.owner || !MASTER_LINK;
+            document.getElementById('adminPanel').hidden = !isOwner;
         }
 
         function claimAdmin() {
-            if (!currentUser || !settingsRef) return;
-            settingsRef.child('admin').transaction(cur => cur ? undefined : currentUser.uid)
-                .then(res => { if (!res.committed) alert("Ya hay un administrador en esta familia."); })
+            if (!currentUser || !ownerRef) return;
+            ownerRef.transaction(cur => cur ? undefined : currentUser.uid)
+                .then(res => { if (!res.committed) alert("Ya hay un dueño de la app."); })
                 .catch(e => alert("No se pudo guardar: " + e.message));
         }
 
-        function releaseAdmin() {
-            if (confirm("¿Dejar de ser administrador? Cualquier miembro de la familia podrá hacerse administrador.")) settingsRef.child('admin').remove();
-        }
 
         buildAdminToggles();
+
+        // --- DISEÑO PERSONALIZABLE (bloques ordenables, se guarda en este dispositivo) ---
+        const BLOCK_KEYS = ['resumen', 'toma', 'acciones', 'calendario', 'historial', 'ajustes'];
+        let layout = { order: BLOCK_KEYS.slice(), hidden: [] };
+        let layoutEditing = false;
+
+        function loadLayout() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('nara_layout') || 'null');
+                if (saved && Array.isArray(saved.order)) {
+                    const order = saved.order.filter((k, i, arr) => BLOCK_KEYS.includes(k) && arr.indexOf(k) === i);
+                    BLOCK_KEYS.forEach(k => { if (!order.includes(k)) order.push(k); });
+                    layout = { order: order, hidden: (saved.hidden || []).filter(k => BLOCK_KEYS.includes(k)) };
+                }
+            } catch (e) {}
+        }
+        function saveLayout() { try { localStorage.setItem('nara_layout', JSON.stringify(layout)); } catch (e) {} }
+        function blockEl(key) { return document.querySelector('#blocks > .block[data-block="' + key + '"]'); }
+
+        function applyLayout() {
+            const root = document.getElementById('blocks');
+            root.querySelectorAll(':scope > .divider').forEach(d => d.remove());
+            layout.order.forEach(k => {
+                const el = blockEl(k);
+                root.appendChild(el);
+                const hid = layout.hidden.includes(k);
+                el.classList.toggle('is-hidden', hid);
+                const eye = el.querySelector('.block-eye');
+                if (eye) { eye.innerText = hid ? '🙈' : '👁'; eye.setAttribute('aria-label', hid ? 'Mostrar bloque' : 'Ocultar bloque'); }
+            });
+            if (!layoutEditing) {
+                let first = true;
+                layout.order.filter(k => !layout.hidden.includes(k)).forEach(k => {
+                    if (!first) { const d = document.createElement('div'); d.className = 'divider'; root.insertBefore(d, blockEl(k)); }
+                    first = false;
+                });
+            }
+        }
+
+        function moveBlock(key, dir) {
+            const i = layout.order.indexOf(key), j = i + dir;
+            if (i < 0 || j < 0 || j >= layout.order.length) return;
+            layout.order.splice(j, 0, layout.order.splice(i, 1)[0]);
+            saveLayout(); applyLayout();
+        }
+        function toggleBlock(key) {
+            const i = layout.hidden.indexOf(key);
+            if (i >= 0) layout.hidden.splice(i, 1); else layout.hidden.push(key);
+            saveLayout(); applyLayout();
+        }
+        function resetLayout() { layout = { order: BLOCK_KEYS.slice(), hidden: [] }; saveLayout(); applyLayout(); }
+
+        function toggleLayoutEdit() {
+            layoutEditing = !layoutEditing;
+            document.body.classList.toggle('layout-editing', layoutEditing);
+            document.getElementById('layoutBtn').innerText = layoutEditing ? '✔ Listo' : '✥ Personalizar';
+            applyLayout();
+            window.scrollTo(0, 0);
+        }
+
+        /* Arrastrar: se mueven los bloques vecinos (nunca el que arrastras) para no perder el dedo en el móvil */
+        function startBlockDrag(e, el) {
+            if (!layoutEditing) return;
+            e.preventDefault();
+            const root = document.getElementById('blocks');
+            el.classList.add('dragging');
+            const mid = n => { const r = n.getBoundingClientRect(); return r.top + r.height / 2; };
+            const move = ev => {
+                let prev = el.previousElementSibling;
+                while (prev && ev.clientY < mid(prev)) { root.insertBefore(prev, el.nextSibling); prev = el.previousElementSibling; }
+                let next = el.nextElementSibling;
+                while (next && ev.clientY > mid(next)) { root.insertBefore(next, el); next = el.nextElementSibling; }
+            };
+            const up = () => {
+                document.removeEventListener('pointermove', move);
+                document.removeEventListener('pointerup', up);
+                document.removeEventListener('pointercancel', up);
+                el.classList.remove('dragging');
+                layout.order = Array.from(root.querySelectorAll(':scope > .block')).map(b => b.dataset.block);
+                saveLayout(); applyLayout();
+            };
+            document.addEventListener('pointermove', move);
+            document.addEventListener('pointerup', up);
+            document.addEventListener('pointercancel', up);
+        }
+
+        function buildLayoutHandles() {
+            document.querySelectorAll('#blocks > .block').forEach(el => {
+                const key = el.dataset.block;
+                const handle = document.createElement('div'); handle.className = 'block-handle';
+                const drag = document.createElement('div'); drag.className = 'block-drag';
+                drag.innerHTML = '<span class="block-grip">⠿</span><span class="block-name"></span>';
+                drag.querySelector('.block-name').innerText = el.dataset.title;
+                drag.addEventListener('pointerdown', e => startBlockDrag(e, el));
+                const mk = (cls, txt, label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = cls; b.innerText = txt; b.setAttribute('aria-label', label); b.onclick = fn; return b; };
+                handle.appendChild(drag);
+                handle.appendChild(mk('block-up', '↑', 'Subir bloque', () => moveBlock(key, -1)));
+                handle.appendChild(mk('block-down', '↓', 'Bajar bloque', () => moveBlock(key, 1)));
+                handle.appendChild(mk('block-eye', '👁', 'Ocultar bloque', () => toggleBlock(key)));
+                el.insertBefore(handle, el.firstChild);
+            });
+        }
+
+        loadLayout(); buildLayoutHandles(); applyLayout();
 
         // --- SISTEMA DE ALARMA ---
         function updateTimer() {
