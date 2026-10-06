@@ -23,11 +23,12 @@
         
         /* AUTH & SETUP SCREENS */
         .full-screen-center { display: flex; flex-direction: column; justify-content: center; height: 90vh; }
-        .auth-logo { text-align: center; font-size: 65px; margin-bottom: 10px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);}
+        .auth-logo { text-align: center; font-size: 65px; margin-bottom: 10px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .logo-wrapper { position: relative; display: inline-block; }
+        .logo-pacifier { position: absolute; bottom: 0px; right: -15px; font-size: 35px; transform: rotate(-15deg); }
         .auth-title { text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 5px; color: #4CAF50; letter-spacing: -0.5px;}
         .auth-subtitle { text-align: center; font-size: 14px; color: #aaa; margin-bottom: 35px; }
         
-        /* Nuevos Botones de Auth (Arreglados) */
         .auth-btn { padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold; width: 100%; cursor: pointer; border: none; display: flex; justify-content: center; align-items: center; transition: transform 0.2s; margin-bottom: 12px; box-sizing: border-box; }
         .auth-btn:active { transform: scale(0.98); filter: brightness(0.9); }
         .auth-btn-primary { background: #4CAF50; color: white; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); }
@@ -38,23 +39,19 @@
         .auth-divider .line { flex-grow: 1; height: 1px; background: #333; }
         .auth-divider span { padding: 0 15px; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Invite Banner */
         .invite-banner { background: #4CAF50; color: white; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); border: 2px solid #81C784;}
         .invite-banner h3 { margin: 0 0 5px 0; font-size: 18px; }
         .invite-banner p { margin: 0; font-size: 13px; }
 
-        /* Form Inputs */
         .form-group { margin-bottom: 15px; }
         .form-group label { font-size: 13px; font-weight: bold; color: #aaa; margin-bottom: 5px; text-transform: uppercase; display: block;}
         .styled-input { background: #222; color: white; border: 1px solid #333; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: bold; width: 100%; box-sizing: border-box; margin-bottom: 15px; transition: border-color 0.3s;}
         .styled-input:focus { outline: none; border-color: #4CAF50; }
         
-        /* Settings Bottom Card */
         .settings-card { background: #1e1e1e; padding: 16px; border-radius: 16px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 15px; border: 1px solid #333;}
         .settings-grid { display: flex; gap: 15px; width: 100%; }
         .settings-col { flex: 1; display: flex; flex-direction: column; }
         
-        /* Banners & Buttons */
         .stock-banner { background: #1976D2; color: white; padding: 12px; border-radius: 10px; text-align: center; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4); }
         .stock-banner:active { transform: scale(0.98); }
         .btn-invite { background: #4CAF50; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
@@ -64,11 +61,15 @@
         .header { text-align: center; margin-top: 10px; margin-bottom: 15px; }
         .total-text { font-size: 48px; font-weight: bold; margin-bottom: 5px; transition: color 0.3s; }
         
-        /* Glass */
         .glass-container { width: 100%; height: 20px; background-color: #2a2a2a; border-radius: 10px; position: relative; overflow: hidden; margin: 10px 0; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .glass-fill { height: 100%; background-color: #EF5350; width: 0%; transition: width 0.5s ease-out, background-color 0.3s; border-radius: 10px; }
         .target-info { font-size: 14px; color: #a0a0a0; margin-bottom: 15px; font-weight: bold;}
-        .timer-text { font-size: 15px; color: #e0e0e0; background: #1e1e1e; padding: 8px 14px; border-radius: 12px; display: inline-block; font-weight: bold;}
+        
+        /* Nuevo Timer a 2 líneas */
+        .timer-container { background: #1e1e1e; padding: 10px 15px; border-radius: 12px; display: inline-block; text-align: left;}
+        .timer-line { font-size: 14px; color: #e0e0e0; font-weight: bold; margin-bottom: 4px;}
+        .timer-next { font-size: 15px; color: #4CAF50; font-weight: bold; }
+        
         .divider { height: 1px; background: #333; margin: 20px 0; }
         
         /* Controls */
@@ -77,7 +78,6 @@
         .btn-adjust:active { background: #444; }
         .amount-text { font-size: 48px; font-weight: bold; text-align: center; flex-grow: 1; }
         
-        /* Action Buttons */
         .btn-save { background: #1976D2; color: white; border: none; border-radius: 16px; width: 100%; padding: 20px; font-size: 22px; font-weight: bold; cursor: pointer; touch-action: manipulation; box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4); margin-bottom: 12px; }
         .btn-save:active { background: #1565C0; transform: scale(0.98); }
         
@@ -118,7 +118,6 @@
 </head>
 <body>
 
-    <!-- LÓGICA DE ENLACE MÁGICO -->
     <script>
         try {
             const urlParams = new URLSearchParams(window.location.search);
@@ -132,15 +131,14 @@
         } catch(e) {}
     </script>
 
-    <!-- PANTALLA DE LOGIN / REGISTRO -->
+    <!-- LOGIN -->
     <div id="authScreen" class="container full-screen-center">
-        
         <div id="inviteBanner" class="invite-banner">
             <h3>💌 ¡Tienes una invitación!</h3>
             <p>Inicia sesión para unirte al registro de <b id="inviteBabyName">la familia</b>.</p>
         </div>
 
-        <div class="auth-logo">🧸</div>
+        <div class="auth-logo"><div class="logo-wrapper">🦌<span class="logo-pacifier">🍼</span></div></div>
         <div class="auth-title">Diario de Nara</div>
         <div class="auth-subtitle">Gestor familiar sincronizado</div>
         
@@ -150,57 +148,45 @@
         <button class="auth-btn auth-btn-primary" onclick="login()">Iniciar sesión con Email</button>
         <button class="auth-btn auth-btn-outline" onclick="register()">Crear cuenta nueva</button>
         
-        <div class="auth-divider">
-            <div class="line"></div>
-            <span>o continuar con</span>
-            <div class="line"></div>
-        </div>
+        <div class="auth-divider"><div class="line"></div><span>o continuar con</span><div class="line"></div></div>
         
         <button class="auth-btn auth-btn-google" onclick="loginGoogle()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" style="margin-right: 10px;"> Google
         </button>
-        <p style="text-align: center; color: #666; font-size: 11px; margin-top: 10px;">⚠️ IMPORTANTE: Si estás dentro de WhatsApp, toca los 3 puntitos y dale a <b>"Abrir en el navegador"</b> (Chrome/Safari) para que Google funcione.</p>
-        
+        <p style="text-align: center; color: #666; font-size: 11px; margin-top: 10px;">⚠️️ IMPORTANTE: Si estás en WhatsApp, dale a <b>"Abrir en el navegador"</b> (Chrome/Safari) para que Google funcione.</p>
         <p id="authError" style="color: #EF5350; text-align: center; margin-top: 10px; font-size: 14px; font-weight: bold;"></p>
     </div>
 
-    <!-- PANTALLA DE CONFIGURACIÓN INICIAL -->
+    <!-- SETUP BEBE -->
     <div id="setupScreen" class="container full-screen-center" style="display: none;">
         <div class="auth-logo">👶</div>
         <div class="auth-title">¡Bienvenido!</div>
         <div class="auth-subtitle">Vamos a configurar el perfil de tu bebé.</div>
         
-        <div class="form-group">
-            <label>Nombre del bebé</label>
-            <input type="text" id="setupName" class="styled-input" placeholder="Ej: Nara">
-        </div>
-        <div class="form-group">
-            <label>Edad inicial</label>
-            <select id="setupAge" class="styled-input"></select>
-        </div>
-        <div class="form-group">
-            <label>Peso (kg)</label>
-            <input type="number" id="setupWeight" class="styled-input" step="0.1" placeholder="Ej: 5.5">
-        </div>
+        <div class="form-group"><label>Nombre del bebé</label><input type="text" id="setupName" class="styled-input" placeholder="Ej: Nara"></div>
+        <div class="form-group"><label>Edad inicial</label><select id="setupAge" class="styled-input"></select></div>
+        <div class="form-group"><label>Peso (kg)</label><input type="number" id="setupWeight" class="styled-input" step="0.1" placeholder="Ej: 5.5"></div>
         
         <button class="auth-btn auth-btn-primary" onclick="saveInitialProfile()">Guardar y Empezar</button>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL -->
+    <!-- APP -->
     <div id="appScreen" class="container" style="display: none;">
         
-        <!-- HEADER LIMPIO -->
         <div class="header">
             <div class="total-text" id="totalText">Cargando...</div>
             <div class="glass-container"><div class="glass-fill" id="dailyProgressFill"></div></div>
             <div class="target-info" id="targetInfoText">Calculando meta...</div>
-            <div class="timer-text" id="timerText">Buscando datos...</div>
+            <div class="timer-container" id="timerTextContainer">
+                <div class="timer-line" id="timerLast">Buscando datos...</div>
+                <div class="timer-next" id="timerNext" style="display:none;"></div>
+            </div>
         </div>
         
         <div class="controls">
-            <button class="btn-adjust" onclick="adjustAmount(-10)">-</button>
+            <button class="btn-adjust" onclick="adjustAmount(-1)">-</button>
             <div class="amount-text" id="amountText">120<span style="font-size: 24px"> ml</span></div>
-            <button class="btn-adjust" onclick="adjustAmount(10)">+</button>
+            <button class="btn-adjust" onclick="adjustAmount(1)">+</button>
         </div>
         
         <button class="btn-save" onclick="saveFeeding(null, currentAmount)">🍼 Guardar Toma</button>
@@ -213,123 +199,67 @@
         
         <div class="divider"></div>
         
-        <!-- CALENDARIO -->
         <div class="section-title">
             <span id="monthTitle">Mes</span>
-            <div class="legend">
-                <span><span class="dot" style="background:#4CAF50"></span> Bien</span>
-                <span><span class="dot" style="background:#FFC107"></span> Justo</span>
-                <span><span class="dot" style="background:#EF5350"></span> Bajo</span>
-            </div>
+            <div class="legend"><span><span class="dot" style="background:#4CAF50"></span> Bien</span><span><span class="dot" style="background:#FFC107"></span> Justo</span><span><span class="dot" style="background:#EF5350"></span> Bajo</span></div>
         </div>
         
-        <div class="calendar-header">
-            <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
-        </div>
+        <div class="calendar-header"><div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div></div>
         <div class="calendar-grid" id="calendarGrid"></div>
         
         <div class="divider"></div>
-        
-        <!-- HISTORIAL -->
         <div class="section-title">Historial de hoy</div>
         <ul class="history-list" id="historyList"></ul>
 
         <div class="divider"></div>
 
-        <!-- ZONA DE AJUSTES Y FAMILIA -->
         <div class="section-title">⚙️ Familia y Ajustes</div>
         <div class="settings-card">
             
             <div class="settings-grid">
+                <div class="settings-col"><label id="labelAgeApp">Edad</label><select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select></div>
+                <div class="settings-col"><label>Peso (kg)</label><input type="number" id="weightInput" class="styled-input" step="0.1" style="margin-bottom:0;"></div>
+            </div>
+            
+            <!-- NUEVOS AJUSTES (UNIDAD Y ALARMA) -->
+            <div class="settings-grid">
                 <div class="settings-col">
-                    <label id="labelAgeApp">Edad</label>
-                    <select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select>
+                    <label>Unidad</label>
+                    <select id="unitSelect" class="styled-input" style="margin-bottom:0;">
+                        <option value="ml">Mililitros (ml)</option>
+                        <option value="oz">Onzas (oz)</option>
+                    </select>
                 </div>
                 <div class="settings-col">
-                    <label>Peso (kg)</label>
-                    <input type="number" id="weightInput" class="styled-input" step="0.1" style="margin-bottom:0;">
+                    <label>Avisar cada</label>
+                    <select id="intervalSelect" class="styled-input" style="margin-bottom:0;">
+                        <option value="0">No avisar</option>
+                        <option value="2">2 horas</option>
+                        <option value="2.5">2.5 horas</option>
+                        <option value="3">3 horas</option>
+                        <option value="3.5">3.5 horas</option>
+                        <option value="4">4 horas</option>
+                    </select>
                 </div>
             </div>
             
             <div class="stock-banner" id="stockBanner" onclick="openStockModal()">📦 Cargando stock de leche...</div>
             <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Enviar invitación a pareja</button>
-            
-            <!-- NUEVO BOTÓN PARA RECUPERAR TUS DATOS ANTIGUOS -->
             <button class="btn-migrate" onclick="migrateOldData()" style="margin-top: 5px;">🔄 Recuperar datos antiguos</button>
-            
             <button onclick="logout()" style="background: transparent; color: #EF5350; border: 1px solid #EF5350; border-radius: 10px; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px;">Cerrar sesión de la cuenta</button>
         </div>
-
     </div>
 
-    <!-- Modal Invitación -->
-    <div class="modal-overlay" id="inviteModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">👨‍👩‍👧 Invitar Familiar</div>
-                <button class="close-btn" onclick="closeModal('inviteModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p>
-                <div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:12px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">Cargando enlace...</div>
-                <button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button>
-            </div>
-        </div>
-    </div>
+    <!-- Modales -->
+    <div class="modal-overlay" id="inviteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">👨‍👩‍👧 Invitar Familiar</div><button class="close-btn" onclick="closeModal('inviteModal')">&times;</button></div><div class="modal-body"><p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p><div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:12px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">Cargando enlace...</div><button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button></div></div></div>
 
-    <!-- Otros Modales -->
-    <div class="modal-overlay" id="historyModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" id="modalTitle">Fecha</div>
-                <button class="close-btn" onclick="closeModal('historyModal')">&times;</button>
-            </div>
-            <div id="modalSubtitle" style="font-size: 14px; color: #4CAF50; margin-bottom: 20px; font-weight: bold;"></div>
-            <div class="modal-body">
-                <ul class="history-list" id="modalHistoryList"></ul>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="historyModal"><div class="modal-content"><div class="modal-header"><div class="modal-title" id="modalTitle">Fecha</div><button class="close-btn" onclick="closeModal('historyModal')">&times;</button></div><div id="modalSubtitle" style="font-size: 14px; color: #4CAF50; margin-bottom: 20px; font-weight: bold;"></div><div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div></div></div>
     
-    <div class="modal-overlay" id="manualModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Añadir toma pasada</div>
-                <button class="close-btn" onclick="closeModal('manualModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Hora de la toma:</label>
-                    <input type="time" id="manualTime" class="styled-input">
-                </div>
-                <div class="form-group">
-                    <label>Cantidad (ml):</label>
-                    <input type="number" id="manualAmountValue" class="styled-input" value="120" step="10">
-                </div>
-                <button class="auth-btn auth-btn-primary" style="margin-top: 10px;" onclick="saveManualFeeding()">Guardar Toma</button>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="manualModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">Añadir toma pasada</div><button class="close-btn" onclick="closeModal('manualModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>Hora de la toma:</label><input type="time" id="manualTime" class="styled-input"></div><div class="form-group"><label>Cantidad:</label><input type="number" id="manualAmountValue" class="styled-input" step="any"></div><button class="auth-btn auth-btn-primary" style="margin-top: 10px;" onclick="saveManualFeeding()">Guardar Toma</button></div></div></div>
     
-    <div class="modal-overlay" id="stockModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">📦 Stock y Gastos</div>
-                <button class="close-btn" onclick="closeModal('stockModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="stockSummary"></div>
-                <div class="form-group" style="display:flex; gap:10px; margin-bottom: 25px;">
-                    <input type="number" id="stockPriceInput" class="styled-input" placeholder="Precio (€)" step="0.01" style="flex:1; margin-bottom:0;">
-                    <button class="auth-btn auth-btn-primary" style="margin-bottom:0; width:auto; padding: 0 15px;" onclick="saveNewStock()">+ Nuevo</button>
-                </div>
-                <div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Historial de botes:</div>
-                <ul class="history-list" id="stockListContainer"></ul>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="stockModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">📦 Stock y Gastos</div><button class="close-btn" onclick="closeModal('stockModal')">&times;</button></div><div class="modal-body"><div id="stockSummary"></div><div class="form-group" style="display:flex; gap:10px; margin-bottom: 25px;"><input type="number" id="stockPriceInput" class="styled-input" placeholder="Precio (€)" step="0.01" style="flex:1; margin-bottom:0;"><button class="auth-btn auth-btn-primary" style="margin-bottom:0; width:auto; padding: 0 15px;" onclick="saveNewStock()">+ Nuevo</button></div><div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Historial de botes:</div><ul class="history-list" id="stockListContainer"></ul></div></div></div>
 
-    <!-- Firebase Scripts -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -344,23 +274,44 @@
             messagingSenderId: "1043620818022",
             appId: "1:1043620818022:web:e38e9079564e2d4d81d1a7"
         };
-        
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
-        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        const db = firebase.database(); const auth = firebase.auth(); const googleProvider = new firebase.auth.GoogleAuthProvider();
 
         let dbRef, vitRef, stockRef, profileRef;
-        let currentUser = null;
-        let currentFamilyId = null;
+        let currentUser = null, currentFamilyId = null;
         let babyProfile = { nombre: 'Bebé', edad: 2, peso: 4.5 };
-
-        let records = [];
-        let stockRecords = [];
-        let vitDRecords = {};
-        let currentAmount = 120;
+        let records = [], stockRecords = [], vitDRecords = {};
+        
+        /* SISTEMA DE UNIDADES Y ALARMAS */
+        let currentAmount = 120; // Internamente siempre ml
+        let currentUnit = localStorage.getItem('nara_unit') || 'ml';
+        let feedInterval = parseFloat(localStorage.getItem('nara_interval')) || 0;
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
+        document.getElementById('unitSelect').value = currentUnit;
+        document.getElementById('intervalSelect').value = feedInterval;
+
+        document.getElementById('unitSelect').onchange = (e) => { 
+            currentUnit = e.target.value; localStorage.setItem('nara_unit', currentUnit); 
+            updateUI(); updateControlsDisplay(); 
+        };
+        document.getElementById('intervalSelect').onchange = (e) => { 
+            feedInterval = parseFloat(e.target.value); localStorage.setItem('nara_interval', feedInterval); 
+            requestNotificationPermission(); updateTimer(); 
+        };
+
+        function requestNotificationPermission() {
+            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        }
+
+        function formatAmount(ml) {
+            if (currentUnit === 'oz') return (Math.round(ml / 3) / 10).toFixed(1) + ' oz'; // 30ml = 1oz
+            return ml + ' ml';
+        }
+
+        // --- ENLACE MÁGICO Y SETUP ---
         const pendingCheck = localStorage.getItem('pending_invite');
         const pendingName = localStorage.getItem('pending_name');
         if(pendingCheck) {
@@ -381,134 +332,90 @@
         }
         populateAgeSelects();
 
-        // --- SISTEMA AUTH ---
+        // --- AUTH ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
                 const pendingInvite = localStorage.getItem('pending_invite');
-                
                 db.ref('usuarios/' + user.uid + '/familyId').once('value').then(snap => {
                     let fId = snap.val();
                     if (pendingInvite && pendingInvite !== fId) {
                         db.ref('usuarios/' + user.uid + '/familyId').set(pendingInvite).then(() => {
-                            localStorage.removeItem('pending_invite');
-                            localStorage.removeItem('pending_name');
-                            alert("¡Invitación aceptada! Cuentas vinculadas con éxito.");
-                            loadFamilyData(pendingInvite);
+                            localStorage.removeItem('pending_invite'); localStorage.removeItem('pending_name');
+                            alert("¡Invitación aceptada! Cuentas vinculadas con éxito."); loadFamilyData(pendingInvite);
                         });
                     } else {
-                        if(!fId) {
-                            fId = user.uid;
-                            db.ref('usuarios/' + user.uid + '/familyId').set(fId);
-                        }
+                        if(!fId) { fId = user.uid; db.ref('usuarios/' + user.uid + '/familyId').set(fId); }
                         loadFamilyData(fId);
                     }
                 }).catch(e => console.error(e));
             } else {
                 currentUser = null; currentFamilyId = null;
                 document.getElementById('authScreen').style.display = 'flex';
-                document.getElementById('setupScreen').style.display = 'none';
-                document.getElementById('appScreen').style.display = 'none';
+                document.getElementById('setupScreen').style.display = 'none'; document.getElementById('appScreen').style.display = 'none';
                 if(dbRef) { dbRef.off(); vitRef.off(); stockRef.off(); profileRef.off(); }
             }
         });
 
         function loadFamilyData(fId) {
             currentFamilyId = fId;
-            profileRef = db.ref('familias/' + currentFamilyId + '/perfil');
-            dbRef = db.ref('familias/' + currentFamilyId + '/registros');
-            vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d');
-            stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
+            profileRef = db.ref('familias/' + currentFamilyId + '/perfil'); dbRef = db.ref('familias/' + currentFamilyId + '/registros');
+            vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d'); stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
             
             profileRef.once('value').then(snap => {
                 if(!snap.exists()) {
-                    document.getElementById('authScreen').style.display = 'none';
-                    document.getElementById('appScreen').style.display = 'none';
+                    document.getElementById('authScreen').style.display = 'none'; document.getElementById('appScreen').style.display = 'none';
                     document.getElementById('setupScreen').style.display = 'flex';
                 } else {
-                    document.getElementById('authScreen').style.display = 'none';
-                    document.getElementById('setupScreen').style.display = 'none';
-                    document.getElementById('appScreen').style.display = 'block';
-                    initDatabaseListeners();
+                    document.getElementById('authScreen').style.display = 'none'; document.getElementById('setupScreen').style.display = 'none';
+                    document.getElementById('appScreen').style.display = 'block'; initDatabaseListeners();
                 }
             }).catch(e => console.error(e));
         }
 
         function saveInitialProfile() {
             const name = document.getElementById('setupName').value.trim() || 'Bebé';
-            const age = document.getElementById('setupAge').value;
-            const weight = document.getElementById('setupWeight').value || 0;
-            
+            const age = document.getElementById('setupAge').value; const weight = document.getElementById('setupWeight').value || 0;
             profileRef.set({ nombre: name, edad: parseInt(age), peso: parseFloat(weight) }).then(() => {
-                document.getElementById('setupScreen').style.display = 'none';
-                document.getElementById('appScreen').style.display = 'block';
+                document.getElementById('setupScreen').style.display = 'none'; document.getElementById('appScreen').style.display = 'block';
                 initDatabaseListeners();
             });
         }
 
-        function login() {
-            const email = document.getElementById('emailInput').value;
-            const pass = document.getElementById('passInput').value;
-            document.getElementById('authError').innerText = "Conectando...";
-            auth.signInWithEmailAndPassword(email, pass).catch(e => document.getElementById('authError').innerText = "Error: Email o contraseña incorrectos.");
-        }
-        
-        function loginGoogle() {
-            document.getElementById('authError').innerText = "Abriendo ventana de Google...";
-            auth.signInWithPopup(googleProvider).catch(error => {
-                document.getElementById('authError').innerText = "Google ha bloqueado la ventana. Asegúrate de abrir la web en Chrome o Safari directamente.";
-            });
-        }
-        
+        function login() { auth.signInWithEmailAndPassword(document.getElementById('emailInput').value, document.getElementById('passInput').value).catch(e => document.getElementById('authError').innerText = "Error: Email o contraseña incorrectos."); }
+        function loginGoogle() { auth.signInWithPopup(googleProvider).catch(error => document.getElementById('authError').innerText = "Asegúrate de abrir la web en Chrome o Safari."); }
         function register() {
-            const email = document.getElementById('emailInput').value;
-            const pass = document.getElementById('passInput').value;
+            const email = document.getElementById('emailInput').value; const pass = document.getElementById('passInput').value;
             if (pass.length < 6) return document.getElementById('authError').innerText = "Contraseña mínimo 6 caracteres.";
-            document.getElementById('authError').innerText = "Creando cuenta...";
             auth.createUserWithEmailAndPassword(email, pass).catch(e => document.getElementById('authError').innerText = "Ese email ya está en uso o no es válido.");
         }
-        
         function logout() { auth.signOut(); }
 
-        // --- FUNCIÓN PARA RESCATAR TUS DATOS ANTIGUOS ---
         function migrateOldData() {
             if(!currentUser || !currentFamilyId) return;
             if(confirm("¿Seguro que quieres recuperar los datos antiguos de " + babyProfile.nombre + "?")) {
-                db.ref('registros_nara').once('value').then(snap => {
-                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/registros').update(snap.val());
-                });
-                db.ref('vitamina_d_nara').once('value').then(snap => {
-                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/vitamina_d').update(snap.val());
-                });
-                db.ref('stock_leche_nara').once('value').then(snap => {
-                    if(snap.exists()) db.ref('familias/' + currentFamilyId + '/stock_leche').update(snap.val());
-                    alert("¡Tus datos antiguos se han copiado con éxito!");
-                });
+                db.ref('registros_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/registros').update(snap.val()); });
+                db.ref('vitamina_d_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/vitamina_d').update(snap.val()); });
+                db.ref('stock_leche_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/stock_leche').update(snap.val()); alert("¡Tus datos antiguos se han copiado con éxito!"); });
             }
         }
 
         function openInviteModal() {
-            const bName = encodeURIComponent(babyProfile.nombre);
-            const inviteLink = window.location.origin + window.location.pathname + "?invite=" + currentFamilyId + "&name=" + bName;
+            const bName = encodeURIComponent(babyProfile.nombre); const inviteLink = window.location.origin + window.location.pathname + "?invite=" + currentFamilyId + "&name=" + bName;
             document.getElementById('myFamilyCode').innerText = inviteLink;
-            
             document.getElementById('btnCopyInvite').onclick = () => {
-                if (navigator.share) {
-                    navigator.share({ title: 'Diario de Nara', text: `Únete para llevar el control de ${babyProfile.nombre} juntos:`, url: inviteLink }).catch(console.error);
-                } else {
-                    navigator.clipboard.writeText(inviteLink); alert("¡Enlace copiado al portapapeles!");
-                }
+                if (navigator.share) navigator.share({ title: 'Diario de Nara', text: `Únete para llevar el control de ${babyProfile.nombre}:`, url: inviteLink }).catch(console.error);
+                else { navigator.clipboard.writeText(inviteLink); alert("¡Enlace copiado!"); }
             };
             document.getElementById('inviteModal').style.display = 'flex';
         }
 
+        // --- DATABASE ---
         function initDatabaseListeners() {
             profileRef.on('value', snap => {
                 if(snap.exists()) {
-                    babyProfile = snap.val();
-                    document.getElementById('labelAgeApp').innerText = `Edad de ${babyProfile.nombre}`;
-                    document.getElementById('ageSelect').value = babyProfile.edad;
-                    document.getElementById('weightInput').value = babyProfile.peso;
+                    babyProfile = snap.val(); document.getElementById('labelAgeApp').innerText = `Edad de ${babyProfile.nombre}`;
+                    document.getElementById('ageSelect').value = babyProfile.edad; document.getElementById('weightInput').value = babyProfile.peso;
                     updateUI(); 
                 }
             });
@@ -522,110 +429,77 @@
                 updateUI();
             });
 
-            vitRef.on('value', snap => {
-                vitDRecords = snap.val() || {};
-                updateVitDUI(); updateUI(); 
-            });
-
+            vitRef.on('value', snap => { vitDRecords = snap.val() || {}; updateVitDUI(); updateUI(); });
             stockRef.on('value', snap => {
-                const data = snap.val() || {};
-                stockRecords = Object.keys(data).map(key => ({ dbKey: key, ...data[key] }));
-                stockRecords.sort((a,b) => b.timestamp - a.timestamp); 
-                updateStockUI();
+                const data = snap.val() || {}; stockRecords = Object.keys(data).map(key => ({ dbKey: key, ...data[key] }));
+                stockRecords.sort((a,b) => b.timestamp - a.timestamp); updateStockUI();
             });
 
             document.querySelectorAll('.modal-overlay').forEach(modal => { modal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; }; });
-            setInterval(updateTimer, 60000);
+            setInterval(updateTimer, 30000); // Check cada 30 seg para la alarma
         }
 
         function calculateTarget() {
-            const age = parseInt(babyProfile.edad) || 0;
-            const weight = parseFloat(babyProfile.peso) || 0;
-            let target = 0;
-            if (age >= 12) { target = 600; } 
-            else if (weight > 0) {
-                target = Math.round(weight * 150);
-                if (age >= 6 && target > 1000) target = 1000; 
-            } else {
-                const fallbacks = {0: 600, 1: 820, 2: 850, 3: 850, 4: 900, 5: 900, 6: 900, 7: 850, 8: 800, 9: 750, 10: 700, 11: 650};
-                target = fallbacks[age] || 600;
-            }
+            const age = parseInt(babyProfile.edad) || 0; const weight = parseFloat(babyProfile.peso) || 0; let target = 0;
+            if (age >= 12) target = 600; 
+            else if (weight > 0) { target = Math.round(weight * 150); if (age >= 6 && target > 1000) target = 1000; } 
+            else { const fallbacks = {0: 600, 1: 820, 2: 850, 3: 850, 4: 900, 5: 900, 6: 900, 7: 850, 8: 800, 9: 750, 10: 700, 11: 650}; target = fallbacks[age] || 600; }
             return target;
         }
 
         function getTodayString() { const now = new Date(); return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`; }
         function getColorForAmount(amount, target) {
-            if (amount === 0) return 'transparent'; 
-            if (amount >= target) return '#4CAF50'; 
-            if (amount >= target * 0.75) return '#FFC107'; 
-            return '#EF5350'; 
+            if (amount === 0) return 'transparent'; if (amount >= target) return '#4CAF50'; 
+            if (amount >= target * 0.75) return '#FFC107'; return '#EF5350'; 
         }
 
         function updateVitDUI() {
-            const todayStr = getTodayString();
-            const btn = document.getElementById('btnVitD');
-            if(vitDRecords[todayStr]) { btn.innerHTML = "☀️ Vit D ✅"; btn.style.background = "#4CAF50"; } 
-            else { btn.innerHTML = "☀️ Vit D"; btn.style.background = "#F57F17"; }
+            const todayStr = getTodayString(); const btn = document.getElementById('btnVitD');
+            if(vitDRecords[todayStr]) { btn.innerHTML = "☀️ Vit D ✅"; btn.style.background = "#4CAF50"; } else { btn.innerHTML = "☀️ Vit D"; btn.style.background = "#F57F17"; }
         }
-
         function toggleVitD() {
             const todayStr = getTodayString();
-            if (vitDRecords[todayStr]) { if(confirm("¿Desmarcar la Vitamina D de hoy?")) vitRef.child(todayStr).remove(); } 
-            else { vitRef.child(todayStr).set(true); }
+            if (vitDRecords[todayStr]) { if(confirm("¿Desmarcar la Vitamina D de hoy?")) vitRef.child(todayStr).remove(); } else { vitRef.child(todayStr).set(true); }
         }
 
         function updateStockUI() {
             const banner = document.getElementById('stockBanner');
             if (stockRecords.length === 0) { banner.innerHTML = "📦 Toca aquí para añadir el primer bote"; banner.style.background = "#424242"; return; }
-            const lastBote = stockRecords[0];
-            const daysDiff = Math.floor((new Date() - new Date(lastBote.timestamp)) / (1000 * 60 * 60 * 24));
-            banner.style.background = daysDiff > 7 ? "#EF5350" : "#1976D2"; 
-            banner.innerHTML = `📦 Bote abierto hace ${daysDiff} día${daysDiff !== 1 ? 's' : ''}`;
+            const lastBote = stockRecords[0]; const daysDiff = Math.floor((new Date() - new Date(lastBote.timestamp)) / (1000 * 60 * 60 * 24));
+            banner.style.background = daysDiff > 7 ? "#EF5350" : "#1976D2"; banner.innerHTML = `📦 Bote abierto hace ${daysDiff} día${daysDiff !== 1 ? 's' : ''}`;
         }
 
         function openStockModal() {
             const container = document.getElementById('stockListContainer'); const summary = document.getElementById('stockSummary');
             container.innerHTML = '';
-            
-            if (stockRecords.length === 0) {
-                summary.innerHTML = ''; container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Aún no hay botes registrados</div>';
-            } else {
+            if (stockRecords.length === 0) { summary.innerHTML = ''; container.innerHTML = '<div style="text-align: center; color: #888;">Aún no hay botes registrados</div>'; } 
+            else {
                 const now = new Date(); const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
                 const dayOfWeek = now.getDay() || 7; const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1).getTime();
                 let spentThisMonth = 0; let spentThisWeek = 0;
-
                 stockRecords.forEach((r, index) => {
-                    const price = parseFloat(r.price) || 0;
-                    if(r.timestamp >= startOfMonth) spentThisMonth += price;
-                    if(r.timestamp >= startOfWeek) spentThisWeek += price;
-
+                    const price = parseFloat(r.price) || 0; if(r.timestamp >= startOfMonth) spentThisMonth += price; if(r.timestamp >= startOfWeek) spentThisWeek += price;
                     const li = document.createElement('li'); li.className = 'history-item';
                     let duracionText = index < stockRecords.length - 1 ? `<span style="font-size:13px; color:#4CAF50;">Duró ${Math.floor((r.timestamp - stockRecords[index + 1].timestamp) / (1000 * 60 * 60 * 24))} días</span>` : `<span style="font-size:13px; color:#a0a0a0;">Primer bote</span>`;
                     if(index === 0) duracionText = `<span style="font-size:13px; color:#FFC107;">En uso actualmente</span>`;
-
                     li.innerHTML = `<div><div style="font-weight:bold; font-size:16px;">${r.dateStr}</div>${duracionText}</div><div style="display:flex; align-items:center; gap:15px;"><span style="font-size:18px; font-weight:bold; color:#e0e0e0;">${price.toFixed(2)}€</span><button class="btn-delete" onclick="deleteStock('${r.dbKey}', event)">🗑️</button></div>`;
                     container.appendChild(li);
                 });
-
                 summary.innerHTML = `<div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #444;"><div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#aaa;">Gasto esta semana:</span><span style="font-weight:bold; font-size:16px;">${spentThisWeek.toFixed(2)} €</span></div><div style="display:flex; justify-content:space-between;"><span style="color:#aaa;">Gasto en ${monthNames[now.getMonth()]}:</span><span style="font-weight:bold; font-size:16px; color:#1976D2;">${spentThisMonth.toFixed(2)} €</span></div></div>`;
             }
             document.getElementById('stockModal').style.display = 'flex';
         }
 
         function saveNewStock() {
-            const priceVal = document.getElementById('stockPriceInput').value;
-            if(!priceVal || priceVal <= 0) return alert("Por favor, introduce un precio válido.");
-            const now = new Date();
-            stockRef.push({ timestamp: now.getTime(), dateStr: now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }), price: parseFloat(priceVal).toFixed(2) });
+            const priceVal = document.getElementById('stockPriceInput').value; if(!priceVal || priceVal <= 0) return alert("Por favor, introduce un precio válido.");
+            const now = new Date(); stockRef.push({ timestamp: now.getTime(), dateStr: now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }), price: parseFloat(priceVal).toFixed(2) });
             document.getElementById('stockPriceInput').value = '';
         }
 
-        function deleteStock(dbKey, event) {
-            if(event) event.stopPropagation(); 
-            if(confirm("¿Borrar este bote de leche?")) { stockRef.child(dbKey).remove(); closeModal('stockModal'); }
-        }
+        function deleteStock(dbKey, event) { if(event) event.stopPropagation(); if(confirm("¿Borrar este bote de leche?")) { stockRef.child(dbKey).remove(); closeModal('stockModal'); } }
 
         function updateUI() {
+            updateControlsDisplay();
             const todayStr = getTodayString(); const todayRecords = records.filter(r => r.date === todayStr);
             const totalMl = todayRecords.filter(r => r.type === 'milk').reduce((sum, r) => sum + r.amount, 0);
             const target = calculateTarget();
@@ -634,11 +508,22 @@
             fillBar.style.width = `${Math.min((totalMl / target) * 100, 100)}%`;
             fillBar.style.backgroundColor = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : '#EF5350';
             
-            document.getElementById('totalText').innerText = `${totalMl} ml`;
+            document.getElementById('totalText').innerText = formatAmount(totalMl);
             document.getElementById('totalText').style.color = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : '#ffffff';
-            document.getElementById('targetInfoText').innerText = `Recomendado: ${target} ml al día`;
+            document.getElementById('targetInfoText').innerText = `Recomendado: ${formatAmount(target)} al día`;
 
             updateTimer(); renderList(todayRecords, document.getElementById('historyList')); renderCalendar(target);
+        }
+
+        function adjustAmount(direction) {
+            let step = currentUnit === 'oz' ? 15 : 10; // 15ml es 0.5oz
+            currentAmount = Math.max(step, currentAmount + (direction * step));
+            updateControlsDisplay();
+        }
+        function updateControlsDisplay() {
+            let displayValue = currentUnit === 'oz' ? (Math.round(currentAmount / 3) / 10).toFixed(1) : currentAmount;
+            let unitStr = currentUnit === 'oz' ? '<span style="font-size: 24px"> oz</span>' : '<span style="font-size: 24px"> ml</span>';
+            document.getElementById('amountText').innerHTML = `${displayValue}${unitStr}`;
         }
 
         function renderList(recordArray, container) {
@@ -646,7 +531,7 @@
             if(recordArray.length === 0) return container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Sin registros</div>';
             [...recordArray].sort((a,b) => b.timestamp - a.timestamp).forEach(r => {
                 const li = document.createElement('li'); li.className = 'history-item';
-                let iconAndText = r.type === 'poop' ? `💩 Caca` : `🍼 ${r.amount} ml`;
+                let iconAndText = r.type === 'poop' ? `💩 Caca` : `🍼 ${formatAmount(r.amount)}`;
                 li.innerHTML = `<span class="history-amount">${iconAndText}</span><div style="display: flex; align-items: center; gap: 15px;"><span class="history-time">${r.time}</span><button class="btn-delete" onclick="deleteRecord('${r.dbKey}', event)">🗑️</button></div>`;
                 container.appendChild(li);
             });
@@ -655,7 +540,6 @@
         function renderCalendar(target) {
             const now = new Date(); const year = now.getFullYear(); const month = now.getMonth();
             document.getElementById('monthTitle').innerText = `${monthNames[month]} ${year}`;
-
             const firstDay = new Date(year, month, 1); const lastDay = new Date(year, month + 1, 0);
             let startDayOfWeek = firstDay.getDay() - 1; if (startDayOfWeek === -1) startDayOfWeek = 6;
             
@@ -675,67 +559,86 @@
                 let dayColor = totalMl > 0 ? getColorForAmount(totalMl, target) : 'transparent';
                 if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) cell.style.boxShadow = 'inset 0 0 0 2px #555';
                 
-                cell.innerHTML = `<div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div><div class="day-text">${day}</div>${totalMl > 0 ? `<div class="day-ml">${totalMl}</div>` : ''}${iconsHtml ? `<div style="position: absolute; top: 3px; right: 3px; display:flex; flex-direction:column; gap:2px;">${iconsHtml}</div>` : ''}`;
+                let displayTotal = currentUnit === 'oz' ? (Math.round(totalMl / 3) / 10).toFixed(1) : totalMl;
+                cell.innerHTML = `<div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div><div class="day-text">${day}</div>${totalMl > 0 ? `<div class="day-ml">${displayTotal}</div>` : ''}${iconsHtml ? `<div style="position: absolute; top: 3px; right: 3px; display:flex; flex-direction:column; gap:2px;">${iconsHtml}</div>` : ''}`;
                 cell.onclick = () => openCalendarModal(dateStr, day, monthNames[month], totalMl, dayRecords);
                 calendarGrid.appendChild(cell);
             }
         }
 
-        function deleteRecord(dbKey, event) {
-            if(event) event.stopPropagation(); 
-            if(confirm("¿Borrar este registro?")) { dbRef.child(dbKey).remove(); closeModal('historyModal'); }
-        }
+        function deleteRecord(dbKey, event) { if(event) event.stopPropagation(); if(confirm("¿Borrar este registro?")) { dbRef.child(dbKey).remove(); closeModal('historyModal'); } }
 
         function saveFeeding(customDateObj = null, amount = 120) {
             const dateToUse = customDateObj || new Date();
             dbRef.push({ timestamp: dateToUse.getTime(), date: `${dateToUse.getFullYear()}-${dateToUse.getMonth() + 1}-${dateToUse.getDate()}`, time: dateToUse.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), type: 'milk', amount: parseInt(amount) });
         }
 
-        function savePoop() {
-            const now = new Date();
-            dbRef.push({ timestamp: now.getTime(), date: getTodayString(), time: now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), type: 'poop' });
-        }
+        function savePoop() { const now = new Date(); dbRef.push({ timestamp: now.getTime(), date: getTodayString(), time: now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), type: 'poop' }); }
 
         function saveManualFeeding() {
-            const timeVal = document.getElementById('manualTime').value; const amountVal = document.getElementById('manualAmountValue').value;
-            if(!timeVal) return alert("Selecciona una hora."); 
+            const timeVal = document.getElementById('manualTime').value; const amountVal = parseFloat(document.getElementById('manualAmountValue').value);
+            if(!timeVal || isNaN(amountVal)) return alert("Revisa la hora y cantidad."); 
+            const saveMl = currentUnit === 'oz' ? Math.round(amountVal * 30) : amountVal; // Convert back to ml for DB
             const [hours, minutes] = timeVal.split(':'); const manualDate = new Date(); manualDate.setHours(hours, minutes, 0, 0);
             if (manualDate > new Date()) manualDate.setDate(manualDate.getDate() - 1);
-            saveFeeding(manualDate, amountVal); closeModal('manualModal');
+            saveFeeding(manualDate, saveMl); closeModal('manualModal');
         }
 
         function openManualModal() {
             document.getElementById('manualTime').value = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
-            document.getElementById('manualAmountValue').value = currentAmount; document.getElementById('manualModal').style.display = 'flex';
+            document.getElementById('manualAmountValue').value = currentUnit === 'oz' ? (Math.round(currentAmount / 3) / 10).toFixed(1) : currentAmount; 
+            document.getElementById('manualModal').style.display = 'flex';
         }
 
         function openCalendarModal(dateStr, day, monthName, totalMl, dayRecords) {
             document.getElementById('modalTitle').innerText = `${day} de ${monthName}`;
             const milkRecords = dayRecords.filter(r => r.type === 'milk'); const poopCount = dayRecords.filter(r => r.type === 'poop').length;
             const vitD = vitDRecords[dateStr] ? ' | 1 Vitamina ☀️' : '';
-            
             let subtitleText = '';
-            if (milkRecords.length > 0) subtitleText += `${milkRecords.length} tomas • ${totalMl} ml`;
+            if (milkRecords.length > 0) subtitleText += `${milkRecords.length} tomas • ${formatAmount(totalMl)}`;
             if (poopCount > 0) subtitleText += (subtitleText ? ' | ' : '') + `${poopCount} cacas 💩`;
             subtitleText += vitD;
-            
             document.getElementById('modalSubtitle').innerText = subtitleText || 'Sin registros';
             renderList(dayRecords, document.getElementById('modalHistoryList')); document.getElementById('historyModal').style.display = 'flex';
         }
 
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
+        // --- SISTEMA DE ALARMA ---
         function updateTimer() {
             const milkRecords = records.filter(r => r.type === 'milk');
-            if (milkRecords.length === 0) return document.getElementById('timerText').innerText = `Aún no hay biberones hoy`; 
-            const lastTime = new Date(Math.max(...milkRecords.map(r => r.timestamp)));
+            const nextElem = document.getElementById('timerNext');
+            if (milkRecords.length === 0) { 
+                document.getElementById('timerLast').innerText = `Aún no hay biberones`; nextElem.style.display = 'none'; return; 
+            }
+            
+            const lastTime = Math.max(...milkRecords.map(r => r.timestamp));
             const diffSeconds = Math.floor((new Date() - lastTime) / 1000);
-            document.getElementById('timerText').innerText = `⏱ Último biberón hace: ${Math.floor(diffSeconds / 3600)}h ${Math.floor((diffSeconds % 3600) / 60)}m`;
+            document.getElementById('timerLast').innerText = `⏱ Hace ${Math.floor(diffSeconds / 3600)}h ${Math.floor((diffSeconds % 3600) / 60)}m`;
+
+            if (feedInterval > 0) {
+                const nextTime = lastTime + (feedInterval * 3600 * 1000);
+                const timeToNext = Math.floor((nextTime - new Date().getTime()) / 1000);
+                
+                if (timeToNext > 0) {
+                    nextElem.style.display = 'block'; nextElem.style.color = '#4CAF50';
+                    nextElem.innerText = `⏰ Próxima en: ${Math.floor(timeToNext / 3600)}h ${Math.floor((timeToNext % 3600) / 60)}m`;
+                    
+                    // Alarma 30 mins antes (entre 30 y 29.5 minutos para no spamear)
+                    if (timeToNext <= 1800 && timeToNext > 1770) triggerNotification(lastTime.toString());
+                } else {
+                    nextElem.style.display = 'block'; nextElem.style.color = '#EF5350';
+                    nextElem.innerText = `⏰ ¡Toca biberón!`;
+                }
+            } else { nextElem.style.display = 'none'; }
         }
 
-        function adjustAmount(delta) {
-            currentAmount = Math.max(10, currentAmount + delta);
-            document.getElementById('amountText').innerHTML = `${currentAmount}<span style="font-size: 24px"> ml</span>`;
+        function triggerNotification(lastTimeId) {
+            const notifiedKey = localStorage.getItem('notified_for_timestamp');
+            if (notifiedKey !== lastTimeId && Notification.permission === 'granted') {
+                new Notification("¡Prepara el biberón! 🍼", { body: babyProfile.nombre + " comerá en unos 30 minutos.", icon: "🍼" });
+                localStorage.setItem('notified_for_timestamp', lastTimeId);
+            }
         }
     </script>
 </body>
