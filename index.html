@@ -7,7 +7,7 @@
     <title>Diario de Nara</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Semi+Condensed:wght@500;700;800&family=Orbitron:wght@700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Semi+Condensed:wght@500;700;800&family=Orbitron:wght@700;900&family=Noto+Serif+JP:wght@400;700;900&display=swap">
     
     <script>
         window.onerror = function(msg, url, line) {
@@ -126,6 +126,80 @@
         .theme-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .theme-btn { flex: 1; padding: 13px 6px; border-radius: 10px; border: 2px solid #444; background: #222; color: #ddd; font-weight: bold; font-size: 14px; cursor: pointer; touch-action: manipulation; }
         .theme-btn[aria-pressed="true"] { border-color: #4CAF50; color: #4CAF50; background: #1e2a1e; }
+
+        /* ===== TEMA NARA (JAPÓN) ===== */
+        body.theme-nara {
+            --ink: #3A3532; /* Tinta oscura cálida */
+            --paper: #F6F3EB; /* Papel de arroz Washi */
+            --card: #FFFFFF;
+            --sakura: #C97A7E; /* Rosa cerezo suave */
+            --matcha: #728461; /* Verde té matcha */
+            --sand: #E6DFD3; /* Tonos arena/madera */
+            --serif: 'Noto Serif JP', 'Times New Roman', serif; /* Tipografía japonesa elegante */
+            background-color: var(--paper);
+            color: var(--ink);
+        }
+        /* Tipografías elegantes para títulos */
+        body.theme-nara .auth-title, body.theme-nara .summary-title, body.theme-nara .baby-name, body.theme-nara .section-title, body.theme-nara .modal-title {
+            font-family: var(--serif); font-weight: 700; color: var(--ink);
+        }
+        body.theme-nara .baby-name { color: var(--sakura); letter-spacing: 2px; }
+        body.theme-nara .auth-title { color: var(--sakura); }
+        body.theme-nara .summary-title { color: var(--sakura); font-size: 24px; }
+        body.theme-nara .summary-sub { color: #887E75; font-family: var(--serif); letter-spacing: 1px; }
+
+        /* Colores de UI */
+        body.theme-nara .auth-subtitle, body.theme-nara .form-group label, body.theme-nara .target-info, body.theme-nara .timer-line, body.theme-nara .calendar-header {
+            color: #887E75;
+        }
+        body.theme-nara .settings-card, body.theme-nara .history-item, body.theme-nara .modal-content, body.theme-nara .timer-container {
+            background: var(--card); border: 1px solid var(--sand); box-shadow: 0 4px 15px rgba(58, 53, 50, 0.05); border-radius: 8px;
+        }
+        body.theme-nara .styled-input { background: var(--paper); color: var(--ink); border: 1px solid var(--sand); border-radius: 6px; }
+        body.theme-nara .styled-input:focus { border-color: var(--matcha); }
+
+        /* Botones Zen */
+        body.theme-nara .btn-save, body.theme-nara .auth-btn-primary { background: var(--sakura); color: #FFF; border-radius: 6px; box-shadow: 0 4px 12px rgba(201, 122, 126, 0.3); border: none; }
+        body.theme-nara .btn-save:active, body.theme-nara .auth-btn-primary:active { background: #B3686C; }
+        body.theme-nara .btn-adjust { background: var(--card); color: var(--ink); border: 1px solid var(--sand); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        body.theme-nara .amount-text { color: var(--ink); font-family: var(--serif); font-weight: 700; }
+        body.theme-nara .total-text { color: var(--ink) !important; font-family: var(--serif); }
+        body.theme-nara .glass-container { background: var(--sand); box-shadow: none; border-radius: 4px; }
+        body.theme-nara .glass-fill { background: var(--matcha); border-radius: 4px; }
+
+        /* Controles secundarios */
+        body.theme-nara .divider, body.theme-nara .auth-divider .line { background: var(--sand); }
+        body.theme-nara .auth-btn-outline { border: 1px solid var(--sand); color: var(--ink); }
+        body.theme-nara .auth-btn-google { background: var(--card); color: var(--ink); border: 1px solid var(--sand); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        body.theme-nara .stock-banner { background: var(--matcha); color: #fff; border-radius: 6px; }
+        body.theme-nara .btn-invite { background: #887E75; color: #fff; border-radius: 6px; }
+        body.theme-nara .btn-migrate { background: var(--ink); color: #fff; border-radius: 6px; }
+        body.theme-nara .btn-secondary { border-radius: 6px; border: none; }
+        body.theme-nara .btn-manual { background: var(--sand); color: var(--ink); }
+        body.theme-nara .btn-poop { background: #A08C7F; color: #fff; }
+        body.theme-nara .btn-vitd { background: #DDA77B; color: #fff; }
+
+        /* Calendario */
+        body.theme-nara .day-cell { background: var(--card); border: 1px solid var(--sand); border-radius: 6px; }
+        body.theme-nara .day-fill { opacity: 0.3; background: var(--matcha); }
+        body.theme-nara .day-cell.today { box-shadow: 0 0 0 2px var(--sakura) !important; }
+        body.theme-nara .day-text { color: var(--ink); text-shadow: none; font-family: var(--serif); }
+        body.theme-nara .day-ml { color: #887E75; text-shadow: none; }
+
+        /* Modales */
+        body.theme-nara .close-btn { color: var(--ink); }
+        body.theme-nara .history-time { color: #887E75; font-family: var(--serif); }
+        body.theme-nara .history-amount { color: var(--ink); font-family: var(--serif); }
+        body.theme-nara .admin-row { background: var(--card); border: 1px solid var(--sand); }
+        body.theme-nara .theme-btn { background: var(--card); border: 1px solid var(--sand); color: var(--ink); }
+        body.theme-nara .theme-btn[aria-pressed="true"] { background: var(--sakura); color: #fff; border-color: var(--sakura); }
+        body.theme-nara .timer-next { color: var(--matcha); }
+        body.theme-nara #timerNext[style*="rgb(239, 83, 80)"] { color: var(--sakura) !important; }
+        body.theme-nara .layout-btn { border-color: var(--sand); color: var(--ink); }
+        body.theme-nara.layout-editing #layoutBtn { background: var(--matcha); border-color: var(--matcha); color: #fff; }
+        body.theme-nara .block-handle { background: var(--card); border-color: var(--sand); }
+        body.theme-nara .block-handle button { background: var(--sand); border: none; color: var(--ink); }
+        body.theme-nara .block.dragging .block-handle { border-color: var(--matcha); box-shadow: 0 8px 20px rgba(58, 53, 50, 0.1); }
 
         /* ===== TEMA POP ART ===== */
         body.theme-pop {
@@ -331,7 +405,7 @@
         body.theme-neon .theme-btn { background: #0D0820; border: 2px solid #2A1B5C; color: #EAF6FF; }
         body.theme-neon .theme-btn[aria-pressed="true"] { border-color: #00F0FF; color: #00F0FF; background: #0D0820; box-shadow: 0 0 12px rgba(0, 240, 255, .6); text-shadow: 0 0 8px #00F0FF; }
 
-        /* ===== ADMINISTRADOR: opciones ocultas para toda la familia ===== */
+        /* ===== ADMINISTRADOR ===== */
         body.hide-pasada .btn-manual, body.hide-caca .btn-poop, body.hide-vitd #btnVitD,
         body.hide-stock #stockBanner, body.hide-invitar .btn-invite, body.hide-migrar .btn-migrate { display: none !important; }
         .admin-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border: 2px solid #333; border-radius: 10px; background: #222; margin-bottom: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
@@ -387,13 +461,13 @@
 <body>
 
     <script>
-        /* TEMAS: 'dark' (clásico) o 'pop'. Se guarda en este dispositivo. */
-        function getTheme() { try { var t = localStorage.getItem('nara_theme'); return ['light', 'neon', 'pop'].indexOf(t) >= 0 ? t : 'dark'; } catch (e) { return 'dark'; } }
+        /* TEMAS */
+        function getTheme() { try { var t = localStorage.getItem('nara_theme'); return ['light', 'neon', 'pop', 'nara'].indexOf(t) >= 0 ? t : 'dark'; } catch (e) { return 'dark'; } }
         function paintTheme(t) {
-            document.body.classList.remove('theme-pop', 'theme-light', 'theme-neon');
+            document.body.classList.remove('theme-pop', 'theme-light', 'theme-neon', 'theme-nara');
             if (t !== 'dark') document.body.classList.add('theme-' + t);
             var meta = document.querySelector('meta[name="theme-color"]');
-            if (meta) meta.setAttribute('content', { dark: '#121212', light: '#F4F5F7', neon: '#07040F', pop: '#FFF1BF' }[t]);
+            if (meta) meta.setAttribute('content', { dark: '#121212', light: '#F4F5F7', neon: '#07040F', pop: '#FFF1BF', nara: '#F6F3EB' }[t]);
             document.querySelectorAll('.theme-btn[data-theme]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-theme') === t ? 'true' : 'false'); });
         }
         function setTheme(t) { try { localStorage.setItem('nara_theme', t); } catch (e) {} paintTheme(t); }
@@ -517,16 +591,13 @@
             
             <div class="block" data-block="ajustes" data-title="⚙️ Ajustes">
                 <div class="block-body">
-                    <!-- TÍTULO DESPLEGABLE DE AJUSTES -->
                     <div class="section-title" onclick="toggleAjustes()" style="cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center;">
                         <span>⚙️ Familia y Ajustes</span>
                         <span id="ajustesIcon" style="font-size: 20px;">▼</span>
                     </div>
                     
-                    <!-- CONTENIDO DE AJUSTES (OCULTO POR DEFECTO) -->
                     <div class="settings-card" id="ajustesContent" style="display: none; margin-top: 10px;">
                         
-                        <!-- CAMBIAR NOMBRE -->
                         <div class="form-group" style="margin-bottom: 10px;">
                             <label>Nombre del bebé</label>
                             <input type="text" id="nameInputApp" class="styled-input" style="margin-bottom:0;" placeholder="Ej: Nara">
@@ -584,9 +655,9 @@
                                 <button type="button" class="theme-btn" data-theme="light" aria-pressed="false" onclick="setTheme('light')">☀️ Blanco</button>
                                 <button type="button" class="theme-btn" data-theme="neon" aria-pressed="false" onclick="setTheme('neon')">⚡ Neón</button>
                                 <button type="button" class="theme-btn" data-theme="pop" aria-pressed="false" onclick="setTheme('pop')">💥 Pop art</button>
+                                <button type="button" class="theme-btn" data-theme="nara" aria-pressed="false" onclick="setTheme('nara')" style="grid-column: span 2;">🌸 Nara (Japón)</button>
                             </div>
                             
-                            <!-- BOTÓN PARA ORDENAR BLOQUES MOVIDO AQUÍ -->
                             <span class="theme-title">🏗️ Apariencia y Diseño</span>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
                                 <button type="button" class="auth-btn auth-btn-outline" id="layoutBtn" onclick="toggleLayoutEdit()" style="margin:0; flex:1;">✥ Ordenar bloques</button>
@@ -633,7 +704,6 @@
         let babyProfile = { nombre: 'Bebé', edad: 2, peso: 4.5 };
         let records = [], stockRecords = [], vitDRecords = {}, diaperRecords = [];
         
-        /* SISTEMA DE UNIDADES Y ALARMAS */
         let currentAmount = 120; 
         let currentUnit = localStorage.getItem('nara_unit') || 'ml';
         let feedInterval = parseFloat(localStorage.getItem('nara_interval')) || 0;
@@ -774,7 +844,6 @@
                 }
             });
 
-            // Guardar cambios al editar el nombre en ajustes
             document.getElementById('nameInputApp').onchange = (e) => profileRef.update({ nombre: e.target.value.trim() || 'Bebé' });
             document.getElementById('ageSelect').onchange = (e) => profileRef.update({ edad: parseInt(e.target.value) });
             document.getElementById('weightInput').onchange = (e) => profileRef.update({ peso: parseFloat(e.target.value) || 0 });
@@ -875,7 +944,7 @@
             [...recordArray].sort((a,b) => b.timestamp - a.timestamp).forEach(r => {
                 const li = document.createElement('li'); li.className = 'history-item';
                 let iconAndText = r.type === 'poop' ? `💩 Caca` : `🍼 ${formatAmount(r.amount)}`;
-                li.innerHTML = `<span class="history-amount">${iconAndText}</span><div style="display: flex; align-items: center; gap: 15px;"><span class="history-time">${r.time}</span><button class="btn-delete" onclick="deleteRecord('${r.dbKey}', event)">🗑️</button></div>`;
+                li.innerHTML = `<span class="history-amount">${iconAndText}</span><div style="display: flex; align-items: center; gap: 15px;"><span class="history-time">${r.time}</span><button class="btn-delete" onclick="deleteRecord('${r.dbKey}', event)">🗑️️</button></div>`;
                 container.appendChild(li);
             });
         }
@@ -1022,11 +1091,10 @@
             { key: 'caca',    label: '💩 Caca' },
             { key: 'vitd',    label: '☀️ Vitamina D' },
             { key: 'stock',   label: '📦 Stock y gastos (leche y pañales)' },
-            { key: 'invitar', label: '👨‍‍👩‍👧 Invitar a pareja' },
+            { key: 'invitar', label: '👨‍👩‍👧 Invitar a pareja' },
             { key: 'migrar',  label: '🔄 Recuperar datos antiguos' }
         ];
         let appSettings = { owner: null, ocultar: {} };
-        /* El botón para reclamar el master solo aparece si abres la app con ?master al final de la dirección */
         const MASTER_LINK = new URLSearchParams(window.location.search).has('master');
 
         function buildAdminToggles() {
@@ -1065,7 +1133,7 @@
             const content = document.getElementById('ajustesContent');
             const icon = document.getElementById('ajustesIcon');
             if (content.style.display === 'none' || forceOpen === true) {
-                content.style.display = 'flex';
+                content.style.display = 'block';
                 icon.innerText = '▲';
             } else {
                 content.style.display = 'none';
@@ -1128,7 +1196,7 @@
             layoutEditing = !layoutEditing;
             document.body.classList.toggle('layout-editing', layoutEditing);
             document.getElementById('layoutBtn').innerText = layoutEditing ? '✔ Terminar edición' : '✥ Ordenar bloques';
-            toggleAjustes(layoutEditing); // Abre ajustes si vamos a ordenar para que el botón sea visible
+            toggleAjustes(layoutEditing); 
             applyLayout();
             window.scrollTo(0, 0);
         }
