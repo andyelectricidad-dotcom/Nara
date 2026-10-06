@@ -60,8 +60,11 @@
         .btn-invite { background: #4CAF50; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
         .btn-migrate { background: #9C27B0; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
 
-        /* App Header */
+        /* App Header y Resumen */
         .header { text-align: center; margin-top: 10px; margin-bottom: 15px; }
+        .summary-title { font-size: 20px; font-weight: bold; margin-bottom: 2px; color: #fff; text-align: center; }
+        .summary-sub { font-size: 14px; color: #aaa; margin-bottom: 12px; text-align: center; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+        
         .total-text { font-size: 48px; font-weight: bold; margin-bottom: 5px; transition: color 0.3s; }
         
         .glass-container { width: 100%; height: 20px; background-color: #2a2a2a; border-radius: 10px; position: relative; overflow: hidden; margin: 10px 0; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
@@ -124,7 +127,7 @@
         .theme-btn { flex: 1; padding: 13px 6px; border-radius: 10px; border: 2px solid #444; background: #222; color: #ddd; font-weight: bold; font-size: 14px; cursor: pointer; touch-action: manipulation; }
         .theme-btn[aria-pressed="true"] { border-color: #4CAF50; color: #4CAF50; background: #1e2a1e; }
 
-        /* ===== TEMA POP ART (se activa con body.theme-pop) ===== */
+        /* ===== TEMA POP ART ===== */
         body.theme-pop {
             --ink: #14110F; --paper: #FFF1BF; --red: #E8212B; --yellow: #FFD60A; --blue: #1F5BFF; --cyan: #5ED6F7; --pink: #FF6FAE; --green: #00A86B;
             --display: 'Bangers', 'Impact', 'Arial Narrow Bold', sans-serif;
@@ -138,6 +141,10 @@
         body.theme-pop button, body.theme-pop select, body.theme-pop input { font-family: var(--body); }
         body.theme-pop [style*="#888"], body.theme-pop [style*="#aaa"], body.theme-pop [style*="#ccc"],
         body.theme-pop [style*="#666"], body.theme-pop [style*="#a0a0a0"] { color: var(--ink) !important; }
+
+        /* Novedad Pop Art: Resumen del Día */
+        body.theme-pop .summary-title { font-family: var(--display); font-weight: 400; font-size: 28px; letter-spacing: .04em; color: var(--yellow); -webkit-text-stroke: 1.5px var(--ink); text-shadow: 2px 2px 0 var(--ink); margin-bottom: 4px; text-align: center; }
+        body.theme-pop .summary-sub { font-family: var(--body); font-weight: 800; font-size: 15px; text-transform: uppercase; color: #fff; -webkit-text-stroke: 1px var(--ink); margin-bottom: 10px; text-align: center; }
 
         /* Entrada y configuración inicial */
         body.theme-pop .auth-logo { padding: 36px 0 28px; text-shadow: none; }
@@ -246,6 +253,8 @@
         body.theme-light .auth-title { color: #2E7D32; text-shadow: none; }
         body.theme-light .auth-subtitle, body.theme-light .form-group label, body.theme-light .target-info,
         body.theme-light .calendar-header, body.theme-light .history-time, body.theme-light .theme-title { color: #6B7280; }
+        body.theme-light .summary-title { color: #1B1D21; }
+        body.theme-light .summary-sub { color: #6B7280; }
         body.theme-light .auth-btn-outline { color: #333; border-color: #C9CDD3; }
         body.theme-light .auth-btn-google { background: #fff; border: 1px solid #D0D4DA; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
         body.theme-light .auth-divider .line, body.theme-light .divider { background: #DDE0E5; }
@@ -291,6 +300,8 @@
         body.theme-neon .auth-title { color: #00F0FF; font-family: 'Orbitron', system-ui, sans-serif; font-weight: 900; letter-spacing: .02em; text-shadow: 0 0 8px #00F0FF, 0 0 24px rgba(0, 240, 255, .6); }
         body.theme-neon .auth-subtitle, body.theme-neon .target-info, body.theme-neon .history-time, body.theme-neon .calendar-header,
         body.theme-neon .form-group label, body.theme-neon .theme-title { color: #A99BFF; }
+        body.theme-neon .summary-title { color: #00F0FF; font-family: 'Orbitron', system-ui, sans-serif; font-weight: 900; text-shadow: 0 0 8px #00F0FF; }
+        body.theme-neon .summary-sub { color: #A99BFF; }
         body.theme-neon .auth-btn-primary { background: #0D0820; color: #00F0FF; border: 2px solid #00F0FF; box-shadow: 0 0 14px rgba(0, 240, 255, .55), inset 0 0 12px rgba(0, 240, 255, .2); text-shadow: 0 0 8px #00F0FF; }
         body.theme-neon .auth-btn-outline { color: #FF2BD6; border: 2px solid #FF2BD6; box-shadow: 0 0 12px rgba(255, 43, 214, .45); }
         body.theme-neon .auth-btn-google { background: #EAF6FF; color: #07040F; box-shadow: 0 0 14px rgba(234, 246, 255, .35); }
@@ -337,14 +348,14 @@
         body.theme-pop .admin-row { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); }
     
         /* ===== NOMBRE DEL BEBÉ ===== */
-        .baby-name { font-size: 20px; font-weight: bold; letter-spacing: .02em; margin-bottom: 2px; color: #81C784; }
+        .baby-name { text-align: center; width: 100%; font-size: 24px; font-weight: bold; letter-spacing: .02em; margin-bottom: 10px; margin-top: -5px; color: #81C784; text-transform: uppercase; }
         .baby-name:empty { display: none; }
         body.theme-light .baby-name { color: #2E7D32; }
         body.theme-neon .baby-name { color: #FF2BD6; font-family: 'Orbitron', system-ui, sans-serif; text-shadow: 0 0 10px #FF2BD6; }
-        body.theme-pop .baby-name { color: #fff; font-family: var(--display); font-weight: 400; font-size: 30px; letter-spacing: .06em; -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 2px 2px 0 var(--ink); }
+        body.theme-pop .baby-name { color: #fff; font-family: var(--display); font-weight: 400; font-size: 38px; letter-spacing: .06em; -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--ink); }
 
         /* ===== BLOQUES PERSONALIZABLES ===== */
-        .layout-bar { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; margin: 2px 0 10px; }
+        .layout-bar { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; margin: 2px 0 10px; width: 100%; }
         .layout-hint { display: none; flex: 1 1 100%; font-size: 12px; color: #aaa; margin: 0 0 2px; }
         .layout-reset { display: none; }
         .layout-btn { background: transparent; border: 1px solid #555; color: #bbb; border-radius: 20px; padding: 7px 14px; font-size: 12px; font-weight: bold; cursor: pointer; touch-action: manipulation; }
@@ -460,108 +471,135 @@
     <!-- APP -->
     <div id="appScreen" class="container" style="display: none;">
         
-        <div class="app-topbar" id="babyNameText"></div><div class="layout-bar"><span class="layout-hint">Arrastra ⠿ para ordenar los bloques. 👁 oculta o muestra cada bloque.</span><button type="button" class="layout-btn layout-reset" onclick="resetLayout()">Restablecer</button><button type="button" class="layout-btn" id="layoutBtn" onclick="toggleLayoutEdit()">✥ Personalizar</button></div><div id="blocks"><div class="block" data-block="resumen" data-title="📊 Resumen del día"><div class="block-body"><div class="header">
+        <div class="baby-name" id="babyNameText"></div>
+        <div class="layout-bar"><span class="layout-hint">Arrastra ⠿ para ordenar los bloques. 👁 oculta o muestra cada bloque.</span><button type="button" class="layout-btn layout-reset" onclick="resetLayout()">Restablecer</button><button type="button" class="layout-btn" id="layoutBtn" onclick="toggleLayoutEdit()">✥ Personalizar</button></div>
+        
+        <div id="blocks">
+            <div class="block" data-block="resumen" data-title="📊 Resumen del día">
+                <div class="block-body">
+                    <div class="header">
                         <div class="summary-title">Resumen del día</div>
-            <div class="summary-sub">Total de leche de hoy</div>
-            <div class="total-text" id="totalText">Cargando...</div>
-            <div class="glass-container"><div class="glass-fill" id="dailyProgressFill"></div></div>
-            <div class="target-info" id="targetInfoText">Calculando meta...</div>
-            <div class="timer-container" id="timerTextContainer">
-                <div class="timer-line" id="timerLast">Buscando datos...</div>
-                <div class="timer-next" id="timerNext" style="display:none;"></div>
-            </div>
-        </div>
-        
-        </div></div><div class="block" data-block="toma" data-title="🍼 Guardar toma"><div class="block-body"><div class="controls">
-            <button class="btn-adjust" onclick="adjustAmount(-1)">-</button>
-            <div class="amount-text" id="amountText">120<span style="font-size: 24px"> ml</span></div>
-            <button class="btn-adjust" onclick="adjustAmount(1)">+</button>
-        </div>
-        
-        <button class="btn-save" onclick="saveFeeding(null, currentAmount)">🍼 Guardar Toma</button>
-        
-        </div></div><div class="block" data-block="acciones" data-title="⚡ Botones: Editar, Caca, Vit D"><div class="block-body"><div class="secondary-actions">
-            <button class="btn-secondary btn-manual" onclick="openManualModal()">✏️ Editar</button>
-            <button class="btn-secondary btn-poop" onclick="savePoop()">💩 Caca</button>
-            <button class="btn-secondary btn-vitd" id="btnVitD" onclick="toggleVitD()">☀️ Vit D</button>
-        </div>
-        
-        
-        
-        </div></div><div class="block" data-block="calendario" data-title="📅 Calendario"><div class="block-body"><div class="section-title">
-            <span id="monthTitle">Mes</span>
-            <div class="legend"><span><span class="dot" style="background:#4CAF50"></span> Bien</span><span><span class="dot" style="background:#FFC107"></span> Justo</span><span><span class="dot" style="background:#EF5350"></span> Bajo</span></div>
-        </div>
-        
-        <div class="calendar-header"><div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div></div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-        
-        
-        </div></div><div class="block" data-block="historial" data-title="📋 Historial de hoy"><div class="block-body"><div class="section-title">Historial de hoy</div>
-        <ul class="history-list" id="historyList"></ul>
-
-        
-
-        </div></div><div class="block" data-block="ajustes" data-title="⚙️ Ajustes"><div class="block-body"><div class="section-title">⚙️ Familia y Ajustes</div>
-        <div class="settings-card">
-            
-            <div class="settings-grid">
-                <div class="settings-col"><label id="labelAgeApp">Edad</label><select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select></div>
-                <div class="settings-col"><label>Peso (kg)</label><input type="number" id="weightInput" class="styled-input" step="0.1" style="margin-bottom:0;"></div>
-            </div>
-            
-            <!-- AJUSTES (UNIDAD Y ALARMA HASTA 6H) -->
-            <div class="settings-grid">
-                <div class="settings-col">
-                    <label>Unidad</label>
-                    <select id="unitSelect" class="styled-input" style="margin-bottom:0;">
-                        <option value="ml">Mililitros (ml)</option>
-                        <option value="oz">Onzas (oz)</option>
-                    </select>
-                </div>
-                <div class="settings-col">
-                    <label>Avisar cada</label>
-                    <select id="intervalSelect" class="styled-input" style="margin-bottom:0;">
-                        <option value="0">No avisar</option>
-                        <option value="2">2 horas</option>
-                        <option value="2.5">2.5 horas</option>
-                        <option value="3">3 horas</option>
-                        <option value="3.5">3.5 horas</option>
-                        <option value="4">4 horas</option>
-                        <option value="4.5">4.5 horas</option>
-                        <option value="5">5 horas</option>
-                        <option value="5.5">5.5 horas</option>
-                        <option value="6">6 horas</option>
-                    </select>
+                        <div class="summary-sub">Total de leche de hoy</div>
+                        <div class="total-text" id="totalText">Cargando...</div>
+                        <div class="glass-container"><div class="glass-fill" id="dailyProgressFill"></div></div>
+                        <div class="target-info" id="targetInfoText">Calculando meta...</div>
+                        <div class="timer-container" id="timerTextContainer">
+                            <div class="timer-line" id="timerLast">Buscando datos...</div>
+                            <div class="timer-next" id="timerNext" style="display:none;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <div class="stock-banner" id="stockBanner" onclick="openStockModal()">📦 Stock y gastos</div>
-            <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍👧 Enviar invitación a pareja</button>
-            <button class="btn-migrate" onclick="migrateOldData()" style="margin-top: 5px;">🔄 Recuperar datos antiguos</button>
-            <button onclick="logout()" style="background: transparent; color: #EF5350; border: 1px solid #EF5350; border-radius: 10px; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px;">Cerrar sesión de la cuenta</button>
+            <div class="block" data-block="toma" data-title="🍼 Guardar toma">
+                <div class="block-body">
+                    <div class="controls">
+                        <button class="btn-adjust" onclick="adjustAmount(-1)">-</button>
+                        <div class="amount-text" id="amountText">120<span style="font-size: 24px"> ml</span></div>
+                        <button class="btn-adjust" onclick="adjustAmount(1)">+</button>
+                    </div>
+                    <button class="btn-save" onclick="saveFeeding(null, currentAmount)">🍼 Guardar Toma</button>
+                </div>
+            </div>
+            
+            <div class="block" data-block="acciones" data-title="⚡ Botones: Editar, Caca, Vit D">
+                <div class="block-body">
+                    <div class="secondary-actions">
+                        <button class="btn-secondary btn-manual" onclick="openManualModal()">✏️ Editar</button>
+                        <button class="btn-secondary btn-poop" onclick="savePoop()">💩 Caca</button>
+                        <button class="btn-secondary btn-vitd" id="btnVitD" onclick="toggleVitD()">☀️ Vit D</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="block" data-block="calendario" data-title="📅 Calendario">
+                <div class="block-body">
+                    <div class="section-title">
+                        <span id="monthTitle">Mes</span>
+                        <div class="legend"><span><span class="dot" style="background:#4CAF50"></span> Bien</span><span><span class="dot" style="background:#FFC107"></span> Justo</span><span><span class="dot" style="background:#EF5350"></span> Bajo</span></div>
+                    </div>
+                    <div class="calendar-header"><div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div></div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+            </div>
+            
+            <div class="block" data-block="historial" data-title="📋 Historial de hoy">
+                <div class="block-body">
+                    <div class="section-title">Historial de hoy</div>
+                    <ul class="history-list" id="historyList"></ul>
+                </div>
+            </div>
+            
+            <div class="block" data-block="ajustes" data-title="⚙️ Ajustes">
+                <div class="block-body">
+                    <div class="section-title">⚙️ Familia y Ajustes</div>
+                    <div class="settings-card">
+                        
+                        <!-- NUEVO: CAMBIAR EL NOMBRE DEL BEBÉ -->
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label>Nombre del bebé</label>
+                            <input type="text" id="nameInputApp" class="styled-input" style="margin-bottom:0;" placeholder="Ej: Nara">
+                        </div>
 
-            <div>
-                <div id="adminClaim" hidden>
-                    <span class="theme-title">👑 Dueño de la app</span>
-                    <button type="button" class="theme-btn" style="width:100%; flex:none; margin-bottom:12px;" onclick="claimAdmin()">Hacerme dueño de la app</button>
-                </div>
-                <div id="adminPanel" hidden>
-                    <span class="theme-title">👑 Panel de dueño (master)</span>
-                    <p style="font-size:12px; color:#aaa; margin:0 0 10px;">Solo tú ves este panel. Marcado = visible para todos los usuarios de la app. Desmarca una opción para quitarla.</p>
-                    <div id="adminToggles"></div>
-                    
-                </div>
-                <span class="theme-title">🎨 Tema</span>
-                <div class="theme-options">
-                    <button type="button" class="theme-btn" data-theme="dark" aria-pressed="true" onclick="setTheme('dark')">🌙 Oscuro</button>
-                    <button type="button" class="theme-btn" data-theme="light" aria-pressed="false" onclick="setTheme('light')">☀️ Blanco</button>
-                    <button type="button" class="theme-btn" data-theme="neon" aria-pressed="false" onclick="setTheme('neon')">⚡ Neón</button>
-                    <button type="button" class="theme-btn" data-theme="pop" aria-pressed="false" onclick="setTheme('pop')">💥 Pop art</button>
+                        <div class="settings-grid">
+                            <div class="settings-col"><label>Edad</label><select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select></div>
+                            <div class="settings-col"><label>Peso (kg)</label><input type="number" id="weightInput" class="styled-input" step="0.1" style="margin-bottom:0;"></div>
+                        </div>
+                        
+                        <div class="settings-grid">
+                            <div class="settings-col">
+                                <label>Unidad</label>
+                                <select id="unitSelect" class="styled-input" style="margin-bottom:0;">
+                                    <option value="ml">Mililitros (ml)</option>
+                                    <option value="oz">Onzas (oz)</option>
+                                </select>
+                            </div>
+                            <div class="settings-col">
+                                <label>Avisar cada</label>
+                                <select id="intervalSelect" class="styled-input" style="margin-bottom:0;">
+                                    <option value="0">No avisar</option>
+                                    <option value="2">2 horas</option>
+                                    <option value="2.5">2.5 horas</option>
+                                    <option value="3">3 horas</option>
+                                    <option value="3.5">3.5 horas</option>
+                                    <option value="4">4 horas</option>
+                                    <option value="4.5">4.5 horas</option>
+                                    <option value="5">5 horas</option>
+                                    <option value="5.5">5.5 horas</option>
+                                    <option value="6">6 horas</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="stock-banner" id="stockBanner" onclick="openStockModal()">📦 Stock y gastos</div>
+                        <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍‍👧 Enviar invitación a pareja</button>
+                        <button class="btn-migrate" onclick="migrateOldData()" style="margin-top: 5px;">🔄 Recuperar datos antiguos</button>
+                        <button onclick="logout()" style="background: transparent; color: #EF5350; border: 1px solid #EF5350; border-radius: 10px; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px;">Cerrar sesión de la cuenta</button>
+
+                        <div>
+                            <div id="adminClaim" hidden>
+                                <span class="theme-title">👑 Dueño de la app</span>
+                                <button type="button" class="theme-btn" style="width:100%; flex:none; margin-bottom:12px;" onclick="claimAdmin()">Hacerme dueño de la app</button>
+                            </div>
+                            <div id="adminPanel" hidden>
+                                <span class="theme-title">👑 Panel de dueño (master)</span>
+                                <p style="font-size:12px; color:#aaa; margin:0 0 10px;">Solo tú ves este panel. Marcado = visible para todos los usuarios de la app. Desmarca una opción para quitarla.</p>
+                                <div id="adminToggles"></div>
+                                
+                            </div>
+                            <span class="theme-title">🎨 Tema</span>
+                            <div class="theme-options">
+                                <button type="button" class="theme-btn" data-theme="dark" aria-pressed="true" onclick="setTheme('dark')">🌙 Oscuro</button>
+                                <button type="button" class="theme-btn" data-theme="light" aria-pressed="false" onclick="setTheme('light')">☀️ Blanco</button>
+                                <button type="button" class="theme-btn" data-theme="neon" aria-pressed="false" onclick="setTheme('neon')">⚡ Neón</button>
+                                <button type="button" class="theme-btn" data-theme="pop" aria-pressed="false" onclick="setTheme('pop')">💥 Pop art</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div></div></div></div>
+    </div>
 
     <!-- Modales -->
     <div class="modal-overlay" id="inviteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">👨‍👩‍👧 Invitar Familiar</div><button class="close-btn" onclick="closeModal('inviteModal')">&times;</button></div><div class="modal-body"><p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p><div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:12px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">Cargando enlace...</div><button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button></div></div></div>
@@ -706,7 +744,7 @@
 
         function migrateOldData() {
             if(!currentUser || !currentFamilyId) return;
-            if(confirm("¿Seguro que quieres recuperar los datos antiguos de " + babyProfile.nombre + "?")) {
+            if(confirm("¿Seguro que quieres recuperar los datos antiguos?")) {
                 db.ref('registros_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/registros').update(snap.val()); });
                 db.ref('vitamina_d_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/vitamina_d').update(snap.val()); });
                 db.ref('stock_leche_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/stock_leche').update(snap.val()); alert("¡Tus datos antiguos se han copiado con éxito!"); });
@@ -727,12 +765,17 @@
         function initDatabaseListeners() {
             profileRef.on('value', snap => {
                 if(snap.exists()) {
-                    babyProfile = snap.val(); document.getElementById('babyNameText').innerText = babyProfile.nombre || ''; document.getElementById('labelAgeApp').innerText = `Edad de ${babyProfile.nombre}`;
-                    document.getElementById('ageSelect').value = babyProfile.edad; document.getElementById('weightInput').value = babyProfile.peso;
+                    babyProfile = snap.val(); 
+                    document.getElementById('babyNameText').innerText = babyProfile.nombre || ''; 
+                    document.getElementById('nameInputApp').value = babyProfile.nombre || ''; 
+                    document.getElementById('ageSelect').value = babyProfile.edad; 
+                    document.getElementById('weightInput').value = babyProfile.peso;
                     updateUI(); 
                 }
             });
 
+            // Guardar cambios al editar el nombre en ajustes
+            document.getElementById('nameInputApp').onchange = (e) => profileRef.update({ nombre: e.target.value.trim() || 'Bebé' });
             document.getElementById('ageSelect').onchange = (e) => profileRef.update({ edad: parseInt(e.target.value) });
             document.getElementById('weightInput').onchange = (e) => profileRef.update({ peso: parseFloat(e.target.value) || 0 });
 
@@ -776,7 +819,7 @@
 
         function updateVitDUI() {
             const todayStr = getTodayString(); const btn = document.getElementById('btnVitD');
-            if(vitDRecords[todayStr]) { btn.innerHTML = "☀️ Vit D ✅"; btn.style.background = "#4CAF50"; } else { btn.innerHTML = "☀️️ Vit D"; btn.style.background = "#F57F17"; }
+            if(vitDRecords[todayStr]) { btn.innerHTML = "☀️ Vit D ✅"; btn.style.background = "#4CAF50"; } else { btn.innerHTML = "☀ Vit D"; btn.style.background = "#F57F17"; }
         }
         function toggleVitD() {
             const todayStr = getTodayString();
@@ -893,7 +936,7 @@
         function openCalendarModal(dateStr, day, monthName, totalMl, dayRecords) {
             document.getElementById('modalTitle').innerText = `${day} de ${monthName}`;
             const milkRecords = dayRecords.filter(r => r.type === 'milk'); const poopCount = dayRecords.filter(r => r.type === 'poop').length;
-            const vitD = vitDRecords[dateStr] ? ' | 1 Vitamina ☀️' : '';
+            const vitD = vitDRecords[dateStr] ? ' | 1 Vitamina ☀️️' : '';
             let subtitleText = '';
             if (milkRecords.length > 0) subtitleText += `${milkRecords.length} tomas • ${formatAmount(totalMl)}`;
             if (poopCount > 0) subtitleText += (subtitleText ? ' | ' : '') + `${poopCount} cacas 💩`;
@@ -1014,7 +1057,6 @@
                 .then(res => { if (!res.committed) alert("Ya hay un dueño de la app."); })
                 .catch(e => alert("No se pudo guardar: " + e.message));
         }
-
 
         buildAdminToggles();
 
