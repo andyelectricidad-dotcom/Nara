@@ -460,8 +460,9 @@
     <!-- APP -->
     <div id="appScreen" class="container" style="display: none;">
         
-        <div class="layout-bar"><span class="layout-hint">Arrastra ⠿ para ordenar los bloques. 👁 oculta o muestra cada bloque.</span><button type="button" class="layout-btn layout-reset" onclick="resetLayout()">Restablecer</button><button type="button" class="layout-btn" id="layoutBtn" onclick="toggleLayoutEdit()">✥ Personalizar</button></div><div id="blocks"><div class="block" data-block="resumen" data-title="📊 Resumen del día"><div class="block-body"><div class="header">
-            <div class="baby-name" id="babyNameText"></div>
+        <div class="app-topbar" id="babyNameText"></div><div class="layout-bar"><span class="layout-hint">Arrastra ⠿ para ordenar los bloques. 👁 oculta o muestra cada bloque.</span><button type="button" class="layout-btn layout-reset" onclick="resetLayout()">Restablecer</button><button type="button" class="layout-btn" id="layoutBtn" onclick="toggleLayoutEdit()">✥ Personalizar</button></div><div id="blocks"><div class="block" data-block="resumen" data-title="📊 Resumen del día"><div class="block-body"><div class="header">
+                        <div class="summary-title">Resumen del día</div>
+            <div class="summary-sub">Total de leche de hoy</div>
             <div class="total-text" id="totalText">Cargando...</div>
             <div class="glass-container"><div class="glass-fill" id="dailyProgressFill"></div></div>
             <div class="target-info" id="targetInfoText">Calculando meta...</div>
