@@ -7,7 +7,11 @@
     <title>Diario de Nara</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Semi+Condensed:wght@500;700;800&family=Orbitron:wght@700;900&family=Noto+Serif+JP:wght@400;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Semi+Condensed:wght@500;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
     
     <script>
         window.onerror = function(msg, url, line) {
@@ -126,67 +130,342 @@
         .theme-btn { flex: 1; padding: 13px 6px; border-radius: 10px; border: 2px solid #444; background: #222; color: #ddd; font-weight: bold; font-size: 14px; cursor: pointer; touch-action: manipulation; }
         .theme-btn[aria-pressed="true"] { border-color: #4CAF50; color: #4CAF50; background: #1e2a1e; }
 
-        /* ===== TEMA NARA (JAPÓN) ===== */
-        body.theme-nara {
-            --ink: #3A3532; 
-            --paper: #F6F3EB; 
-            --card: #FFFFFF;
-            --sakura: #C97A7E; 
-            --matcha: #728461; 
-            --sand: #E6DFD3; 
-            --serif: 'Noto Serif JP', 'Times New Roman', serif; 
-            background-color: var(--paper);
-            color: var(--ink);
+        /* ===== BASE: estados y piezas nuevas (neutras; Pop art las reajusta más abajo) ===== */
+        body { --ok: #4CAF50; --warn: #FFC107; --bad: #EF5350; }
+        .dot-ok { background: var(--ok); } .dot-warn { background: var(--warn); } .dot-bad { background: var(--bad); }
+        .day-cell.today { box-shadow: inset 0 0 0 2px #555; }
+        .btn-vitd.done { background: #4CAF50; }
+        .stock-banner.is-empty { background: #424242; }
+        .stock-banner.is-alert { background: #EF5350; }
+        .day-icons { position: absolute; top: 3px; right: 3px; display: flex; flex-direction: column; gap: 2px; }
+        .day-icons div { font-size: 14px; line-height: 1.2; }
+        .btn-logout { background: transparent; color: #EF5350; border: 1px solid #EF5350; border-radius: 10px; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .auth-note { text-align: center; color: #666; font-size: 11px; margin-top: 10px; }
+        .empty-note { text-align: center; color: #888; padding: 10px; }
+        .admin-note { color: #aaa; }
+        .invite-text { color: #ccc; font-size: 14px; }
+        .invite-code { background: #222; padding: 15px; border-radius: 8px; text-align: center; font-family: monospace; font-size: 12px; margin-bottom: 20px; word-break: break-all; color: #4CAF50; border: 1px dashed #4CAF50; }
+
+        /* Personalizar: aviso arriba y barra de acciones abajo (siempre visibles al editar) */
+        .layout-banner { display: none; margin: 0 0 14px; padding: 12px 14px; border-radius: 12px; background: #1e1e1e; border: 1px solid #333; text-align: center; }
+        .layout-banner b { display: block; font-size: 17px; margin-bottom: 4px; }
+        body.layout-editing .layout-banner { display: block; }
+        .layout-bar { display: none; position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: 100%; max-width: 430px; box-sizing: border-box; z-index: 900; gap: 8px; padding: 10px 15px calc(10px + env(safe-area-inset-bottom, 0px)); background: #121212; border-top: 1px solid #333; }
+        body.layout-editing .layout-bar { display: flex; }
+        .layout-bar button { height: 52px; border-radius: 12px; font-size: 15px; font-weight: bold; white-space: nowrap; min-width: 0; padding: 0 6px; cursor: pointer; touch-action: manipulation; border: 1px solid #555; background: #222; color: #fff; }
+        .layout-bar .lb-cancel { flex: 1; }
+        .layout-bar .lb-reset { flex: 1.1; }
+        .layout-bar .lb-ok { flex: 1.3; background: #4CAF50; border-color: #4CAF50; }
+        body.layout-editing .container { padding-bottom: 130px; }
+
+        /* Stock y gastos */
+        .st-section { font-weight: bold; margin: 24px 0 10px; color: #aaa; }
+        .st-form { display: flex; gap: 10px; margin-bottom: 10px; }
+        .st-form .styled-input { flex: 1; min-width: 0; margin-bottom: 0; }
+        .st-form .auth-btn { width: auto; margin-bottom: 0; padding: 0 16px; white-space: nowrap; }
+        .st-preview { font-size: 14px; font-weight: bold; margin: 0 0 10px; color: #aaa; }
+        .st-sum { background: #222; padding: 15px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #444; }
+        .st-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+        .st-k { color: #aaa; } .st-v { font-weight: bold; font-size: 16px; }
+        .st-v.is-total { color: #1976D2; }
+        .st-split { border-top: 1px dashed #555; margin-top: 12px; padding-top: 10px; font-size: 13px; }
+        .st-split .st-line { margin-bottom: 4px; } .st-split .st-v { font-size: 13px; font-weight: normal; }
+        .st-insight { border-top: 1px dashed #555; margin-top: 12px; padding-top: 10px; font-size: 13px; line-height: 1.5; color: #ccc; }
+        .st-insight div + div { margin-top: 6px; }
+        .st-item { display: block; }
+        .st-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+        .st-date { font-weight: bold; font-size: 16px; }
+        .st-price { font-weight: bold; font-size: 18px; color: #e0e0e0; }
+        .st-state { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; font-size: 13px; color: #aaa; }
+        .st-chip { padding: 2px 9px; border-radius: 99px; font-size: 12px; font-weight: bold; }
+        .chip-use { background: rgba(255, 193, 7, .16); color: #FFC107; }
+        .chip-done { background: rgba(76, 175, 80, .16); color: #4CAF50; }
+        .st-actions { display: flex; gap: 8px; align-items: center; }
+        .btn-consume { flex: 1; height: 42px; border-radius: 10px; border: 0; background: #2E7D32; color: #fff; font-size: 14px; font-weight: bold; cursor: pointer; touch-action: manipulation; }
+        .btn-consume.is-undo { background: transparent; border: 1px solid #666; color: #ccc; }
+        .st-actions .btn-delete { flex: none; width: 46px; height: 42px; border: 1px solid #3a3a3a; border-radius: 10px; font-size: 17px; padding: 0; }
+
+        /* ===================================================================
+           TEMAS: Oscuro · Blanco · Neón · Nara
+           Cada tema solo define variables y unos pocos detalles propios.
+           Los componentes se escriben una vez para los cuatro (body.th).
+           =================================================================== */
+
+        /* --- OSCURO · luz de noche: marrón cacao y ámbar tenue, sin azules --- */
+        body.theme-dark {
+            color-scheme: dark;
+            --bg: #17100E; --bg-img: radial-gradient(90% 340px at 50% -50px, rgba(236, 160, 98, .18), transparent 72%); --bg-repeat: no-repeat;
+            --surface: #221815; --surface-2: #2D221D; --line: #3A2B25; --line-2: #4F3C32;
+            --text: #F2E8DC; --muted: #B5A598;
+            --accent: #EBA567; --accent-text: #EBA567; --on-accent: #231206; --accent-soft: rgba(235, 165, 103, .15);
+            --ok: #86C98A; --warn: #EBC15E; --bad: #EC7B72; --ok-bg: #24362A; --ok-fg: #A9DEAC;
+            --btn-bg: linear-gradient(180deg, #F3B678, #E69A58); --btn-fg: #2A1608;
+            --btn-shadow: 0 12px 30px -10px rgba(235, 165, 103, .45), inset 0 1px 0 rgba(255, 255, 255, .35);
+            --track: #2D221D; --ring: #EBA567; --overlay: rgba(10, 6, 5, .8);
+            --poop-bg: #3C2B21; --poop-fg: #F0CDA6; --vit-bg: #3B341B; --vit-fg: #F0D27A; --edit-bg: #2D221D; --edit-fg: #E9DACA;
+            --radius: 22px; --radius-sm: 14px; --radius-btn: 20px; --radius-xs: 10px;
+            --f-display: 'Bricolage Grotesque', 'Figtree', system-ui, sans-serif;
+            --f-body: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            --f-num: 'Bricolage Grotesque', 'Figtree', system-ui, sans-serif;
+            --shadow-card: none; --shadow-modal: 0 24px 60px rgba(0, 0, 0, .6); --bar-h: 14px; --fill-op: .42;
         }
-        body.theme-nara .auth-title, body.theme-nara .summary-title, body.theme-nara .baby-name, body.theme-nara .section-title, body.theme-nara .modal-title { font-family: var(--serif); font-weight: 700; color: var(--ink); }
-        body.theme-nara .baby-name { color: var(--sakura); letter-spacing: 2px; }
-        body.theme-nara .auth-title { color: var(--sakura); }
-        body.theme-nara .summary-title { color: var(--sakura); font-size: 24px; }
-        body.theme-nara .summary-sub { color: #887E75; font-family: var(--serif); letter-spacing: 1px; }
 
-        body.theme-nara .auth-subtitle, body.theme-nara .form-group label, body.theme-nara .target-info, body.theme-nara .timer-line, body.theme-nara .calendar-header { color: #887E75; }
-        body.theme-nara .settings-card, body.theme-nara .history-item, body.theme-nara .modal-content, body.theme-nara .timer-container { background: var(--card); border: 1px solid var(--sand); box-shadow: 0 4px 15px rgba(58, 53, 50, 0.05); border-radius: 8px; }
-        body.theme-nara .styled-input { background: var(--paper); color: var(--ink); border: 1px solid var(--sand); border-radius: 6px; }
-        body.theme-nara .styled-input:focus { border-color: var(--matcha); }
+        /* --- BLANCO · hoja de registro: papel con cuadrícula, tinta azul, horas en monoespaciada --- */
+        body.theme-light {
+            color-scheme: light;
+            --bg: #F3F5F9;
+            --bg-img: linear-gradient(rgba(36, 71, 201, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(36, 71, 201, .055) 1px, transparent 1px); --bg-size: 22px 22px;
+            --surface: #FFFFFF; --surface-2: #ECF0F7; --line: #D6DDE9; --line-2: #B5C0D2;
+            --text: #0F1B33; --muted: #566379;
+            --accent: #2447C9; --accent-text: #2447C9; --on-accent: #FFFFFF; --accent-soft: #E3EAFB;
+            --ok: #1C8C5A; --warn: #B87600; --bad: #D13A3A; --ok-bg: #DCF2E6; --ok-fg: #14683F;
+            --btn-bg: #2447C9; --btn-fg: #FFFFFF; --btn-shadow: 0 1px 0 rgba(15, 27, 51, .25), 0 10px 18px -10px rgba(36, 71, 201, .7);
+            --track: #E4E9F2; --ring: #2447C9; --overlay: rgba(15, 27, 51, .5);
+            --poop-bg: #F4EAE2; --poop-fg: #6A4025; --vit-bg: #FBF0CF; --vit-fg: #7A5300; --edit-bg: #E3EAFB; --edit-fg: #1F3B8F;
+            --radius: 10px; --radius-sm: 8px; --radius-btn: 10px; --radius-xs: 5px;
+            --f-display: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            --f-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            --f-num: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            --shadow-card: none; --shadow-modal: 0 18px 50px rgba(15, 27, 51, .25); --bar-h: 18px; --fill-op: .5;
+        }
 
-        body.theme-nara .btn-save, body.theme-nara .auth-btn-primary { background: var(--sakura); color: #FFF; border-radius: 6px; box-shadow: 0 4px 12px rgba(201, 122, 126, 0.3); border: none; }
-        body.theme-nara .btn-save:active, body.theme-nara .auth-btn-primary:active { background: #B3686C; }
-        body.theme-nara .btn-adjust { background: var(--card); color: var(--ink); border: 1px solid var(--sand); border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        body.theme-nara .amount-text { color: var(--ink); font-family: var(--serif); font-weight: 700; }
-        body.theme-nara .total-text { color: var(--ink) !important; font-family: var(--serif); }
-        body.theme-nara .glass-container { background: var(--sand); box-shadow: none; border-radius: 4px; }
-        body.theme-nara .glass-fill { background: var(--matcha); border-radius: 4px; }
+        /* --- NEÓN · arcade nocturno: violeta profundo, brillo solo en lo importante --- */
+        body.theme-neon {
+            color-scheme: dark;
+            --bg: #070516;
+            --bg-img: radial-gradient(70% 300px at 90% -40px, rgba(255, 61, 203, .22), transparent 72%), radial-gradient(70% 300px at 4% -20px, rgba(53, 240, 255, .17), transparent 72%), linear-gradient(rgba(140, 110, 255, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(140, 110, 255, .07) 1px, transparent 1px);
+            --bg-size: auto, auto, 34px 34px, 34px 34px; --bg-repeat: no-repeat, no-repeat, repeat, repeat;
+            --surface: #0F0A26; --surface-2: #181042; --line: #2A2063; --line-2: #4638A0;
+            --text: #EEECFF; --muted: #A59EDD;
+            --accent: #35F0FF; --accent-text: #5CF4FF; --on-accent: #031219; --accent-soft: rgba(53, 240, 255, .13);
+            --ok: #3DF5A6; --warn: #FFD23F; --bad: #FF5A86; --ok-bg: #062F20; --ok-fg: #5BFFB5;
+            --btn-bg: linear-gradient(135deg, #35F0FF 0%, #8B7BFF 100%); --btn-fg: #06041A;
+            --btn-shadow: 0 0 0 1px rgba(53, 240, 255, .6), 0 10px 32px -6px rgba(53, 240, 255, .5);
+            --track: #181042; --ring: #FF3DCB; --overlay: rgba(4, 2, 16, .86);
+            --poop-bg: #2A0C3E; --poop-fg: #FF93E8; --vit-bg: #2B2706; --vit-fg: #FFE066; --edit-bg: #0A2832; --edit-fg: #6CF3FF;
+            --radius: 18px; --radius-sm: 12px; --radius-btn: 16px; --radius-xs: 8px;
+            --f-display: 'Unbounded', 'Manrope', system-ui, sans-serif;
+            --f-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            --f-num: 'Unbounded', 'Manrope', system-ui, sans-serif;
+            --shadow-card: none; --shadow-modal: 0 0 40px rgba(255, 61, 203, .35); --bar-h: 14px; --fill-op: .55;
+        }
 
-        body.theme-nara .divider, body.theme-nara .auth-divider .line { background: var(--sand); }
-        body.theme-nara .auth-btn-outline { border: 1px solid var(--sand); color: var(--ink); }
-        body.theme-nara .auth-btn-google { background: var(--card); color: var(--ink); border: 1px solid var(--sand); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        body.theme-nara .stock-banner { background: var(--matcha); color: #fff; border-radius: 6px; }
-        body.theme-nara .btn-invite { background: #887E75; color: #fff; border-radius: 6px; }
-        body.theme-nara .btn-migrate { background: var(--ink); color: #fff; border-radius: 6px; }
-        body.theme-nara .btn-secondary { border-radius: 6px; border: none; }
-        body.theme-nara .btn-manual { background: var(--sand); color: var(--ink); }
-        body.theme-nara .btn-poop { background: #A08C7F; color: #fff; }
-        body.theme-nara .btn-vitd { background: #DDA77B; color: #fff; }
+        /* --- NARA · papel de niebla del parque, tinta sumi, sello bermellón y añil --- */
+        body.theme-nara {
+            color-scheme: light;
+            --bg: #E4E9DD;
+            --bg-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .28 0 0 0 0 .22 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); --bg-size: 180px 180px;
+            --surface: #F3F5ED; --surface-2: #DFE5D6; --line: rgba(31, 36, 32, .17); --line-2: rgba(31, 36, 32, .36);
+            --text: #1F2420; --muted: #5C675B;
+            --accent: #C4401F; --accent-text: #B33519; --on-accent: #FBF5E9; --accent-soft: rgba(196, 64, 31, .1);
+            --ai: #2A3B5C; --on-ai: #F3F5ED;
+            --ok: #58783F; --warn: #B98A16; --bad: #B8321F; --ok-bg: #CFDCC0; --ok-fg: #33501F;
+            --btn-bg: #C4401F; --btn-fg: #FBF5E9; --btn-shadow: inset 0 0 0 3px #C4401F, inset 0 0 0 4px rgba(251, 245, 233, .65), 0 2px 0 rgba(31, 36, 32, .3);
+            --track: #D2D9C7; --ring: #C4401F; --overlay: rgba(31, 36, 32, .58);
+            --poop-bg: #D8CCB8; --poop-fg: #4A3626; --vit-bg: #EBDA9F; --vit-fg: #5F4A0B; --edit-bg: #2A3B5C; --edit-fg: #F3F5ED;
+            --radius: 3px; --radius-sm: 2px; --radius-btn: 3px; --radius-xs: 0px;
+            --f-display: 'Shippori Mincho', 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+            --f-body: 'Zen Kaku Gothic New', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', system-ui, sans-serif;
+            --f-num: 'Shippori Mincho', 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+            --shadow-card: none; --shadow-modal: 0 20px 50px rgba(31, 36, 32, .3); --bar-h: 8px; --fill-op: .5;
+        }
 
-        body.theme-nara .day-cell { background: var(--card); border: 1px solid var(--sand); border-radius: 6px; }
-        body.theme-nara .day-fill { opacity: 0.3; background: var(--matcha); }
-        body.theme-nara .day-cell.today { box-shadow: 0 0 0 2px var(--sakura) !important; }
-        body.theme-nara .day-text { color: var(--ink); text-shadow: none; font-family: var(--serif); }
-        body.theme-nara .day-ml { color: #887E75; text-shadow: none; }
+        /* --- Componentes compartidos --- */
+        body.th {
+            box-sizing: border-box; min-height: 100vh; min-height: 100dvh;
+            background-color: var(--bg); background-image: var(--bg-img, none); background-size: var(--bg-size, auto); background-repeat: var(--bg-repeat, repeat);
+            color: var(--text); font-family: var(--f-body); -webkit-font-smoothing: antialiased;
+        }
+        body.th button, body.th input, body.th select { font-family: inherit; }
 
-        body.theme-nara .close-btn { color: var(--ink); }
-        body.theme-nara .history-time { color: #887E75; font-family: var(--serif); }
-        body.theme-nara .history-amount { color: var(--ink); font-family: var(--serif); }
-        body.theme-nara .admin-row { background: var(--card); border: 1px solid var(--sand); }
-        body.theme-nara .theme-btn { background: var(--card); border: 1px solid var(--sand); color: var(--ink); }
-        body.theme-nara .theme-btn[aria-pressed="true"] { background: var(--sakura); color: #fff; border-color: var(--sakura); }
-        body.theme-nara .timer-next { color: var(--matcha); }
-        body.theme-nara #timerNext[style*="rgb(239, 83, 80)"] { color: var(--sakura) !important; }
-        body.theme-nara .layout-btn { border-color: var(--sand); color: var(--ink); }
-        body.theme-nara.layout-editing #layoutBtn { background: var(--matcha); border-color: var(--matcha); color: #fff; }
-        body.theme-nara .block-handle { background: var(--card); border-color: var(--sand); }
-        body.theme-nara .block-handle button { background: var(--sand); border: none; color: var(--ink); }
-        body.theme-nara .block.dragging .block-handle { border-color: var(--matcha); box-shadow: 0 8px 20px rgba(58, 53, 50, 0.1); }
+        /* acceso y formularios */
+        body.th .auth-logo { text-shadow: none; }
+        body.th .auth-title { font-family: var(--f-display); color: var(--text); }
+        body.th .auth-subtitle, body.th .auth-note { color: var(--muted); }
+        body.th .auth-btn { border-radius: var(--radius-btn); }
+        body.th .auth-btn-primary { background: var(--btn-bg); color: var(--btn-fg); box-shadow: var(--btn-shadow); }
+        body.th .auth-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--line-2); }
+        body.th .auth-btn-google { background: var(--surface); color: var(--text); border: 1px solid var(--line-2); box-shadow: none; }
+        body.th .auth-divider .line { background: var(--line); }
+        body.th .auth-divider span { color: var(--muted); }
+        body.th .invite-banner { background: var(--accent); color: var(--on-accent); border: 0; border-radius: var(--radius); box-shadow: var(--btn-shadow); }
+        body.th .form-group label, body.th .settings-col label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 13px; font-weight: 600; text-transform: none; letter-spacing: .01em; }
+        body.th .styled-input { background: var(--surface-2); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+        body.th .styled-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        body.th .styled-input::placeholder { color: var(--muted); opacity: .75; }
+        body.th .settings-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-card); }
+        body.th .stock-banner { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm); box-shadow: none; }
+        body.th .stock-banner.is-empty { background: var(--surface-2); color: var(--muted); }
+        body.th .stock-banner.is-alert { background: var(--bad); border-color: var(--bad); color: #fff; }
+        body.th .btn-invite { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
+        body.th .btn-logout { color: var(--bad); border-color: var(--bad); border-radius: var(--radius-sm); }
+        body.th .divider { background: var(--line); }
+
+        /* cabecera y resumen */
+        body.th .baby-name { font-family: var(--f-display); text-transform: none; color: var(--text); }
+        body.th .summary-title { font-family: var(--f-display); color: var(--text); }
+        body.th .summary-sub { color: var(--muted); text-transform: none; font-weight: 600; letter-spacing: 0; font-size: 13px; }
+        body.th .total-text { font-family: var(--f-num); font-variant-numeric: tabular-nums; line-height: 1; }
+        body.th .glass-container { height: var(--bar-h); background: var(--track); border-radius: 99px; box-shadow: none; }
+        body.th .glass-fill { border-radius: inherit; }
+        body.th .target-info { color: var(--muted); font-weight: 600; }
+        body.th .timer-container { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+        body.th .timer-line { color: var(--text); }
+
+        /* controles de toma */
+        body.th .btn-adjust { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); }
+        body.th .btn-adjust:active { background: var(--surface); }
+        body.th .amount-text { font-family: var(--f-num); font-variant-numeric: tabular-nums; color: var(--text); }
+        body.th .amount-text span { color: var(--muted); }
+        body.th .btn-save { background: var(--btn-bg); color: var(--btn-fg); border-radius: var(--radius-btn); box-shadow: var(--btn-shadow); font-family: var(--f-display); }
+        body.th .btn-save:active { transform: scale(.985); filter: brightness(.93); }
+        body.th .btn-secondary { border: 1px solid var(--line); border-radius: var(--radius-btn); font-weight: 700; }
+        body.th .btn-manual { background: var(--edit-bg); color: var(--edit-fg); }
+        body.th .btn-poop { background: var(--poop-bg); color: var(--poop-fg); }
+        body.th .btn-vitd { background: var(--vit-bg); color: var(--vit-fg); }
+        body.th .btn-vitd.done { background: var(--ok-bg); color: var(--ok-fg); }
+
+        /* calendario e historial */
+        body.th .section-title { font-family: var(--f-display); color: var(--text); }
+        body.th .legend { color: var(--muted); }
+        body.th .calendar-header { color: var(--muted); }
+        body.th .day-cell { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-xs); }
+        body.th .day-fill { opacity: var(--fill-op); }
+        body.th .day-text { color: var(--text); text-shadow: none; font-family: var(--f-num); }
+        body.th .day-ml { color: var(--muted); text-shadow: none; }
+        body.th .day-cell.today { box-shadow: inset 0 0 0 2px var(--ring); }
+        body.th .day-icons { flex-direction: row; gap: 0; top: 2px; right: 2px; }
+        body.th .day-icons div { font-size: 11px; }
+        body.th .history-item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+        body.th .history-amount { color: var(--text); font-family: var(--f-num); }
+        body.th .history-time { color: var(--muted); font-family: var(--f-num); }
+        body.th .btn-delete { color: var(--bad); }
+        body.th .empty-note { color: var(--muted); }
+
+        /* ventanas */
+        body.th .modal-overlay { background: var(--overlay); }
+        body.th .modal-content { background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius); box-shadow: var(--shadow-modal); color: var(--text); }
+        body.th .modal-title { font-family: var(--f-display); color: var(--text); }
+        body.th .close-btn { color: var(--muted); }
+        body.th .modal-subtitle { color: var(--accent-text); }
+        body.th .invite-text { color: var(--muted); }
+        body.th .invite-code { background: var(--surface-2); color: var(--accent-text); border: 1px dashed var(--accent); border-radius: var(--radius-sm); }
+
+        /* stock y gastos */
+        body.th .st-section { color: var(--text); font-family: var(--f-display); font-size: 17px; }
+        body.th .st-preview { color: var(--muted); }
+        body.th .st-sum { background: var(--surface-2); border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
+        body.th .st-k, body.th .st-state { color: var(--muted); }
+        body.th .st-v { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+        body.th .st-v.is-total { color: var(--accent-text); }
+        body.th .st-split, body.th .st-insight { border-top-color: var(--line-2); }
+        body.th .st-insight { color: var(--text); }
+        body.th .st-price { color: var(--text); font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+        body.th .chip-use { background: var(--accent-soft); color: var(--accent-text); }
+        body.th .chip-done { background: var(--ok-bg); color: var(--ok-fg); }
+        body.th .btn-consume { background: var(--ok-bg); color: var(--ok-fg); border: 1px solid var(--ok); border-radius: var(--radius-sm); }
+        body.th .btn-consume.is-undo { background: transparent; color: var(--muted); border-color: var(--line-2); }
+        body.th .st-actions .btn-delete { border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
+
+        /* selector de tema, panel de dueño y personalizar */
+        body.th .theme-title { color: var(--muted); text-transform: none; letter-spacing: .01em; font-size: 13px; }
+        body.th .theme-btn { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
+        body.th .theme-btn[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+        body.th .admin-row { background: var(--surface-2); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+        body.th .admin-row input { accent-color: var(--accent); }
+        body.th .admin-note { color: var(--muted); }
+        body.th .layout-banner { background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm); color: var(--text); }
+        body.th .layout-hint { color: var(--muted); }
+        body.th .layout-bar { background: var(--surface); border-top: 1px solid var(--line-2); }
+        body.th .layout-bar button { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
+        body.th .layout-bar .lb-ok { background: var(--btn-bg); color: var(--btn-fg); border-color: transparent; box-shadow: var(--btn-shadow); }
+        body.th .block-handle { background: var(--surface); border: 2px dashed var(--line-2); border-radius: var(--radius-sm); }
+        body.th .block-handle button { background: var(--surface-2); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius-xs); }
+        body.th .block-handle button:disabled { opacity: .45; cursor: default; }
+        body.th .block-grip { color: var(--muted); }
+        body.th .block-name { color: var(--text); }
+        body.th .block.dragging .block-handle { border-style: solid; border-color: var(--accent); box-shadow: 0 10px 24px rgba(0, 0, 0, .25); }
+
+        /* --- Detalles propios: OSCURO --- */
+        body.theme-dark .baby-name { font-size: 28px; font-weight: 800; letter-spacing: -.01em; color: var(--accent); margin: 8px 0 18px; }
+        body.theme-dark .header { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; padding: 22px 18px 20px; margin-top: 0; }
+        body.theme-dark .summary-title { font-size: 17px; font-weight: 700; }
+        body.theme-dark .total-text { font-size: 72px; font-weight: 800; letter-spacing: -.03em; margin: 12px 0 16px; }
+        body.theme-dark .glass-fill { background-image: linear-gradient(180deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0) 65%); }
+        body.theme-dark .timer-container { border-radius: 99px; padding: 9px 20px; }
+        body.theme-dark .btn-save { font-size: 22px; font-weight: 800; padding: 22px; }
+        body.theme-dark .amount-text { font-size: 52px; font-weight: 700; }
+        body.theme-dark .section-title { font-size: 19px; font-weight: 700; }
+
+        /* --- Detalles propios: BLANCO --- */
+        body.theme-light .baby-name { font-size: 26px; font-weight: 700; letter-spacing: -.01em; margin: 8px 0 16px; }
+        body.theme-light .header { background: var(--surface); border: 1px solid var(--line-2); border-radius: 10px; padding: 16px 16px 18px; margin-top: 0; }
+        body.theme-light .summary-title { font-size: 15px; font-weight: 600; }
+        body.theme-light .total-text { font-size: 54px; font-weight: 600; letter-spacing: -.05em; margin: 10px 0 12px; }
+        body.theme-light .glass-container { border-radius: 3px; border: 1px solid var(--line-2); background: var(--surface); }
+        body.theme-light .glass-container::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: repeating-linear-gradient(90deg, transparent 0, transparent calc(10% - 1px), rgba(15, 27, 51, .32) calc(10% - 1px), rgba(15, 27, 51, .32) 10%); }
+        body.theme-light .glass-fill { border-radius: 0; }
+        body.theme-light .timer-container { background: var(--surface-2); }
+        body.theme-light .timer-line, body.theme-light .timer-next { font-family: var(--f-num); font-size: 13.5px; }
+        body.theme-light .btn-save { font-size: 20px; font-weight: 700; }
+        body.theme-light .amount-text { font-size: 46px; font-weight: 600; letter-spacing: -.04em; }
+        body.theme-light .section-title { font-size: 17px; font-weight: 600; }
+        body.theme-light .day-cell { border-radius: 4px; }
+        body.theme-light .history-time { font-size: 13px; }
+
+        /* --- Detalles propios: NEÓN --- */
+        body.theme-neon .baby-name { font-size: 22px; font-weight: 800; letter-spacing: .04em; color: var(--accent-text); text-shadow: 0 0 16px rgba(53, 240, 255, .6); margin: 10px 0 18px; }
+        body.theme-neon .header, body.theme-neon .settings-card, body.theme-neon .modal-content {
+            border: 1px solid transparent;
+            background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, rgba(53, 240, 255, .7), rgba(139, 123, 255, .35) 50%, rgba(255, 61, 203, .65)) border-box;
+        }
+        body.theme-neon .header { padding: 20px 16px 18px; margin-top: 0; border-radius: 22px; }
+        body.theme-neon .summary-title { font-size: 14px; font-weight: 700; }
+        body.theme-neon .total-text { font-size: 42px; font-weight: 700; letter-spacing: -.02em; margin: 12px 0 16px; text-shadow: 0 0 22px currentColor; }
+        body.theme-neon .glass-container { border: 1px solid var(--line-2); }
+        body.theme-neon .glass-fill { box-shadow: 0 0 14px rgba(255, 255, 255, .35); }
+        body.theme-neon .btn-adjust { border-color: var(--accent); color: var(--accent-text); }
+        body.theme-neon .controls .btn-adjust:first-child { border-color: #FF3DCB; color: #FF7FE3; }
+        body.theme-neon .amount-text { font-size: 38px; font-weight: 700; }
+        body.theme-neon .btn-save { font-size: 17px; font-weight: 800; letter-spacing: .02em; padding: 22px; }
+        body.theme-neon .btn-secondary { font-size: 13px; }
+        body.theme-neon .day-cell.today { box-shadow: inset 0 0 0 2px var(--ring), 0 0 14px rgba(255, 61, 203, .7); }
+        body.theme-neon .section-title { font-size: 15px; font-weight: 700; }
+        body.theme-neon .modal-title { font-size: 18px; }
+        body.theme-neon .st-section { font-size: 14px; }
+
+        /* --- Detalles propios: NARA --- */
+        body.theme-nara .baby-name { font-size: 30px; font-weight: 800; letter-spacing: .2em; margin: 10px 0 22px; text-indent: .2em; }
+        body.theme-nara .baby-name::after { content: ""; display: block; width: 30px; height: 2px; background: var(--accent); margin: 10px auto 0; }
+        body.theme-nara .header { background: var(--surface); border: 1px solid var(--line-2); border-radius: 2px; padding: 24px 20px 22px; margin-top: 0; box-shadow: inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--line-2); }
+        body.theme-nara .summary-title { font-size: 20px; font-weight: 700; letter-spacing: .06em; }
+        body.theme-nara .summary-title::before, body.theme-nara #monthTitle::before, body.theme-nara .block[data-block="historial"] .section-title::before {
+            display: inline-block; vertical-align: middle; margin-right: 9px; padding: 3px 5px 2px; border-radius: 2px;
+            background: var(--accent); color: var(--on-accent); font-family: var(--f-display); font-size: 12px; font-weight: 700; letter-spacing: .08em; line-height: 1.1;
+        }
+        body.theme-nara .summary-title::before { content: "今日"; }
+        body.theme-nara #monthTitle::before { content: "暦"; }
+        body.theme-nara .block[data-block="historial"] .section-title { justify-content: flex-start; }
+        body.theme-nara .block[data-block="historial"] .section-title::before { content: "記録"; }
+        body.theme-nara .summary-sub { font-family: var(--f-display); letter-spacing: .06em; font-weight: 500; }
+        body.theme-nara .total-text { font-size: 58px; font-weight: 700; letter-spacing: -.02em; margin: 12px 0 14px; }
+        body.theme-nara .glass-container { border-radius: 0; }
+        body.theme-nara .timer-container { background: transparent; border-width: 1px 0; border-radius: 0; padding: 10px 6px; }
+        body.theme-nara .btn-save { font-size: 24px; font-weight: 800; letter-spacing: .14em; padding: 20px; }
+        body.theme-nara .btn-adjust { background: var(--surface); border-color: var(--line-2); border-radius: 50%; }
+        body.theme-nara .amount-text { font-size: 48px; font-weight: 700; }
+        body.theme-nara .btn-secondary { border-radius: 3px; font-weight: 700; letter-spacing: .04em; }
+        body.theme-nara .section-title { font-size: 19px; font-weight: 700; letter-spacing: .06em; }
+        body.theme-nara .calendar-grid { gap: 0; border-top: 1px solid var(--line-2); border-left: 1px solid var(--line-2); }
+        body.theme-nara .calendar-grid > div { border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+        body.theme-nara .day-cell { border: 0; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); border-radius: 0; }
+        body.theme-nara .day-cell.today .day-text { color: var(--accent-text); }
+        body.theme-nara .history-item { border-radius: 0; border-width: 0 0 1px; background: transparent; padding-left: 4px; padding-right: 4px; }
+        body.theme-nara .modal-content { box-shadow: var(--shadow-modal), inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--line-2); padding: 26px; }
+        body.theme-nara .stock-banner { background: var(--ai); color: var(--on-ai); border-color: var(--ai); }
+        body.theme-nara .stock-banner.is-empty { background: var(--surface-2); color: var(--muted); }
+        body.theme-nara .st-section { letter-spacing: .06em; }
+        body.theme-nara .layout-bar .lb-ok { box-shadow: var(--btn-shadow); }
 
         /* ===== TEMA POP ART ===== */
         body.theme-pop {
@@ -278,9 +557,8 @@
         body.theme-pop .settings-col label { color: var(--ink); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
         body.theme-pop .stock-banner { border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: .05em; padding: 14px 10px; }
         body.theme-pop .stock-banner:active { transform: translate(3px, 3px); box-shadow: none; }
-        body.theme-pop .btn-invite, body.theme-pop .btn-migrate { border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 22px; letter-spacing: .05em; padding: 13px 10px; }
+        body.theme-pop .btn-invite { border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 22px; letter-spacing: .05em; padding: 13px 10px; }
         body.theme-pop .btn-invite { background: var(--green); }
-        body.theme-pop .btn-migrate { background: var(--pink); color: var(--ink); }
         body.theme-pop .settings-card > button[onclick="logout()"] { background: #fff !important; color: var(--red) !important; border: 3px solid var(--red) !important; border-radius: 4px !important; box-shadow: 3px 3px 0 var(--red); font-family: var(--display); font-weight: 400 !important; font-size: 22px; letter-spacing: .05em; }
         body.theme-pop .theme-title { color: var(--ink); font-weight: 800; letter-spacing: .08em; }
         body.theme-pop .theme-btn { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; font-family: var(--display); font-weight: 400; font-size: 21px; letter-spacing: .05em; box-shadow: var(--shadow-sm); }
@@ -296,114 +574,39 @@
         body.theme-pop .modal-body p { color: var(--ink) !important; }
         body.theme-pop .admin-row { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); }
     
-        /* ===== TEMA BLANCO ===== */
-        body.theme-light { background: #F4F5F7; color: #1B1D21; }
-        body.theme-light .auth-title { color: #2E7D32; text-shadow: none; }
-        body.theme-light .auth-subtitle, body.theme-light .form-group label, body.theme-light .target-info,
-        body.theme-light .calendar-header, body.theme-light .history-time, body.theme-light .theme-title { color: #6B7280; }
-        body.theme-light .summary-title { color: #1B1D21; }
-        body.theme-light .summary-sub { color: #6B7280; }
-        body.theme-light .auth-btn-outline { color: #333; border-color: #C9CDD3; }
-        body.theme-light .auth-btn-google { background: #fff; border: 1px solid #D0D4DA; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
-        body.theme-light .auth-divider .line, body.theme-light .divider { background: #DDE0E5; }
-        body.theme-light .auth-divider span { color: #8A9099; }
-        body.theme-light .styled-input { background: #fff; color: #1B1D21; border-color: #D0D4DA; }
-        body.theme-light .styled-input:focus { border-color: #4CAF50; }
-        body.theme-light .settings-card, body.theme-light .history-item, body.theme-light .modal-content, body.theme-light .timer-container { background: #fff; border-color: #E2E4E8; box-shadow: 0 2px 8px rgba(0, 0, 0, .05); }
-        body.theme-light .timer-line { color: #1B1D21; }
-        body.theme-light .glass-container { background: #E3E6EA; box-shadow: inset 0 2px 5px rgba(0, 0, 0, .12); }
-        body.theme-light .btn-adjust { background: #fff; border-color: #B8BDC5; color: #1B1D21; }
-        body.theme-light .btn-adjust:active { background: #E9ECEF; }
-        body.theme-light .section-title { color: #1B1D21; }
-        body.theme-light .day-cell { background: #fff; border-color: #E2E4E8; }
-        body.theme-light .day-fill { opacity: .5; }
-        body.theme-light .day-text { color: #1B1D21; text-shadow: none; }
-        body.theme-light .day-ml { color: #4B5563; text-shadow: none; }
-        body.theme-light .close-btn { color: #1B1D21; }
-        body.theme-light .modal-overlay { background: rgba(20, 24, 31, .45); }
-        body.theme-light .modal-content { box-shadow: 0 10px 30px rgba(0, 0, 0, .18); }
-        body.theme-light #modalSubtitle { color: #2E7D32 !important; }
-        body.theme-light .modal-body p { color: #4B5563 !important; }
-        body.theme-light #myFamilyCode { background: #F1F3F5 !important; color: #2E7D32 !important; }
-        body.theme-light #stockSummary > div { background: #F1F3F5 !important; border-color: #D8DBE0 !important; }
-        body.theme-light [style*="#888"], body.theme-light [style*="#aaa"], body.theme-light [style*="#a0a0a0"],
-        body.theme-light [style*="#ccc"], body.theme-light [style*="#666"] { color: #6B7280 !important; }
-        body.theme-light [style*="color:#e0e0e0"] { color: #1B1D21 !important; }
-        body.theme-light [style*="color:#FFC107"] { color: #B26A00 !important; }
-        body.theme-light [style*="color:#4CAF50"] { color: #2E7D32 !important; }
-        body.theme-light #totalText[style*="rgb(255, 193, 7)"] { color: #C77C00 !important; }
-        body.theme-light #totalText[style*="rgb(76, 175, 80)"], body.theme-light #timerNext[style*="rgb(76, 175, 80)"] { color: #2E7D32 !important; }
-        body.theme-light #totalText[style*="rgb(239, 83, 80)"] { color: #D32F2F !important; }
-        body.theme-light .admin-row { background: #F1F3F5; border-color: #D8DBE0; }
-        body.theme-light .theme-btn { background: #fff; border-color: #C9CDD3; color: #1B1D21; }
-        body.theme-light .theme-btn[aria-pressed="true"] { border-color: #2E7D32; color: #2E7D32; background: #E8F5E9; }
+        /* ===== POP ART: piezas nuevas (mismo lenguaje visual que el resto del tema) ===== */
+        body.theme-pop .empty-note, body.theme-pop .admin-note, body.theme-pop .auth-note { color: var(--ink); }
+        body.theme-pop .st-section { color: var(--ink); font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .04em; text-shadow: 2px 2px 0 var(--yellow); }
+        body.theme-pop .st-preview, body.theme-pop .st-insight, body.theme-pop .st-state, body.theme-pop .st-date, body.theme-pop .st-price { color: var(--ink); font-weight: 800; }
+        body.theme-pop #diaperListContainer span { color: var(--ink) !important; }
+        body.theme-pop .st-chip { border: 2px solid var(--ink); background: var(--yellow); }
+        body.theme-pop .chip-done { background: var(--cyan); }
+        body.theme-pop .btn-consume { background: var(--green); color: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: .05em; }
+        body.theme-pop .btn-consume.is-undo { background: #fff; color: var(--ink); }
+        body.theme-pop .btn-consume:active { transform: translate(3px, 3px); box-shadow: none; }
+        body.theme-pop .st-actions .btn-delete { border: 3px solid var(--ink); border-radius: 4px; background: #fff; }
+        body.theme-pop .layout-banner { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); }
+        body.theme-pop .layout-banner b { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .04em; }
+        body.theme-pop .layout-bar { background: var(--paper); border-top: 4px solid var(--ink); }
+        body.theme-pop .layout-bar button { border: 3px solid var(--ink); border-radius: 4px; background: #fff; color: var(--ink); font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .04em; box-shadow: var(--shadow-sm); }
+        body.theme-pop .layout-bar .lb-ok { background: var(--green); color: #fff; }
+        body.theme-pop .layout-bar button:active { transform: translate(3px, 3px); box-shadow: none; }
+        body.theme-pop #modalSubtitle { font-weight: bold; }
 
-        /* ===== TEMA NEÓN ===== */
-        body.theme-neon {
-            background-color: #07040F;
-            background-image: linear-gradient(rgba(0, 240, 255, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 43, 214, .045) 1px, transparent 1px);
-            background-size: 32px 32px;
-            color: #EAF6FF;
-        }
-        body.theme-neon .auth-title { color: #00F0FF; font-family: 'Orbitron', system-ui, sans-serif; font-weight: 900; letter-spacing: .02em; text-shadow: 0 0 8px #00F0FF, 0 0 24px rgba(0, 240, 255, .6); }
-        body.theme-neon .auth-subtitle, body.theme-neon .target-info, body.theme-neon .history-time, body.theme-neon .calendar-header,
-        body.theme-neon .form-group label, body.theme-neon .theme-title { color: #A99BFF; }
-        body.theme-neon .summary-title { color: #00F0FF; font-family: 'Orbitron', system-ui, sans-serif; font-weight: 900; text-shadow: 0 0 8px #00F0FF; }
-        body.theme-neon .summary-sub { color: #A99BFF; }
-        body.theme-neon .auth-btn-primary { background: #0D0820; color: #00F0FF; border: 2px solid #00F0FF; box-shadow: 0 0 14px rgba(0, 240, 255, .55), inset 0 0 12px rgba(0, 240, 255, .2); text-shadow: 0 0 8px #00F0FF; }
-        body.theme-neon .auth-btn-outline { color: #FF2BD6; border: 2px solid #FF2BD6; box-shadow: 0 0 12px rgba(255, 43, 214, .45); }
-        body.theme-neon .auth-btn-google { background: #EAF6FF; color: #07040F; box-shadow: 0 0 14px rgba(234, 246, 255, .35); }
-        body.theme-neon .auth-divider .line { height: 2px; background: linear-gradient(90deg, #FF2BD6, #00F0FF); }
-        body.theme-neon .auth-divider span { color: #A99BFF; }
-        body.theme-neon .invite-banner { background: #FF2BD6; border-color: #FF8BE9; box-shadow: 0 0 18px rgba(255, 43, 214, .6); }
-        body.theme-neon .styled-input { background: #0D0820; color: #fff; border: 2px solid #2A1B5C; }
-        body.theme-neon .styled-input:focus { border-color: #00F0FF; box-shadow: 0 0 12px rgba(0, 240, 255, .5); }
-        body.theme-neon .settings-card, body.theme-neon .history-item, body.theme-neon .modal-content, body.theme-neon .timer-container { background: #0D0820; border: 2px solid #2A1B5C; box-shadow: 0 0 14px rgba(255, 43, 214, .22); }
-        body.theme-neon .modal-content { border-color: #FF2BD6; box-shadow: 0 0 24px rgba(255, 43, 214, .45); }
-        body.theme-neon .timer-line { color: #EAF6FF; }
-        body.theme-neon .total-text { font-family: 'Orbitron', system-ui, sans-serif; font-weight: 900; text-shadow: 0 0 10px currentColor, 0 0 28px currentColor; }
-        body.theme-neon .glass-container { background: #14092C; border: 2px solid #2A1B5C; box-shadow: none; }
-        body.theme-neon .glass-fill { box-shadow: 0 0 14px rgba(255, 255, 255, .45); }
-        body.theme-neon .btn-adjust { background: #0D0820; border: 2px solid #00F0FF; color: #00F0FF; text-shadow: 0 0 8px #00F0FF; box-shadow: 0 0 12px rgba(0, 240, 255, .5); }
-        body.theme-neon .controls .btn-adjust:first-child { border-color: #FF2BD6; color: #FF2BD6; text-shadow: 0 0 8px #FF2BD6; box-shadow: 0 0 12px rgba(255, 43, 214, .5); }
-        body.theme-neon .btn-adjust:active { background: #1A0F3D; }
-        body.theme-neon .amount-text { font-family: 'Orbitron', system-ui, sans-serif; font-weight: 900; text-shadow: 0 0 10px rgba(255, 255, 255, .6); }
-        body.theme-neon .btn-save { background: linear-gradient(90deg, #FF2BD6, #7A3CFF); color: #fff; box-shadow: 0 0 22px rgba(255, 43, 214, .6); text-shadow: 0 0 8px rgba(255, 255, 255, .7); }
-        body.theme-neon .btn-save:active { background: linear-gradient(90deg, #E01EBE, #6A2FE8); }
-        body.theme-neon .btn-secondary { border: 2px solid #A99BFF; }
-        body.theme-neon .btn-poop { background: #0D0820; border-color: #FF2BD6; box-shadow: 0 0 10px rgba(255, 43, 214, .5); }
-        body.theme-neon .btn-manual { background: #0D0820; border-color: #00F0FF; box-shadow: 0 0 10px rgba(0, 240, 255, .5); }
-        body.theme-neon .btn-vitd { border-color: #B6FF00; box-shadow: 0 0 10px rgba(182, 255, 0, .45); }
-        body.theme-neon .stock-banner { border: 2px solid #00F0FF; box-shadow: 0 0 14px rgba(0, 240, 255, .5); }
-        body.theme-neon .btn-invite, body.theme-neon .btn-migrate { box-shadow: 0 0 12px rgba(255, 255, 255, .18); }
-        body.theme-neon .section-title { color: #EAF6FF; text-shadow: 0 0 10px rgba(255, 43, 214, .8); }
-        body.theme-neon .divider { height: 2px; background: linear-gradient(90deg, transparent, #FF2BD6, #00F0FF, transparent); }
-        body.theme-neon .day-cell { background: #0D0820; border: 1px solid #2A1B5C; }
-        body.theme-neon .day-fill { opacity: .6; }
-        body.theme-neon .day-cell.today { box-shadow: 0 0 0 2px #00F0FF, 0 0 14px #00F0FF !important; }
-        body.theme-neon .close-btn { color: #00F0FF; }
-        body.theme-neon .modal-overlay { background: rgba(5, 2, 15, .88); }
-        body.theme-neon #modalSubtitle { color: #00F0FF !important; }
-        body.theme-neon #myFamilyCode { background: #0D0820 !important; color: #00F0FF !important; border-color: #00F0FF !important; }
-        body.theme-neon #stockSummary > div { background: #0D0820 !important; border-color: #FF2BD6 !important; }
-        body.theme-neon [style*="#888"], body.theme-neon [style*="#aaa"], body.theme-neon [style*="#a0a0a0"],
-        body.theme-neon [style*="#ccc"], body.theme-neon [style*="#666"] { color: #A99BFF !important; }
-        body.theme-neon .admin-row { background: #0D0820; border: 2px solid #2A1B5C; }
-        body.theme-neon .theme-btn { background: #0D0820; border: 2px solid #2A1B5C; color: #EAF6FF; }
-        body.theme-neon .theme-btn[aria-pressed="true"] { border-color: #00F0FF; color: #00F0FF; background: #0D0820; box-shadow: 0 0 12px rgba(0, 240, 255, .6); text-shadow: 0 0 8px #00F0FF; }
-
+        /* ===== ADMINISTRADOR ===== */
+        body.hide-pasada .btn-manual, body.hide-caca .btn-poop, body.hide-vitd #btnVitD,
+        body.hide-invitar .btn-invite { display: none !important; }
+        .admin-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border: 2px solid #333; border-radius: 10px; background: #222; margin-bottom: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        .admin-row input { width: 22px; height: 22px; flex: none; accent-color: #4CAF50; }
+    
         /* ===== NOMBRE DEL BEBÉ ===== */
         .baby-name { text-align: center; width: 100%; font-size: 34px; font-weight: 900; letter-spacing: .02em; margin-bottom: 25px; margin-top: 5px; color: #4CAF50; text-transform: uppercase; }
         .baby-name:empty { display: none; }
-        body.theme-light .baby-name { color: #2E7D32; }
-        body.theme-neon .baby-name { color: #FF2BD6; font-family: 'Orbitron', system-ui, sans-serif; font-size: 36px; text-shadow: 0 0 12px #FF2BD6; }
         body.theme-pop .baby-name { color: #fff; font-family: var(--display); font-weight: 400; font-size: 56px; letter-spacing: .06em; -webkit-text-stroke: 2.5px var(--ink); paint-order: stroke fill; text-shadow: 4px 4px 0 var(--ink); margin-top: 5px; margin-bottom: 25px; }
 
         /* ===== BLOQUES PERSONALIZABLES ===== */
         .layout-hint { display: none; flex: 1 1 100%; font-size: 12px; color: #aaa; margin: 0 0 2px; }
         body.layout-editing .layout-hint { display: block; }
-        body.layout-editing #resetLayoutBtn { display: block !important; }
-        body.layout-editing #layoutBtn { background: #4CAF50; color: white; border-color: #4CAF50; }
         
         .block-handle { display: none; align-items: center; gap: 8px; background: #1e1e1e; border: 2px dashed #555; border-radius: 12px; padding: 8px 8px 8px 4px; }
         .block-drag { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; padding: 6px 0; }
@@ -417,19 +620,6 @@
         body.layout-editing .block.is-hidden { display: block; opacity: .5; }
         .block.dragging .block-handle { border-style: solid; border-color: #4CAF50; box-shadow: 0 8px 20px rgba(0, 0, 0, .5); }
 
-        body.theme-light .layout-hint { color: #6B7280; }
-        body.theme-light .block-handle { background: #fff; border-color: #C9CDD3; }
-        body.theme-light .block-handle button { background: #F1F3F5; border-color: #D8DBE0; color: #1B1D21; }
-        body.theme-light .block-grip { color: #9CA3AF; }
-        body.theme-light.layout-editing #layoutBtn { background: #2E7D32; border-color: #2E7D32; color: #fff; }
-
-        body.theme-neon .layout-hint { color: #A99BFF; }
-        body.theme-neon .block-handle { background: #0D0820; border-color: #A99BFF; }
-        body.theme-neon .block-handle button { background: #14092C; border-color: #2A1B5C; color: #EAF6FF; }
-        body.theme-neon .block-grip { color: #00F0FF; }
-        body.theme-neon.layout-editing #layoutBtn { background: #FF2BD6; border-color: #FF2BD6; color: #fff; box-shadow: 0 0 12px rgba(255, 43, 214, .6); }
-        body.theme-neon .block.dragging .block-handle { border-color: #00F0FF; box-shadow: 0 0 16px rgba(0, 240, 255, .6); }
-
         body.theme-pop .layout-hint { color: var(--ink); font-weight: 700; }
         body.theme-pop.layout-editing #layoutBtn { background: var(--red); color: #fff; border-color: var(--ink);}
         body.theme-pop .block-handle { background: #fff; border: 3px dashed var(--ink); border-radius: 4px; }
@@ -437,24 +627,162 @@
         body.theme-pop .block-name { font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: .04em; }
         body.theme-pop .block-grip { color: var(--ink); }
         body.theme-pop .block.dragging .block-handle { border-style: solid; box-shadow: var(--shadow-sm); }
-        
-        body.theme-nara .layout-btn { border-color: var(--sand); color: var(--ink); }
-        body.theme-nara.layout-editing #layoutBtn { background: var(--matcha); border-color: var(--matcha); color: #fff; }
-        body.theme-nara .block-handle { background: var(--card); border-color: var(--sand); }
-        body.theme-nara .block-handle button { background: var(--sand); border: none; color: var(--ink); }
-        body.theme-nara .block.dragging .block-handle { border-color: var(--matcha); box-shadow: 0 8px 20px rgba(58, 53, 50, 0.1); }
+
+        /* ===================================================================
+           v2: engranaje + pantalla de Ajustes + tarjeta de Stock + sakura (Nara)
+           =================================================================== */
+
+        /* --- cabecera con engranaje --- */
+        .app-top { position: relative; width: 100%; min-height: 50px; padding: 0 54px; box-sizing: border-box; }
+        .btn-gear { position: absolute; top: calc(50% - 29px); right: 0; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; touch-action: manipulation; background: #1e1e1e; color: #ddd; border: 1px solid #333; }
+        .btn-gear svg { width: 23px; height: 23px; display: block; }
+        .btn-gear:active { transform: scale(.94); }
+        body.layout-editing .btn-gear { display: none; }
+
+        /* --- pantalla de Ajustes --- */
+        .set-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 10px; margin: -15px -15px 6px; padding: 12px 15px 12px; background: #121212; border-bottom: 1px solid #2a2a2a; }
+        .set-back { flex: none; height: 44px; padding: 0 16px 0 12px; border-radius: 99px; border: 1px solid #444; background: #1e1e1e; color: #fff; font-size: 15px; font-weight: bold; cursor: pointer; touch-action: manipulation; white-space: nowrap; }
+        .set-back:active { transform: scale(.97); }
+        .set-title { flex: 1; font-size: 22px; font-weight: bold; text-align: right; padding-right: 4px; }
+        .set-h { font-size: 12px; font-weight: bold; color: #999; text-transform: uppercase; letter-spacing: .1em; margin: 22px 4px 8px; }
+        .settings-page .settings-card { margin-bottom: 0; }
+        .set-help { font-size: 13px; color: #999; margin: 0; line-height: 1.45; }
+        .acct-line { font-size: 13px; color: #aaa; overflow-wrap: anywhere; }
+        .acct-line b { color: #ddd; }
+        .set-foot { height: 26px; }
+        body.hide-invitar #setFamilySec { display: none; }
+
+        /* --- tarjeta de Stock en el inicio --- */
+        .stock-card { display: block; width: 100%; box-sizing: border-box; text-align: left; background: #1e1e1e; border: 1px solid #333; border-radius: 16px; padding: 14px 16px 6px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        .stock-card:active { transform: scale(.99); }
+        .sc-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+        .sc-title { font-weight: bold; font-size: 16px; white-space: nowrap; }
+        .sc-month { font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+        .sc-month b { color: #eee; }
+        .sc-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #2a2a2a; }
+        .sc-head + .sc-row { border-top: 0; }
+        .sc-ico { font-size: 20px; flex: none; width: 26px; text-align: center; }
+        .sc-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .sc-main b { font-size: 15px; }
+        .sc-main small { font-size: 12.5px; color: #aaa; line-height: 1.35; }
+        .sc-badge { flex: none; font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 99px; white-space: nowrap; border: 1px solid transparent; }
+        .sc-badge.is-ok { background: rgba(76, 175, 80, .16); color: var(--ok); }
+        .sc-badge.is-warn { color: var(--warn); border-color: var(--warn); }
+        .sc-badge.is-bad { background: var(--bad); color: #fff; }
+        .sc-badge.is-none { color: #999; border-color: #555; }
+        .stock-card.is-alert { border-color: var(--bad); }
+        body.hide-stock .block[data-block="stock"] { display: none !important; }
+
+        /* --- temas nuevos (variables compartidas) --- */
+        body.th .btn-gear { background: var(--surface); color: var(--text); border: 1px solid var(--line-2); }
+        body.th .set-top { background: var(--bg); border-bottom: 1px solid var(--line); }
+        body.th .set-back { background: var(--surface); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-btn); }
+        body.th .set-title { font-family: var(--f-display); color: var(--text); }
+        body.th .set-h { color: var(--muted); }
+        body.th .set-help, body.th .acct-line { color: var(--muted); }
+        body.th .acct-line b { color: var(--text); }
+        body.th .stock-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-card); color: var(--text); }
+        body.th .stock-card.is-alert { border-color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); }
+        body.th .sc-title { font-family: var(--f-display); }
+        body.th .sc-month { color: var(--muted); }
+        body.th .sc-month b { color: var(--text); font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+        body.th .sc-row { border-top-color: var(--line); }
+        body.th .sc-main small { color: var(--muted); }
+        body.th .sc-badge.is-ok { background: var(--ok-bg); color: var(--ok-fg); }
+        body.th .sc-badge.is-none { color: var(--muted); border-color: var(--line-2); }
+        body.th .btn-invite { width: 100%; padding: 13px; font-weight: 700; }
+        body.th .btn-logout { padding: 13px; }
+
+        body.theme-dark .btn-gear { color: var(--accent); }
+        body.theme-dark .stock-card { border-radius: 22px; }
+        body.theme-light .btn-gear { border-radius: 10px; }
+        body.theme-light .sc-month b { font-family: var(--f-num); font-size: 12.5px; }
+        body.theme-neon .btn-gear { color: var(--accent-text); border-color: rgba(53, 240, 255, .55); box-shadow: 0 0 14px rgba(53, 240, 255, .25); }
+        body.theme-neon .stock-card { border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, rgba(53, 240, 255, .7), rgba(139, 123, 255, .35) 50%, rgba(255, 61, 203, .65)) border-box; }
+        body.theme-neon .stock-card.is-alert { background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(135deg, var(--bad), var(--bad)) border-box; box-shadow: 0 0 18px rgba(255, 90, 134, .35); }
+        body.theme-neon .set-title { font-size: 18px; }
+        body.theme-neon .sc-title { font-size: 14px; }
+
+        /* --- Nara: sakura --- */
+        body.theme-nara {
+            --sakura: #F3C3CF; --sakura-deep: #D9708A;
+            --bg-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='190' viewBox='-14 -14 300 190'%3E%3Cdefs%3E%3Cpath id='p' d='M0 0C-7-5-9.5-15-4.2-22.5L0-19L4.2-22.5C9.5-15 7-5 0 0Z'/%3E%3Cg id='f'%3E%3Cg fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9'%3E%3Cuse href='%23p' transform='rotate(0)'/%3E%3Cuse href='%23p' transform='rotate(72)'/%3E%3Cuse href='%23p' transform='rotate(144)'/%3E%3Cuse href='%23p' transform='rotate(216)'/%3E%3Cuse href='%23p' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='4.4' fill='%23E07591'/%3E%3Cg fill='%23B5344F'%3E%3Ccircle cx='4.11' cy='-5.66' r='1.25'/%3E%3Ccircle cx='6.66' cy='2.16' r='1.25'/%3E%3Ccircle cx='0.00' cy='7.00' r='1.25'/%3E%3Ccircle cx='-6.66' cy='2.16' r='1.25'/%3E%3Ccircle cx='-4.11' cy='-5.66' r='1.25'/%3E%3C/g%3E%3C/g%3E%3Cg id='b'%3E%3Cpath d='M0 0C-4-3-5-9-1-14C3-9 4-3 0 0Z' fill='%23EE9DB2' stroke='%23E39AAF' stroke-width='.8'/%3E%3Cpath d='M-2.6 1.2C-1 -1 1 -1 2.6 1.2C1 3 -1 3 -2.6 1.2Z' fill='%237E8F5A'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='none' stroke='%233E322E' stroke-linecap='round' opacity='.88'%3E%3Cpath d='M-12 20C30 26 62 22 98 36' stroke-width='8'/%3E%3Cpath d='M96 35C130 48 160 60 196 60' stroke-width='5.5'/%3E%3Cpath d='M194 60C220 60 244 54 268 44' stroke-width='3.2'/%3E%3Cpath d='M84 32C94 56 104 80 126 104' stroke-width='3.2'/%3E%3Cpath d='M126 104C134 114 146 120 160 124' stroke-width='2'/%3E%3Cpath d='M150 54C162 36 178 24 204 16' stroke-width='2.6'/%3E%3Cpath d='M44 24C50 8 60 0 76 -6' stroke-width='2.4'/%3E%3Cpath d='M230 56C238 70 250 78 266 82' stroke-width='1.8'/%3E%3C/g%3E%3Cuse href='%23b' transform='translate(142 52) rotate(-40) scale(1)'/%3E%3Cuse href='%23b' transform='translate(236 52) rotate(30) scale(0.9)'/%3E%3Cuse href='%23b' transform='translate(110 64) rotate(-150) scale(0.9)'/%3E%3Cuse href='%23b' transform='translate(30 22) rotate(-20) scale(0.8)'/%3E%3Cuse href='%23b' transform='translate(196 70) rotate(160) scale(0.8)'/%3E%3Cuse href='%23f' transform='translate(100 36) rotate(10) scale(1.0)'/%3E%3Cuse href='%23f' transform='translate(126 100) rotate(-20) scale(0.9)'/%3E%3Cuse href='%23f' transform='translate(204 16) rotate(30) scale(0.78)'/%3E%3Cuse href='%23f' transform='translate(266 44) rotate(5) scale(0.82)'/%3E%3Cuse href='%23f' transform='translate(58 22) rotate(-12) scale(0.7)'/%3E%3Cuse href='%23f' transform='translate(178 62) rotate(40) scale(0.72)'/%3E%3Cuse href='%23f' transform='translate(160 124) rotate(15) scale(0.62)'/%3E%3Cuse href='%23f' transform='translate(266 82) rotate(-30) scale(0.6)'/%3E%3Cuse href='%23f' transform='translate(74 -4) rotate(20) scale(0.55)'/%3E%3Cuse href='%23p' fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9' transform='translate(40 70) rotate(40) scale(0.45)'/%3E%3Cuse href='%23p' fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9' transform='translate(150 160) rotate(-60) scale(0.4)'/%3E%3Cuse href='%23p' fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9' transform='translate(230 128) rotate(120) scale(0.42)'/%3E%3Cuse href='%23p' fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9' transform='translate(90 150) rotate(10) scale(0.36)'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cdefs%3E%3Cpath id='p' d='M0 0C-7-5-9.5-15-4.2-22.5L0-19L4.2-22.5C9.5-15 7-5 0 0Z'/%3E%3C/defs%3E%3Cg fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.8'%3E%3Cuse href='%23p' opacity='0.5' transform='translate(30 40) rotate(20) scale(0.55)'/%3E%3Cuse href='%23p' opacity='0.4' transform='translate(150 22) rotate(-70) scale(0.42)'/%3E%3Cuse href='%23p' opacity='0.45' transform='translate(215 120) rotate(140) scale(0.6)'/%3E%3Cuse href='%23p' opacity='0.4' transform='translate(80 170) rotate(75) scale(0.38)'/%3E%3Cuse href='%23p' opacity='0.45' transform='translate(175 215) rotate(-20) scale(0.5)'/%3E%3Cuse href='%23p' opacity='0.35' transform='translate(20 235) rotate(200) scale(0.4)'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .28 0 0 0 0 .22 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            --bg-size: 270px auto, 260px 260px, 180px 180px; --bg-repeat: no-repeat, repeat, repeat; --bg-pos: left -34px top -12px, 0 0, 0 0;
+        }
+        /* en Ajustes, sin rama (quedaría cortada bajo la barra de arriba) */
+        body.theme-nara.settings-open { --bg-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cdefs%3E%3Cpath id='p' d='M0 0C-7-5-9.5-15-4.2-22.5L0-19L4.2-22.5C9.5-15 7-5 0 0Z'/%3E%3C/defs%3E%3Cg fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.8'%3E%3Cuse href='%23p' opacity='0.5' transform='translate(30 40) rotate(20) scale(0.55)'/%3E%3Cuse href='%23p' opacity='0.4' transform='translate(150 22) rotate(-70) scale(0.42)'/%3E%3Cuse href='%23p' opacity='0.45' transform='translate(215 120) rotate(140) scale(0.6)'/%3E%3Cuse href='%23p' opacity='0.4' transform='translate(80 170) rotate(75) scale(0.38)'/%3E%3Cuse href='%23p' opacity='0.45' transform='translate(175 215) rotate(-20) scale(0.5)'/%3E%3Cuse href='%23p' opacity='0.35' transform='translate(20 235) rotate(200) scale(0.4)'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .28 0 0 0 0 .22 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); --bg-size: 260px 260px, 180px 180px; --bg-repeat: repeat, repeat; --bg-pos: 0 0; }
+        body.theme-nara .baby-name { text-shadow: 0 0 3px var(--bg), 0 0 8px var(--bg), 0 0 14px var(--bg); }
+        body.th { background-position: var(--bg-pos, 0 0); }
+        body.theme-nara .baby-name::after { width: 22px; height: 22px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-24 -24 48 48'%3E%3Cdefs%3E%3Cpath id='p' d='M0 0C-7-5-9.5-15-4.2-22.5L0-19L4.2-22.5C9.5-15 7-5 0 0Z'/%3E%3Cg id='f'%3E%3Cg fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9'%3E%3Cuse href='%23p' transform='rotate(0)'/%3E%3Cuse href='%23p' transform='rotate(72)'/%3E%3Cuse href='%23p' transform='rotate(144)'/%3E%3Cuse href='%23p' transform='rotate(216)'/%3E%3Cuse href='%23p' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='4.4' fill='%23E07591'/%3E%3Cg fill='%23B5344F'%3E%3Ccircle cx='4.11' cy='-5.66' r='1.25'/%3E%3Ccircle cx='6.66' cy='2.16' r='1.25'/%3E%3Ccircle cx='0.00' cy='7.00' r='1.25'/%3E%3Ccircle cx='-6.66' cy='2.16' r='1.25'/%3E%3Ccircle cx='-4.11' cy='-5.66' r='1.25'/%3E%3C/g%3E%3C/g%3E%3Cg id='b'%3E%3Cpath d='M0 0C-4-3-5-9-1-14C3-9 4-3 0 0Z' fill='%23EE9DB2' stroke='%23E39AAF' stroke-width='.8'/%3E%3Cpath d='M-2.6 1.2C-1 -1 1 -1 2.6 1.2C1 3 -1 3 -2.6 1.2Z' fill='%237E8F5A'/%3E%3C/g%3E%3C/defs%3E%3Cuse href='%23f'/%3E%3C/svg%3E") center / contain no-repeat; margin: 6px auto 0; }
+        body.theme-nara .btn-gear { background: rgba(243, 245, 237, .85); border-color: var(--line-2); color: var(--text); }
+        body.theme-nara .stock-card { border: 1px solid var(--line-2); border-radius: 2px; box-shadow: inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--line-2); padding: 18px 20px 10px; }
+        body.theme-nara .stock-card.is-alert { box-shadow: inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--bad); }
+        body.theme-nara .sc-title { letter-spacing: .06em; }
+        body.theme-nara .sc-title::before { content: "蔵"; display: inline-block; vertical-align: 2px; margin-right: 9px; padding: 3px 5px 2px; border-radius: 2px; background: var(--ai); color: var(--on-ai); font-size: 12px; letter-spacing: .08em; line-height: 1.1; }
+        body.theme-nara .set-top { background: rgba(228, 233, 221, .94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+        body.theme-nara .set-title { letter-spacing: .14em; }
+        body.theme-nara .set-h { font-family: var(--f-display); text-transform: none; letter-spacing: .12em; font-size: 14px; color: var(--text); }
+        body.theme-nara .set-h::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 7px; vertical-align: -2px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-24 -24 48 48'%3E%3Cdefs%3E%3Cpath id='p' d='M0 0C-7-5-9.5-15-4.2-22.5L0-19L4.2-22.5C9.5-15 7-5 0 0Z'/%3E%3Cg id='f'%3E%3Cg fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9'%3E%3Cuse href='%23p' transform='rotate(0)'/%3E%3Cuse href='%23p' transform='rotate(72)'/%3E%3Cuse href='%23p' transform='rotate(144)'/%3E%3Cuse href='%23p' transform='rotate(216)'/%3E%3Cuse href='%23p' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='4.4' fill='%23E07591'/%3E%3Cg fill='%23B5344F'%3E%3Ccircle cx='4.11' cy='-5.66' r='1.25'/%3E%3Ccircle cx='6.66' cy='2.16' r='1.25'/%3E%3Ccircle cx='0.00' cy='7.00' r='1.25'/%3E%3Ccircle cx='-6.66' cy='2.16' r='1.25'/%3E%3Ccircle cx='-4.11' cy='-5.66' r='1.25'/%3E%3C/g%3E%3C/g%3E%3Cg id='b'%3E%3Cpath d='M0 0C-4-3-5-9-1-14C3-9 4-3 0 0Z' fill='%23EE9DB2' stroke='%23E39AAF' stroke-width='.8'/%3E%3Cpath d='M-2.6 1.2C-1 -1 1 -1 2.6 1.2C1 3 -1 3 -2.6 1.2Z' fill='%237E8F5A'/%3E%3C/g%3E%3C/defs%3E%3Cuse href='%23f'/%3E%3C/svg%3E") center / contain no-repeat; }
+        body.theme-nara .day-cell.today { box-shadow: inset 0 0 0 2px var(--ring); background: #FBEFF1; }
+
+        /* pétalos que caen (solo Nara; nunca tapan nada y se apagan con "reducir movimiento") */
+        .sakura-fall { display: none; }
+        body.theme-nara .sakura-fall { display: block; position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        body.theme-nara > .container { position: relative; z-index: 1; }
+        .sakura-fall i { position: absolute; top: -40px; display: block; animation: sk-fall linear infinite; will-change: transform; }
+        .sakura-fall i b { display: block; width: 15px; height: 15px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -24 24 26'%3E%3Cpath d='M0 0C-7-5-9.5-15-4.2-22.5L0-19L4.2-22.5C9.5-15 7-5 0 0Z' fill='%23F6CBD6' stroke='%23E39AAF' stroke-width='.9'/%3E%3C/svg%3E") center / contain no-repeat; opacity: .8; animation: sk-sway ease-in-out infinite alternate; }
+        .sakura-fall i:nth-child(1) { left: 6%;  animation-duration: 19s; animation-delay: -2s; }
+        .sakura-fall i:nth-child(2) { left: 22%; animation-duration: 25s; animation-delay: -14s; }
+        .sakura-fall i:nth-child(3) { left: 41%; animation-duration: 21s; animation-delay: -7s; }
+        .sakura-fall i:nth-child(4) { left: 58%; animation-duration: 28s; animation-delay: -20s; }
+        .sakura-fall i:nth-child(5) { left: 74%; animation-duration: 23s; animation-delay: -4s; }
+        .sakura-fall i:nth-child(6) { left: 89%; animation-duration: 26s; animation-delay: -11s; }
+        .sakura-fall i:nth-child(7) { left: 33%; animation-duration: 31s; animation-delay: -25s; }
+        .sakura-fall i:nth-child(2) b, .sakura-fall i:nth-child(5) b { width: 11px; height: 11px; animation-duration: 3.4s; }
+        .sakura-fall i:nth-child(odd) b { animation-duration: 4.2s; }
+        .sakura-fall i:nth-child(4) b, .sakura-fall i:nth-child(7) b { width: 18px; height: 18px; opacity: .6; animation-duration: 5s; }
+        @keyframes sk-fall { from { transform: translate3d(0, -5vh, 0); } to { transform: translate3d(-60px, 110vh, 0); } }
+        @keyframes sk-sway { from { transform: translateX(-14px) rotate(-30deg); } to { transform: translateX(14px) rotate(50deg); } }
+        @media (prefers-reduced-motion: reduce) { body.theme-nara .sakura-fall { display: none; } }
+
+        /* --- Pop art: piezas nuevas --- */
+        body.theme-pop .btn-gear { background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); width: 50px; height: 50px; top: calc(50% - 35px); }
+        body.theme-pop .btn-gear svg { width: 27px; height: 27px; }
+        body.theme-pop .btn-gear:active { transform: translate(3px, 3px); box-shadow: none; }
+        body.theme-pop .set-top { background: var(--paper); border-bottom: 4px solid var(--ink); }
+        body.theme-pop .set-back { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 21px; letter-spacing: .05em; }
+        body.theme-pop .set-back:active { transform: translate(3px, 3px); box-shadow: none; }
+        body.theme-pop .set-title { font-family: var(--display); font-weight: 400; font-size: 38px; letter-spacing: .05em; color: var(--red); -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--ink); }
+        body.theme-pop .set-h { font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: .05em; text-transform: none; color: var(--ink); text-shadow: 2px 2px 0 var(--yellow); }
+        body.theme-pop .set-help, body.theme-pop .acct-line, body.theme-pop .acct-line b { color: var(--ink); font-weight: 700; }
+        body.theme-pop .stock-card { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); }
+        body.theme-pop .stock-card:active { transform: translate(3px, 3px); box-shadow: none; }
+        body.theme-pop .stock-card.is-alert { background: #FFE3E3; }
+        body.theme-pop .sc-title { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .04em; }
+        body.theme-pop .sc-month, body.theme-pop .sc-month b, body.theme-pop .sc-main small { color: var(--ink); font-weight: 700; }
+        body.theme-pop .sc-row { border-top: 2px dashed var(--ink); }
+        body.theme-pop .sc-main b { font-family: var(--display); font-weight: 400; font-size: 21px; letter-spacing: .04em; }
+        body.theme-pop .sc-badge { border: 2px solid var(--ink); border-radius: 3px; color: var(--ink); font-weight: 800; }
+        body.theme-pop .sc-badge.is-ok { background: var(--cyan); }
+        body.theme-pop .sc-badge.is-warn { background: var(--yellow); }
+        body.theme-pop .sc-badge.is-bad { background: var(--red); color: #fff; }
+        body.theme-pop .sc-badge.is-none { background: #fff; }
     </style>
 </head>
 <body>
 
     <script>
         /* TEMAS */
-        function getTheme() { try { var t = localStorage.getItem('nara_theme'); return ['light', 'neon', 'pop', 'nara'].indexOf(t) >= 0 ? t : 'dark'; } catch (e) { return 'dark'; } }
+        var THEMES = ['dark', 'light', 'neon', 'pop', 'nara'];
+        var THEME_COLORS = { dark: '#17100E', light: '#F3F5F9', neon: '#070516', pop: '#FFF1BF', nara: '#E4E9DD' };
+        function getTheme() { try { var t = localStorage.getItem('nara_theme'); return THEMES.indexOf(t) >= 0 ? t : 'dark'; } catch (e) { return 'dark'; } }
         function paintTheme(t) {
-            document.body.classList.remove('theme-pop', 'theme-light', 'theme-neon', 'theme-nara');
-            if (t !== 'dark') document.body.classList.add('theme-' + t);
+            var body = document.body;
+            body.classList.remove('th', 'theme-dark', 'theme-pop', 'theme-light', 'theme-neon', 'theme-nara');
+            body.classList.add('theme-' + t);
+            if (t !== 'pop') body.classList.add('th');   // Pop art tiene su propio bloque de estilos
             var meta = document.querySelector('meta[name="theme-color"]');
-            if (meta) meta.setAttribute('content', { dark: '#121212', light: '#F4F5F7', neon: '#07040F', pop: '#FFF1BF', nara: '#F6F3EB' }[t]);
+            if (meta) meta.setAttribute('content', THEME_COLORS[t]);
             document.querySelectorAll('.theme-btn[data-theme]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-theme') === t ? 'true' : 'false'); });
         }
         function setTheme(t) { try { localStorage.setItem('nara_theme', t); } catch (e) {} paintTheme(t); }
@@ -474,6 +802,8 @@
             }
         } catch(e) {}
     </script>
+
+    <div class="sakura-fall" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
 
     <!-- LOGIN -->
     <div id="authScreen" class="container full-screen-center">
@@ -497,7 +827,7 @@
         <button class="auth-btn auth-btn-google" onclick="loginGoogle()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" style="margin-right: 10px;"> Google
         </button>
-        <p style="text-align: center; color: #666; font-size: 11px; margin-top: 10px;">⚠ IMPORTANTE: Si estás en WhatsApp, dale a <b>"Abrir en el navegador"</b> (Chrome/Safari) para que Google funcione.</p>
+        <p class="auth-note">⚠ IMPORTANTE: Si estás en WhatsApp, dale a <b>"Abrir en el navegador"</b> (Chrome/Safari) para que Google funcione.</p>
         <p id="authError" style="color: #EF5350; text-align: center; margin-top: 10px; font-size: 14px; font-weight: bold;"></p>
     </div>
 
@@ -516,9 +846,23 @@
 
     <!-- APP -->
     <div id="appScreen" class="container" style="display: none;">
+
+        <!-- Modo personalizar: aviso arriba y barra de acciones siempre visible abajo -->
+        <div class="layout-banner" id="layoutBanner">
+            <b>Personalizar inicio</b>
+            <span class="layout-hint">Arrastra ⠿ para ordenar y usa 👁 para ocultar. Los cambios se guardan al pulsar Aceptar.</span>
+        </div>
+        <div class="layout-bar" id="layoutBar">
+            <button type="button" class="lb-cancel" onclick="cancelLayoutEdit()">✕ Cancelar</button>
+            <button type="button" class="lb-reset" onclick="resetLayout()">⟲ Restaurar</button>
+            <button type="button" class="lb-ok" onclick="acceptLayoutEdit()">✔ Aceptar</button>
+        </div>
         
-        <!-- Nombre Gigante Primera Línea -->
-        <div class="baby-name" id="babyNameText"></div>
+        <!-- Nombre del bebé arriba y engranaje de Ajustes -->
+        <div class="app-top">
+            <div class="baby-name" id="babyNameText"></div>
+            <button type="button" class="btn-gear" onclick="openSettings()" aria-label="Ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+        </div>
         
         <div id="blocks">
             <div class="block" data-block="resumen" data-title="📊 Resumen del día">
@@ -558,11 +902,17 @@
                 </div>
             </div>
             
+            <div class="block" data-block="stock" data-title="📦 Stock y gastos">
+                <div class="block-body">
+                    <div class="stock-card" id="stockCard" role="button" tabindex="0" onclick="openStockModal()" onkeydown="if(event.key==='Enter')openStockModal()">📦 Stock y gastos</div>
+                </div>
+            </div>
+
             <div class="block" data-block="calendario" data-title="📅 Calendario">
                 <div class="block-body">
                     <div class="section-title">
                         <span id="monthTitle">Mes</span>
-                        <div class="legend"><span><span class="dot" style="background:#4CAF50"></span> Bien</span><span><span class="dot" style="background:#FFC107"></span> Justo</span><span><span class="dot" style="background:#EF5350"></span> Bajo</span></div>
+                        <div class="legend"><span><span class="dot dot-ok"></span> Bien</span><span><span class="dot dot-warn"></span> Justo</span><span><span class="dot dot-bad"></span> Bajo</span></div>
                     </div>
                     <div class="calendar-header"><div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div></div>
                     <div class="calendar-grid" id="calendarGrid"></div>
@@ -575,97 +925,132 @@
                     <ul class="history-list" id="historyList"></ul>
                 </div>
             </div>
-
-            <!-- NUEVO BLOQUE: UTILIDADES -->
-            <div class="block" data-block="utilidades" data-title="🧰 Utilidades">
-                <div class="block-body">
-                    <div class="section-title">🧰 Utilidades</div>
-                    <div class="settings-card">
-                        <div class="stock-banner" id="stockBanner" onclick="openStockModal()">📦 Stock y gastos</div>
-                        <button class="btn-invite" onclick="openInviteModal()" style="margin-top: 15px;">👨‍👩‍👧 Enviar invitación a pareja</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- BLOQUE: AJUSTES -->
-            <div class="block" data-block="ajustes" data-title="⚙️ Ajustes">
-                <div class="block-body">
-                    <div class="section-title" onclick="toggleAjustes()" style="cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center;">
-                        <span>⚙️ Familia y Ajustes</span>
-                        <span id="ajustesIcon" style="font-size: 20px;">▼</span>
-                    </div>
-                    
-                    <div class="settings-card" id="ajustesContent" style="display: none; margin-top: 10px;">
-                        
-                        <div class="form-group" style="margin-bottom: 10px;">
-                            <label>Nombre del bebé</label>
-                            <input type="text" id="nameInputApp" class="styled-input" style="margin-bottom:0;" placeholder="Ej: Nara">
-                        </div>
-
-                        <div class="settings-grid">
-                            <div class="settings-col"><label>Edad</label><select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select></div>
-                            <div class="settings-col"><label>Peso (kg)</label><input type="number" id="weightInput" class="styled-input" step="0.1" style="margin-bottom:0;"></div>
-                        </div>
-                        
-                        <div class="settings-grid">
-                            <div class="settings-col">
-                                <label>Unidad</label>
-                                <select id="unitSelect" class="styled-input" style="margin-bottom:0;">
-                                    <option value="ml">Mililitros (ml)</option>
-                                    <option value="oz">Onzas (oz)</option>
-                                </select>
-                            </div>
-                            <div class="settings-col">
-                                <label>Avisar cada</label>
-                                <select id="intervalSelect" class="styled-input" style="margin-bottom:0;">
-                                    <option value="0">No avisar</option>
-                                    <option value="2">2 horas</option>
-                                    <option value="2.5">2.5 horas</option>
-                                    <option value="3">3 horas</option>
-                                    <option value="3.5">3.5 horas</option>
-                                    <option value="4">4 horas</option>
-                                    <option value="4.5">4.5 horas</option>
-                                    <option value="5">5 horas</option>
-                                    <option value="5.5">5.5 horas</option>
-                                    <option value="6">6 horas</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 15px;">
-                            <span class="theme-title">🎨 Tema</span>
-                            <div class="theme-options" style="margin-bottom: 15px;">
-                                <button type="button" class="theme-btn" data-theme="dark" aria-pressed="true" onclick="setTheme('dark')">🌙 Oscuro</button>
-                                <button type="button" class="theme-btn" data-theme="light" aria-pressed="false" onclick="setTheme('light')">☀️ Blanco</button>
-                                <button type="button" class="theme-btn" data-theme="neon" aria-pressed="false" onclick="setTheme('neon')">⚡ Neón</button>
-                                <button type="button" class="theme-btn" data-theme="pop" aria-pressed="false" onclick="setTheme('pop')">💥 Pop art</button>
-                                <button type="button" class="theme-btn" data-theme="nara" aria-pressed="false" onclick="setTheme('nara')" style="grid-column: span 2;">🌸 Nara (Japón)</button>
-                            </div>
-                            
-                            <span class="theme-title">🏗️ Apariencia y Diseño</span>
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
-                                <button type="button" class="auth-btn auth-btn-outline" id="layoutBtn" onclick="toggleLayoutEdit()" style="margin:0; flex:1;">✥ Ordenar bloques</button>
-                                <button type="button" class="auth-btn auth-btn-outline" onclick="resetLayout()" style="margin:0; width: auto; padding: 0 15px; display: none;" id="resetLayoutBtn">⟲ Restaurar</button>
-                            </div>
-                            <div class="layout-hint" style="text-align: center; font-size: 13px; font-weight: bold; margin-bottom: 15px;">Arrastra ⠿ para ordenar. 👁 para ocultar.</div>
-
-                            <!-- BOTON CERRAR SESIÓN AL FINAL -->
-                            <button onclick="logout()" style="background: transparent; color: #EF5350; border: 1px solid #EF5350; border-radius: 10px; padding: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px;">Cerrar sesión de la cuenta</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Modales -->
-    <div class="modal-overlay" id="inviteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">👨‍👩‍👧 Invitar Familiar</div><button class="close-btn" onclick="closeModal('inviteModal')">&times;</button></div><div class="modal-body"><p style="color:#ccc; font-size:14px;">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p><div style="background:#222; padding:15px; border-radius:8px; text-align:center; font-family:monospace; font-size:12px; margin-bottom:20px; word-break:break-all; color:#4CAF50; border: 1px dashed #4CAF50;" id="myFamilyCode">Cargando enlace...</div><button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button></div></div></div>
+    <!-- AJUSTES (pantalla propia, se abre con el engranaje) -->
+    <div id="settingsScreen" class="container settings-page" style="display: none;">
+        <div class="set-top">
+            <button type="button" class="set-back" onclick="closeSettings()">‹ Inicio</button>
+            <div class="set-title">Ajustes</div>
+        </div>
 
-    <div class="modal-overlay" id="historyModal"><div class="modal-content"><div class="modal-header"><div class="modal-title" id="modalTitle">Fecha</div><button class="close-btn" onclick="closeModal('historyModal')">&times;</button></div><div id="modalSubtitle" style="font-size: 14px; color: #4CAF50; margin-bottom: 20px; font-weight: bold;"></div><div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div></div></div>
+        <div class="set-h">Bebé</div>
+        <div class="settings-card">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Nombre del bebé</label>
+                <input type="text" id="nameInputApp" class="styled-input" style="margin-bottom:0;" placeholder="Ej: Nara">
+            </div>
+            <div class="settings-grid">
+                <div class="settings-col"><label>Edad</label><select id="ageSelect" class="styled-input" style="margin-bottom:0;"></select></div>
+                <div class="settings-col"><label>Peso (kg)</label><input type="number" id="weightInput" class="styled-input" step="0.1" style="margin-bottom:0;"></div>
+            </div>
+        </div>
+
+        <div class="set-h">Tomas</div>
+        <div class="settings-card">
+            <div class="settings-grid">
+                <div class="settings-col">
+                    <label>Unidad</label>
+                    <select id="unitSelect" class="styled-input" style="margin-bottom:0;">
+                        <option value="ml">Mililitros (ml)</option>
+                        <option value="oz">Onzas (oz)</option>
+                    </select>
+                </div>
+                <div class="settings-col">
+                    <label>Avisar cada</label>
+                    <select id="intervalSelect" class="styled-input" style="margin-bottom:0;">
+                        <option value="0">No avisar</option>
+                        <option value="2">2 horas</option>
+                        <option value="2.5">2.5 horas</option>
+                        <option value="3">3 horas</option>
+                        <option value="3.5">3.5 horas</option>
+                        <option value="4">4 horas</option>
+                        <option value="4.5">4.5 horas</option>
+                        <option value="5">5 horas</option>
+                        <option value="5.5">5.5 horas</option>
+                        <option value="6">6 horas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="set-h">Apariencia</div>
+        <div class="settings-card">
+            <div>
+                <span class="theme-title" style="margin-top: 0;">Tema</span>
+                <div class="theme-options">
+                    <button type="button" class="theme-btn" data-theme="dark" aria-pressed="true" onclick="setTheme('dark')">🌙 Oscuro</button>
+                    <button type="button" class="theme-btn" data-theme="light" aria-pressed="false" onclick="setTheme('light')">☀️ Blanco</button>
+                    <button type="button" class="theme-btn" data-theme="neon" aria-pressed="false" onclick="setTheme('neon')">⚡ Neón</button>
+                    <button type="button" class="theme-btn" data-theme="pop" aria-pressed="false" onclick="setTheme('pop')">💥 Pop art</button>
+                    <button type="button" class="theme-btn" data-theme="nara" aria-pressed="false" onclick="setTheme('nara')" style="grid-column: span 2;">🌸 Nara (Japón)</button>
+                </div>
+            </div>
+            <div>
+                <span class="theme-title" style="margin-top: 0;">Pantalla de inicio</span>
+                <button type="button" class="auth-btn auth-btn-outline" id="layoutBtn" onclick="startPersonalize()" style="margin:0;">✥ Personalizar pantalla de inicio</button>
+            </div>
+        </div>
+
+        <section id="setFamilySec">
+            <div class="set-h">Familia</div>
+            <div class="settings-card">
+                <p class="set-help">Comparte un enlace para que tu pareja vea y apunte lo mismo desde su móvil.</p>
+                <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍‍👧 Enviar invitación a pareja</button>
+            </div>
+        </section>
+
+        <section id="setOwnerSec" hidden>
+            <div class="set-h">Dueño de la app</div>
+            <div class="settings-card">
+                <div id="adminClaim" hidden>
+                    <button type="button" class="theme-btn" style="width:100%; flex:none;" onclick="claimAdmin()">👑 Hacerme dueño de la app</button>
+                </div>
+                <div id="adminPanel" hidden>
+                    <p class="admin-note" style="font-size:12px; margin:0 0 10px;">Solo tú ves este panel. Marcado = visible para todos los usuarios de la app. Desmarca una opción para quitarla.</p>
+                    <div id="adminToggles"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="set-h">Cuenta</div>
+        <div class="settings-card">
+            <div class="acct-line">Sesión iniciada como <b id="acctEmail"></b></div>
+            <button class="btn-logout" onclick="logout()">Cerrar sesión de la cuenta</button>
+        </div>
+        <div class="set-foot"></div>
+    </div>
+
+    <!-- Modales -->
+    <div class="modal-overlay" id="inviteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">👨‍👩‍‍👧 Invitar Familiar</div><button class="close-btn" onclick="closeModal('inviteModal')">&times;</button></div><div class="modal-body"><p class="invite-text">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p><div class="invite-code" id="myFamilyCode">Cargando enlace...</div><button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button></div></div></div>
+
+    <div class="modal-overlay" id="historyModal"><div class="modal-content"><div class="modal-header"><div class="modal-title" id="modalTitle">Fecha</div><button class="close-btn" onclick="closeModal('historyModal')">&times;</button></div><div id="modalSubtitle" class="modal-subtitle"></div><div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div></div></div>
     
     <div class="modal-overlay" id="manualModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">Añadir toma pasada</div><button class="close-btn" onclick="closeModal('manualModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>Hora de la toma:</label><input type="time" id="manualTime" class="styled-input"></div><div class="form-group"><label>Cantidad:</label><input type="number" id="manualAmountValue" class="styled-input" step="any"></div><button class="auth-btn auth-btn-primary" style="margin-top: 10px;" onclick="saveManualFeeding()">Guardar Toma</button></div></div></div>
     
-    <div class="modal-overlay" id="stockModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">📦 Stock y Gastos</div><button class="close-btn" onclick="closeModal('stockModal')">&times;</button></div><div class="modal-body"><div id="stockSummary"></div><div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Añadir bote de leche:</div><div class="form-group" style="display:flex; gap:10px; margin-bottom: 25px;"><input type="number" id="stockPriceInput" class="styled-input" placeholder="Precio (€)" step="0.01" style="flex:1; margin-bottom:0;"><button class="auth-btn auth-btn-primary" style="margin-bottom:0; width:auto; padding: 0 15px;" onclick="saveNewStock()">+ Nuevo</button></div><div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Añadir pañales (cantidad y precio del paquete):</div><div class="form-group" style="display:flex; gap:10px; margin-bottom: 8px;"><input type="number" id="diaperCountInput" class="styled-input" placeholder="Nº pañales" step="1" min="1" inputmode="numeric" oninput="updateDiaperPreview()" style="flex:1; min-width:0; margin-bottom:0;"><input type="number" id="diaperPriceInput" class="styled-input" placeholder="Precio paquete (€)" step="0.01" inputmode="decimal" oninput="updateDiaperPreview()" style="flex:1; min-width:0; margin-bottom:0;"></div><div id="diaperPreview" style="font-size:14px; font-weight:bold; margin-bottom:10px; color:#aaa;">Escribe cuántos pañales trae el paquete y su precio</div><button class="auth-btn auth-btn-primary" style="margin-bottom: 25px;" onclick="saveNewDiapers()">🧷 Añadir pañales</button><div style="font-weight:bold; margin-bottom:10px; color:#aaa;">Historial de botes:</div><ul class="history-list" id="stockListContainer"></ul><div style="font-weight:bold; margin: 25px 0 10px; color:#aaa;">Historial de pañales:</div><ul class="history-list" id="diaperListContainer"></ul></div></div></div>
+    <div class="modal-overlay" id="stockModal"><div class="modal-content">
+        <div class="modal-header"><div class="modal-title">📦 Stock y gastos</div><button class="close-btn" onclick="closeModal('stockModal')">&times;</button></div>
+        <div class="modal-body">
+            <div id="stockSummary"></div>
+
+            <div class="st-section">🍼 Leche</div>
+            <div class="st-form">
+                <input type="number" id="stockPriceInput" class="styled-input" placeholder="Precio (€)" step="0.01" inputmode="decimal">
+                <button class="auth-btn auth-btn-primary" onclick="saveNewStock()">+ Nuevo bote</button>
+            </div>
+            <ul class="history-list" id="stockListContainer"></ul>
+
+            <div class="st-section">🧷 Pañales</div>
+            <div class="st-form">
+                <input type="number" id="diaperCountInput" class="styled-input" placeholder="Nº pañales" step="1" min="1" inputmode="numeric" oninput="updateDiaperPreview()">
+                <input type="number" id="diaperPriceInput" class="styled-input" placeholder="Precio (€)" step="0.01" inputmode="decimal" oninput="updateDiaperPreview()">
+            </div>
+            <div id="diaperPreview" class="st-preview">Escribe cuántos pañales trae el paquete y su precio</div>
+            <button class="auth-btn auth-btn-primary" style="margin-bottom: 14px;" onclick="saveNewDiapers()">🧷 Añadir pañales</button>
+            <ul class="history-list" id="diaperListContainer"></ul>
+        </div>
+    </div></div>
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -685,7 +1070,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database(); const auth = firebase.auth(); const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-        let dbRef, vitRef, stockRef, profileRef, diaperRef;
+        let dbRef, vitRef, stockRef, profileRef, diaperRef, settingsRef, ownerRef;
         let currentUser = null, currentFamilyId = null;
         let babyProfile = { nombre: 'Bebé', edad: 2, peso: 4.5 };
         let records = [], stockRecords = [], vitDRecords = {}, diaperRecords = [];
@@ -756,10 +1141,10 @@
                     }
                 }).catch(e => console.error(e));
             } else {
-                currentUser = null; currentFamilyId = null;
+                currentUser = null; currentFamilyId = null; hideSettingsScreen(false);
                 document.getElementById('authScreen').style.display = 'flex';
                 document.getElementById('setupScreen').style.display = 'none'; document.getElementById('appScreen').style.display = 'none';
-                if(dbRef) { dbRef.off(); vitRef.off(); stockRef.off(); profileRef.off(); diaperRef.off(); }
+                if(dbRef) { dbRef.off(); vitRef.off(); stockRef.off(); profileRef.off(); diaperRef.off(); settingsRef.off(); ownerRef.off(); }
             }
         });
 
@@ -767,7 +1152,7 @@
             currentFamilyId = fId;
             profileRef = db.ref('familias/' + currentFamilyId + '/perfil'); dbRef = db.ref('familias/' + currentFamilyId + '/registros');
             vitRef = db.ref('familias/' + currentFamilyId + '/vitamina_d'); stockRef = db.ref('familias/' + currentFamilyId + '/stock_leche');
-            diaperRef = db.ref('familias/' + currentFamilyId + '/panales');
+            diaperRef = db.ref('familias/' + currentFamilyId + '/panales'); settingsRef = db.ref('sistema/ajustes'); ownerRef = db.ref('sistema/owner');
             
             profileRef.once('value').then(snap => {
                 if(!snap.exists()) {
@@ -796,7 +1181,11 @@
             if (pass.length < 6) return document.getElementById('authError').innerText = "Contraseña mínimo 6 caracteres.";
             auth.createUserWithEmailAndPassword(email, pass).catch(e => document.getElementById('authError').innerText = "Ese email ya está en uso o no es válido.");
         }
-        function logout() { auth.signOut(); }
+        function logout() {
+            if (!confirm('¿Cerrar sesión en este móvil? Los datos no se borran.')) return;
+            if (layoutEditing) cancelLayoutEdit();
+            auth.signOut();
+        }
 
         function openInviteModal() {
             const bName = encodeURIComponent(babyProfile.nombre); const inviteLink = window.location.origin + window.location.pathname + "?invite=" + currentFamilyId + "&name=" + bName;
@@ -840,8 +1229,10 @@
             diaperRef.on('value', snap => {
                 const data = snap.val() || {};
                 diaperRecords = Object.keys(data).map(key => ({ dbKey: key, ...data[key] }));
-                diaperRecords.sort((a,b) => b.timestamp - a.timestamp); refreshStockModalIfOpen();
+                diaperRecords.sort((a,b) => b.timestamp - a.timestamp); updateStockUI(); refreshStockModalIfOpen();
             });
+            settingsRef.on('value', snap => { appSettings.ocultar = (snap.val() || {}).ocultar || {}; applySettings(); });
+            ownerRef.on('value', snap => { appSettings.owner = snap.val() || null; applySettings(); });
 
             document.querySelectorAll('.modal-overlay').forEach(modal => { modal.onclick = function(e) { if (e.target === this) this.style.display = 'none'; }; });
             setInterval(updateTimer, 30000); 
@@ -857,24 +1248,18 @@
 
         function getTodayString() { const now = new Date(); return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`; }
         function getColorForAmount(amount, target) {
-            if (amount === 0) return 'transparent'; if (amount >= target) return '#4CAF50'; 
-            if (amount >= target * 0.75) return '#FFC107'; return '#EF5350'; 
+            if (amount === 0) return 'transparent'; if (amount >= target) return 'var(--ok)'; 
+            if (amount >= target * 0.75) return 'var(--warn)'; return 'var(--bad)'; 
         }
 
         function updateVitDUI() {
             const todayStr = getTodayString(); const btn = document.getElementById('btnVitD');
-            if(vitDRecords[todayStr]) { btn.innerHTML = "☀️ Vit D ✅"; btn.style.background = "#4CAF50"; } else { btn.innerHTML = "☀ Vit D"; btn.style.background = "#F57F17"; }
+            const done = !!vitDRecords[todayStr];
+            btn.classList.toggle('done', done); btn.innerHTML = done ? "☀️ Vit D ✅" : "☀ Vit D";
         }
         function toggleVitD() {
             const todayStr = getTodayString();
             if (vitDRecords[todayStr]) { if(confirm("¿Desmarcar la Vitamina D de hoy?")) vitRef.child(todayStr).remove(); } else { vitRef.child(todayStr).set(true); }
-        }
-
-        function updateStockUI() {
-            const banner = document.getElementById('stockBanner');
-            if (stockRecords.length === 0) { banner.innerHTML = "📦 Stock y gastos"; banner.style.background = "#424242"; return; }
-            const lastBote = stockRecords[0]; const daysDiff = Math.floor((new Date() - new Date(lastBote.timestamp)) / (1000 * 60 * 60 * 24));
-            banner.style.background = daysDiff > 7 ? "#EF5350" : "#1976D2"; banner.innerHTML = "📦 Stock y gastos";
         }
 
         function saveNewStock() {
@@ -883,7 +1268,6 @@
             document.getElementById('stockPriceInput').value = '';
         }
 
-        function deleteStock(dbKey, event) { if(event) event.stopPropagation(); if(confirm("¿Borrar este bote de leche?")) { stockRef.child(dbKey).remove(); closeModal('stockModal'); } }
 
         function updateUI() {
             updateControlsDisplay();
@@ -893,13 +1277,13 @@
             
             const fillBar = document.getElementById('dailyProgressFill');
             fillBar.style.width = `${Math.min((totalMl / target) * 100, 100)}%`;
-            fillBar.style.backgroundColor = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : '#EF5350';
+            fillBar.style.backgroundColor = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : 'var(--bad)';
             
             document.getElementById('totalText').innerText = formatAmount(totalMl);
             document.getElementById('totalText').style.color = getColorForAmount(totalMl, target) !== 'transparent' ? getColorForAmount(totalMl, target) : '';
             document.getElementById('targetInfoText').innerText = `Recomendado: ${formatAmount(target)} al día`;
 
-            updateTimer(); renderList(todayRecords, document.getElementById('historyList')); renderCalendar(target);
+            updateTimer(); updateStockUI(); renderList(todayRecords, document.getElementById('historyList')); renderCalendar(target);
         }
 
         function adjustAmount(direction) {
@@ -915,7 +1299,7 @@
 
         function renderList(recordArray, container) {
             container.innerHTML = '';
-            if(recordArray.length === 0) return container.innerHTML = '<div style="text-align: center; color: #888; padding: 10px;">Sin registros</div>';
+            if(recordArray.length === 0) return container.innerHTML = '<div class="empty-note">Sin registros</div>';
             [...recordArray].sort((a,b) => b.timestamp - a.timestamp).forEach(r => {
                 const li = document.createElement('li'); li.className = 'history-item';
                 let iconAndText = r.type === 'poop' ? `💩 Caca` : `🍼 ${formatAmount(r.amount)}`;
@@ -939,15 +1323,15 @@
                 const hasPoop = dayRecords.some(r => r.type === 'poop'); const hasVitD = !!vitDRecords[dateStr];
                 
                 let iconsHtml = '';
-                if (hasVitD) iconsHtml += '<div style="font-size: 14px; line-height: 1.2;">☀️</div>';
-                if (hasPoop) iconsHtml += '<div style="font-size: 14px; line-height: 1.2;">💩</div>';
+                if (hasVitD) iconsHtml += '<div>☀️</div>';
+                if (hasPoop) iconsHtml += '<div>💩</div>';
                 
                 const cell = document.createElement('div'); cell.className = 'day-cell';
                 let dayColor = totalMl > 0 ? getColorForAmount(totalMl, target) : 'transparent';
-                if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) { cell.style.boxShadow = 'inset 0 0 0 2px #555'; cell.classList.add('today'); }
+                if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) { cell.classList.add('today'); }
                 
                 let displayTotal = currentUnit === 'oz' ? (Math.round(totalMl / 3) / 10).toFixed(1) : totalMl;
-                cell.innerHTML = `<div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div><div class="day-text">${day}</div>${totalMl > 0 ? `<div class="day-ml">${displayTotal}</div>` : ''}${iconsHtml ? `<div style="position: absolute; top: 3px; right: 3px; display:flex; flex-direction:column; gap:2px;">${iconsHtml}</div>` : ''}`;
+                cell.innerHTML = `<div class="day-fill" style="height: ${Math.min((totalMl / target) * 100, 100)}%; background-color: ${dayColor};"></div><div class="day-text">${day}</div>${totalMl > 0 ? `<div class="day-ml">${displayTotal}</div>` : ''}${iconsHtml ? `<div class="day-icons">${iconsHtml}</div>` : ''}`;
                 cell.onclick = () => openCalendarModal(dateStr, day, monthNames[month], totalMl, dayRecords);
                 calendarGrid.appendChild(cell);
             }
@@ -992,62 +1376,115 @@
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
         // --- STOCK, PAÑALES Y GASTOS ---
-        function eur(n) { return n.toFixed(2) + ' €'; }
+        const DAY_MS = 86400000;
+        function eur(n) { return n.toFixed(2).replace('.', ',') + ' €'; }
+        function num1(n) { return (Math.round(n * 10) / 10).toString().replace('.', ','); }
+        function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+        function fmtDay(ts) { return new Date(ts).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }); }
+        function daysBetween(a, b) { return Math.max(1, Math.round((b - a) / DAY_MS)); }
         function perUnit(r) { const c = parseInt(r.count) || 0, p = parseFloat(r.price) || 0; return c > 0 ? (p / c).toFixed(3) : '0.000'; }
+
+        // Las listas van de más nuevo a más antiguo. Un bote/paquete termina cuando se marca "Gastado";
+        // si no se marcó pero ya hay otro más nuevo, se da por terminado al abrir ese. El último sin marcar está "en uso".
+        function endOf(list, i) {
+            if (list[i].consumedTs) return list[i].consumedTs;
+            return i > 0 ? list[i - 1].timestamp : null;
+        }
+        function finishedStats(list) {
+            let n = 0, days = 0, price = 0, count = 0;
+            list.forEach((r, i) => {
+                const end = endOf(list, i); if (!end) return;
+                n++; days += daysBetween(r.timestamp, end); price += parseFloat(r.price) || 0; count += parseInt(r.count) || 0;
+            });
+            return { n, days, price, count };
+        }
 
         function refreshStockModalIfOpen() {
             const m = document.getElementById('stockModal');
             if (m && m.style.display === 'flex') renderStockModal();
         }
 
+        function stockRowHtml(kind, list, i) {
+            const r = list[i], end = endOf(list, i), explicit = !!r.consumedTs, price = parseFloat(r.price) || 0;
+            let chip = '', note = '';
+            if (explicit) {
+                chip = '<span class="st-chip chip-done">Gastado</span>';
+                note = `${fmtDay(r.consumedTs)} · duró ${plural(daysBetween(r.timestamp, r.consumedTs), 'día', 'días')}`;
+            } else if (end) {
+                note = `Duró ${plural(daysBetween(r.timestamp, end), 'día', 'días')}`;
+            } else {
+                const d = Math.floor((Date.now() - r.timestamp) / DAY_MS);
+                chip = '<span class="st-chip chip-use">En uso</span>';
+                note = d < 1 ? 'desde hoy' : `lleva ${plural(d, 'día', 'días')}`;
+            }
+            if (kind === 'diaper') note = `${r.count} pañales · ${perUnit(r).replace('.', ',')} €/ud` + (note ? ' · ' + note : '');
+            const del = kind === 'diaper' ? 'deleteDiapers' : 'deleteStock';
+            return `<div class="st-top"><span class="st-date">${r.dateStr}</span><span class="st-price">${price.toFixed(2).replace('.', ',')} €</span></div>
+                <div class="st-state">${chip}<span>${note}</span></div>
+                <div class="st-actions">
+                    <button class="btn-consume${explicit ? ' is-undo' : ''}" onclick="toggleConsumed('${kind}', '${r.dbKey}', event)">${explicit ? '↩ Reabrir' : '✓ Gastado'}</button>
+                    <button class="btn-delete" aria-label="Borrar (registrado por error)" onclick="${del}('${r.dbKey}', event)">🗑️</button>
+                </div>`;
+        }
+
         function renderStockModal() {
             const now = new Date();
             const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+            const startOfPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).getTime();
             const dayOfWeek = now.getDay() || 7;
             const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1).getTime();
-            const spent = (list, from) => list.filter(r => r.timestamp >= from).reduce((s, r) => s + (parseFloat(r.price) || 0), 0);
+            const spent = (list, from, to) => list.filter(r => r.timestamp >= from && r.timestamp < (to || Infinity)).reduce((s, r) => s + (parseFloat(r.price) || 0), 0);
             const milkWeek = spent(stockRecords, startOfWeek), milkMonth = spent(stockRecords, startOfMonth);
             const diaperWeek = spent(diaperRecords, startOfWeek), diaperMonth = spent(diaperRecords, startOfMonth);
-            const monthName = monthNames[now.getMonth()];
+            const prevTotal = spent(stockRecords, startOfPrevMonth, startOfMonth) + spent(diaperRecords, startOfPrevMonth, startOfMonth);
+            const monthName = monthNames[now.getMonth()], prevName = monthNames[(now.getMonth() + 11) % 12];
+
+            const insights = [];
+            const m = finishedStats(stockRecords), d = finishedStats(diaperRecords);
+            if (m.n > 0) insights.push(`🍼 Un bote dura de media ${num1(m.days / m.n)} días · ${eur(m.price / m.days)} al día`);
+            if (d.n > 0 && d.count > 0) insights.push(`🧷 Gastáis unos ${num1(d.count / d.days)} pañales al día · ${eur(d.price / d.count)} cada uno`);
 
             const summary = document.getElementById('stockSummary');
             if (stockRecords.length === 0 && diaperRecords.length === 0) { summary.innerHTML = ''; }
             else {
-                summary.innerHTML = `<div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #444;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#aaa;">Gasto esta semana:</span><span style="font-weight:bold; font-size:16px;">${eur(milkWeek + diaperWeek)}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span style="color:#aaa;">Gasto en ${monthName}:</span><span style="font-weight:bold; font-size:16px; color:#1976D2;">${eur(milkMonth + diaperMonth)}</span></div>
-                    <div style="border-top:1px dashed #555; margin-top:12px; padding-top:10px; font-size:13px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="color:#aaa;">🍼 Leche (${monthName})</span><span style="color:#aaa;">${eur(milkMonth)}</span></div>
-                        <div style="display:flex; justify-content:space-between;"><span style="color:#aaa;">🧷 Pañales (${monthName})</span><span style="color:#aaa;">${eur(diaperMonth)}</span></div>
-                    </div></div>`;
+                summary.innerHTML = `<div class="st-sum">
+                    <div class="st-line"><span class="st-k">Gasto esta semana</span><span class="st-v">${eur(milkWeek + diaperWeek)}</span></div>
+                    <div class="st-line"><span class="st-k">Gasto en ${monthName}</span><span class="st-v is-total">${eur(milkMonth + diaperMonth)}</span></div>
+                    <div class="st-split">
+                        <div class="st-line"><span class="st-k">🍼 Leche (${monthName})</span><span class="st-v">${eur(milkMonth)}</span></div>
+                        <div class="st-line"><span class="st-k">🧷 Pañales (${monthName})</span><span class="st-v">${eur(diaperMonth)}</span></div>
+                        <div class="st-line"><span class="st-k">Mes anterior (${prevName})</span><span class="st-v">${eur(prevTotal)}</span></div>
+                    </div>
+                    ${insights.length ? `<div class="st-insight">${insights.map(t => `<div>${t}</div>`).join('')}</div>` : ''}
+                </div>`;
             }
 
             const container = document.getElementById('stockListContainer'); container.innerHTML = '';
-            if (stockRecords.length === 0) container.innerHTML = '<div style="text-align: center; color: #888;">Aún no hay botes registrados</div>';
-            stockRecords.forEach((r, index) => {
-                const price = parseFloat(r.price) || 0;
-                const li = document.createElement('li'); li.className = 'history-item';
-                let duracionText = index < stockRecords.length - 1 ? `<span style="font-size:13px; color:#4CAF50;">Duró ${Math.floor((r.timestamp - stockRecords[index + 1].timestamp) / (1000 * 60 * 60 * 24))} días</span>` : `<span style="font-size:13px; color:#a0a0a0;">Primer bote</span>`;
-                if (index === 0) duracionText = `<span style="font-size:13px; color:#FFC107;">En uso actualmente</span>`;
-                li.innerHTML = `<div><div style="font-weight:bold; font-size:16px;">${r.dateStr}</div>${duracionText}</div><div style="display:flex; align-items:center; gap:15px;"><span style="font-size:18px; font-weight:bold; color:#e0e0e0;">${price.toFixed(2)}€</span><button class="btn-delete" onclick="deleteStock('${r.dbKey}', event)">🗑️</button></div>`;
-                container.appendChild(li);
-            });
+            if (stockRecords.length === 0) container.innerHTML = '<div class="empty-note">Aún no hay botes registrados</div>';
+            stockRecords.forEach((r, i) => { const li = document.createElement('li'); li.className = 'history-item st-item'; li.innerHTML = stockRowHtml('milk', stockRecords, i); container.appendChild(li); });
 
             const dContainer = document.getElementById('diaperListContainer'); dContainer.innerHTML = '';
-            if (diaperRecords.length === 0) dContainer.innerHTML = '<div style="text-align: center; color: #888;">Aún no hay pañales registrados</div>';
-            diaperRecords.forEach(r => {
-                const price = parseFloat(r.price) || 0;
-                const li = document.createElement('li'); li.className = 'history-item';
-                li.innerHTML = `<div><div style="font-weight:bold; font-size:16px;">${r.dateStr}</div><span style="font-size:13px; color:#aaa;">${r.count} pañales · ${perUnit(r)} €/ud</span></div><div style="display:flex; align-items:center; gap:15px;"><span style="font-size:18px; font-weight:bold; color:#e0e0e0;">${price.toFixed(2)}€</span><button class="btn-delete" onclick="deleteDiapers('${r.dbKey}', event)">🗑️</button></div>`;
-                dContainer.appendChild(li);
-            });
+            if (diaperRecords.length === 0) dContainer.innerHTML = '<div class="empty-note">Aún no hay pañales registrados</div>';
+            diaperRecords.forEach((r, i) => { const li = document.createElement('li'); li.className = 'history-item st-item'; li.innerHTML = stockRowHtml('diaper', diaperRecords, i); dContainer.appendChild(li); });
         }
 
         function openStockModal() { renderStockModal(); document.getElementById('stockModal').style.display = 'flex'; }
 
+        // "Gastado" no borra nada: guarda cuándo se acabó (y se puede deshacer con "Reabrir").
+        function toggleConsumed(kind, key, event) {
+            if (event) event.stopPropagation();
+            const list = kind === 'diaper' ? diaperRecords : stockRecords;
+            const ref = kind === 'diaper' ? diaperRef : stockRef;
+            const i = list.findIndex(r => r.dbKey === key); if (i < 0) return;
+            if (list[i].consumedTs) { ref.child(key).update({ consumedTs: null }); return; }
+            ref.child(key).update({ consumedTs: i > 0 ? list[i - 1].timestamp : Date.now() });
+        }
+
+        function deleteStock(dbKey, event) { if (event) event.stopPropagation(); if (confirm("¿Borrar este bote? Úsalo solo si lo registrasteis por error. Si ya se acabó, pulsa «Gastado».")) stockRef.child(dbKey).remove(); }
+
         function updateDiaperPreview() {
             const n = parseInt(document.getElementById('diaperCountInput').value), p = parseFloat(document.getElementById('diaperPriceInput').value);
-            document.getElementById('diaperPreview').innerText = (n > 0 && p > 0) ? `= ${(p / n).toFixed(3)} € por pañal` : 'Escribe cuántos pañales trae el paquete y su precio';
+            document.getElementById('diaperPreview').innerText = (n > 0 && p > 0) ? `= ${(p / n).toFixed(3).replace('.', ',')} € por pañal` : 'Escribe cuántos pañales trae el paquete y su precio';
         }
 
         function saveNewDiapers() {
@@ -1058,24 +1495,125 @@
             document.getElementById('diaperCountInput').value = ''; document.getElementById('diaperPriceInput').value = ''; updateDiaperPreview();
         }
 
-        function deleteDiapers(dbKey, event) { if (event) event.stopPropagation(); if (confirm("¿Borrar este paquete de pañales?")) diaperRef.child(dbKey).remove(); }
+        function deleteDiapers(dbKey, event) { if (event) event.stopPropagation(); if (confirm("¿Borrar este paquete? Úsalo solo si lo registrasteis por error. Si ya se acabó, pulsa «Gastado».")) diaperRef.child(dbKey).remove(); }
 
+        // Tarjeta de Stock en el inicio: estado de un vistazo (toca para abrir el detalle)
+        function updateStockUI() {
+            const card = document.getElementById('stockCard'); if (!card) return;
+            const now = Date.now(), nowD = new Date();
+            const monthStart = new Date(nowD.getFullYear(), nowD.getMonth(), 1).getTime();
+            const monthSpent = [...stockRecords, ...diaperRecords].filter(r => r.timestamp >= monthStart).reduce((s, r) => s + (parseFloat(r.price) || 0), 0);
+            const daysSince = ts => Math.floor((now - ts) / DAY_MS);
+            const sinceTxt = d => d < 1 ? 'abierto hoy' : `lleva ${plural(d, 'día', 'días')}`;
+            const row = (ico, name, detail, badge, cls) => `<div class="sc-row"><span class="sc-ico">${ico}</span><span class="sc-main"><b>${name}</b><small>${detail}</small></span><span class="sc-badge is-${cls}">${badge}</span></div>`;
 
-        // --- SISTEMA DESPLEGABLE DE AJUSTES ---
-        function toggleAjustes(forceOpen = false) {
-            const content = document.getElementById('ajustesContent');
-            const icon = document.getElementById('ajustesIcon');
-            if (content.style.display === 'none' || forceOpen === true) {
-                content.style.display = 'block';
-                icon.innerText = '▲';
-            } else {
-                content.style.display = 'none';
-                icon.innerText = '▼';
+            // leche
+            let milk;
+            if (stockRecords.length === 0) milk = row('🍼', 'Leche', 'Aún no hay botes apuntados', 'Sin datos', 'none');
+            else {
+                const last = stockRecords[0], m = finishedStats(stockRecords);
+                if (last.consumedTs) milk = row('🍼', 'Leche', `Se acabó el ${fmtDay(last.consumedTs)} · apunta el nuevo`, 'Sin bote', 'bad');
+                else {
+                    const d = daysSince(last.timestamp), avg = m.n > 0 ? m.days / m.n : 0;
+                    const soon = d > 7 || (avg > 0 && d >= avg - 1);
+                    milk = row('🍼', 'Leche', sinceTxt(d) + (avg > 0 ? ` · suele durar ${num1(avg)} días` : ''), soon ? 'Se acaba' : 'En uso', soon ? 'warn' : 'ok');
+                }
             }
+
+            // pañales
+            let dia;
+            if (diaperRecords.length === 0) dia = row('🧷', 'Pañales', 'Aún no hay paquetes apuntados', 'Sin datos', 'none');
+            else {
+                const last = diaperRecords[0], st = finishedStats(diaperRecords);
+                if (last.consumedTs) dia = row('🧷', 'Pañales', `Se acabaron el ${fmtDay(last.consumedTs)} · apunta el nuevo`, 'Sin paquete', 'bad');
+                else {
+                    const d = daysSince(last.timestamp), total = parseInt(last.count) || 0, rate = st.days > 0 ? st.count / st.days : 0;
+                    if (rate > 0 && total > 0) {
+                        const left = Math.max(0, Math.round(total - rate * Math.max(d, 0)));
+                        const low = left <= rate * 2;
+                        dia = row('🧷', 'Pañales', `quedan unos ${left} de ${total} · ${sinceTxt(d)}`, low ? 'Quedan pocos' : 'En uso', low ? 'warn' : 'ok');
+                    } else dia = row('🧷', 'Pañales', `${total} pañales · ${sinceTxt(d)}`, 'En uso', 'ok');
+                }
+            }
+
+            const monthName = monthNames[nowD.getMonth()];
+            card.innerHTML = `<div class="sc-head"><span class="sc-title">Stock y gastos</span><span class="sc-month">${monthName}: <b>${eur(monthSpent)}</b></span></div>${milk}${dia}`;
+            card.classList.toggle('is-alert', card.querySelector('.sc-badge.is-bad') !== null);
         }
 
+        // --- ADMINISTRADOR (opciones que se pueden ocultar a toda la familia) ---
+        const ADMIN_FEATURES = [
+            { key: 'pasada',  label: '✏️ Editar' },
+            { key: 'caca',    label: '💩 Caca' },
+            { key: 'vitd',    label: '☀️ Vitamina D' },
+            { key: 'stock',   label: '📦 Stock y gastos (leche y pañales)' },
+            { key: 'invitar', label: '👨‍👩‍👧 Invitar a pareja' }
+        ];
+        let appSettings = { owner: null, ocultar: {} };
+        const MASTER_LINK = new URLSearchParams(window.location.search).has('master');
+
+        function buildAdminToggles() {
+            const box = document.getElementById('adminToggles'); box.innerHTML = '';
+            ADMIN_FEATURES.forEach(f => {
+                const row = document.createElement('label'); row.className = 'admin-row';
+                const txt = document.createElement('span'); txt.innerText = f.label;
+                const cb = document.createElement('input'); cb.type = 'checkbox'; cb.id = 'adm_' + f.key; cb.checked = true;
+                cb.onchange = () => settingsRef.child('ocultar/' + f.key).set(cb.checked ? null : true).catch(e => { alert("No se pudo guardar el ajuste: " + e.message); applySettings(); });
+                row.appendChild(txt); row.appendChild(cb); box.appendChild(row);
+            });
+        }
+
+        function applySettings() {
+            const hidden = appSettings.ocultar || {};
+            ADMIN_FEATURES.forEach(f => {
+                document.body.classList.toggle('hide-' + f.key, !!hidden[f.key]);
+                const cb = document.getElementById('adm_' + f.key); if (cb) cb.checked = !hidden[f.key];
+            });
+            const isOwner = !!currentUser && !!appSettings.owner && appSettings.owner === currentUser.uid;
+            document.getElementById('adminClaim').hidden = !!appSettings.owner || !MASTER_LINK;
+            document.getElementById('adminPanel').hidden = !isOwner;
+            document.getElementById('setOwnerSec').hidden = document.getElementById('adminClaim').hidden && !isOwner;
+        }
+
+        function claimAdmin() {
+            if (!currentUser || !ownerRef) return;
+            ownerRef.transaction(cur => cur ? undefined : currentUser.uid)
+                .then(res => { if (!res.committed) alert("Ya hay un dueño de la app."); })
+                .catch(e => alert("No se pudo guardar: " + e.message));
+        }
+
+        buildAdminToggles();
+
+        // --- PANTALLA DE AJUSTES (engranaje) ---
+        // Se abre como una pantalla propia; el botón "atrás" del móvil también vuelve al inicio.
+        let settingsOpen = false, homeScrollY = 0;
+        try { history.scrollRestoration = 'manual'; } catch (e) {}
+        function openSettings() {
+            if (settingsOpen || layoutEditing) return;
+            homeScrollY = window.scrollY;
+            document.getElementById('acctEmail').innerText = (currentUser && (currentUser.email || currentUser.displayName)) || 'tu cuenta';
+            document.getElementById('appScreen').style.display = 'none';
+            document.getElementById('settingsScreen').style.display = 'block';
+            settingsOpen = true; document.body.classList.add('settings-open'); window.scrollTo(0, 0);
+            try { history.pushState({ naraSettings: true }, ''); } catch (e) {}
+        }
+        function hideSettingsScreen(restoreScroll) {
+            if (!settingsOpen) return;
+            settingsOpen = false; document.body.classList.remove('settings-open');
+            document.getElementById('settingsScreen').style.display = 'none';
+            if (currentUser) document.getElementById('appScreen').style.display = 'block';
+            if (restoreScroll) window.scrollTo(0, homeScrollY);
+        }
+        function closeSettings() {
+            const wasOpen = settingsOpen;
+            hideSettingsScreen(true);
+            try { if (wasOpen && history.state && history.state.naraSettings) history.back(); } catch (e) {}
+        }
+        window.addEventListener('popstate', () => hideSettingsScreen(true));
+        function startPersonalize() { closeSettings(); enterLayoutEdit(); }
+
         // --- DISEÑO PERSONALIZABLE (bloques ordenables) ---
-        const BLOCK_KEYS = ['resumen', 'toma', 'acciones', 'calendario', 'historial', 'utilidades', 'ajustes'];
+        const BLOCK_KEYS = ['resumen', 'toma', 'acciones', 'stock', 'calendario', 'historial'];
         let layout = { order: BLOCK_KEYS.slice(), hidden: [] };
         let layoutEditing = false;
 
@@ -1084,8 +1622,12 @@
                 const saved = JSON.parse(localStorage.getItem('nara_layout') || 'null');
                 if (saved && Array.isArray(saved.order)) {
                     const order = saved.order.filter((k, i, arr) => BLOCK_KEYS.includes(k) && arr.indexOf(k) === i);
-                    BLOCK_KEYS.forEach(k => { if (!order.includes(k)) order.push(k); });
-                    layout = { order: order, hidden: (saved.hidden || []).filter(k => BLOCK_KEYS.includes(k) && k !== 'ajustes') };
+                    BLOCK_KEYS.forEach((k, i) => {   // bloque nuevo: justo después del que lo precede por defecto
+                        if (order.includes(k)) return;
+                        const prev = i > 0 ? order.indexOf(BLOCK_KEYS[i - 1]) : -1;
+                        order.splice(prev + 1, 0, k);
+                    });
+                    layout = { order: order, hidden: (saved.hidden || []).filter(k => BLOCK_KEYS.includes(k)) };
                 }
             } catch (e) {}
         }
@@ -1101,7 +1643,7 @@
                 const hid = layout.hidden.includes(k);
                 el.classList.toggle('is-hidden', hid);
                 const eye = el.querySelector('.block-eye');
-                if (eye && k !== 'ajustes') { eye.innerText = hid ? '🙈' : '👁'; eye.setAttribute('aria-label', hid ? 'Mostrar bloque' : 'Ocultar bloque'); }
+                if (eye) { eye.innerText = hid ? '🙈' : '👁'; eye.setAttribute('aria-label', hid ? 'Mostrar bloque' : 'Ocultar bloque'); }
             });
             if (!layoutEditing) {
                 let first = true;
@@ -1119,27 +1661,25 @@
             applyLayout();
         }
         function toggleBlock(key) {
-            if (key === 'ajustes') return;   
             const i = layout.hidden.indexOf(key);
             if (i >= 0) layout.hidden.splice(i, 1); else layout.hidden.push(key);
             applyLayout();
         }
         function resetLayout() { layout = { order: BLOCK_KEYS.slice(), hidden: [] }; applyLayout(); }
 
+        // Los cambios se ven al momento, pero solo se guardan al pulsar Aceptar; Cancelar vuelve a como estaba.
         let layoutBackup = null;
-        function setAjustesOpen(open) {
-            document.getElementById('ajustesContent').style.display = open ? 'block' : 'none';
-            document.getElementById('ajustesIcon').innerText = open ? '▲' : '▼';
+        function enterLayoutEdit() {
+            layoutBackup = JSON.parse(JSON.stringify(layout));
+            layoutEditing = true; document.body.classList.add('layout-editing');
+            applyLayout(); window.scrollTo(0, 0);
         }
-        function toggleLayoutEdit() {
-            layoutEditing = !layoutEditing;
-            document.body.classList.toggle('layout-editing', layoutEditing);
-            document.getElementById('layoutBtn').innerText = layoutEditing ? '✔ Terminar edición' : '✥ Ordenar bloques';
-            if (layoutEditing) toggleAjustes(true); 
-            else saveLayout();
-            applyLayout();
-            window.scrollTo(0, 0);
+        function endLayoutEdit() {
+            layoutEditing = false; layoutBackup = null; document.body.classList.remove('layout-editing');
+            applyLayout(); window.scrollTo(0, 0);
         }
+        function acceptLayoutEdit() { saveLayout(); endLayoutEdit(); }
+        function cancelLayoutEdit() { if (!layoutEditing) return; if (layoutBackup) layout = layoutBackup; endLayoutEdit(); }
 
         /* Arrastrar bloques */
         function startBlockDrag(e, el) {
@@ -1179,9 +1719,7 @@
                 handle.appendChild(drag);
                 handle.appendChild(mk('block-up', '↑', 'Subir bloque', () => moveBlock(key, -1)));
                 handle.appendChild(mk('block-down', '↓', 'Bajar bloque', () => moveBlock(key, 1)));
-                const eye = mk('block-eye', key === 'ajustes' ? '🔒' : '👁', key === 'ajustes' ? 'Siempre visible' : 'Ocultar bloque', () => toggleBlock(key));
-                if (key === 'ajustes') eye.disabled = true;
-                handle.appendChild(eye);
+                handle.appendChild(mk('block-eye', '👁', 'Ocultar bloque', () => toggleBlock(key)));
                 el.insertBefore(handle, el.firstChild);
             });
         }
@@ -1205,12 +1743,12 @@
                 const timeToNext = Math.floor((nextTime - new Date().getTime()) / 1000);
                 
                 if (timeToNext > 0) {
-                    nextElem.style.display = 'block'; nextElem.style.color = '#4CAF50';
+                    nextElem.style.display = 'block'; nextElem.style.color = 'var(--ok)';
                     nextElem.innerText = `⏰ Próxima en: ${Math.floor(timeToNext / 3600)}h ${Math.floor((timeToNext % 3600) / 60)}m`;
                     
                     if (timeToNext <= 1800 && timeToNext > 1770) triggerNotification(lastTime.toString());
                 } else {
-                    nextElem.style.display = 'block'; nextElem.style.color = '#EF5350';
+                    nextElem.style.display = 'block'; nextElem.style.color = 'var(--bad)';
                     nextElem.innerText = `⏰ ¡Toca biberón!`;
                 }
             } else { nextElem.style.display = 'none'; }
