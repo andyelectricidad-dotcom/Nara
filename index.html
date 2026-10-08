@@ -59,10 +59,9 @@
         .settings-grid { display: flex; gap: 15px; width: 100%; }
         .settings-col { flex: 1; display: flex; flex-direction: column; }
         
-        .stock-banner { background: #1976D2; color: white; padding: 12px; border-radius: 10px; text-align: center; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4); }
+        .stock-banner { background: #1976D2; color: white; padding: 12px; border-radius: 10px; text-align: center; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4); display: block; }
         .stock-banner:active { transform: scale(0.98); }
         .btn-invite { background: #4CAF50; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
-        .btn-migrate { background: #9C27B0; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; font-size: 14px; cursor: pointer; }
 
         /* App Header y Resumen */
         .header { text-align: center; margin-top: 10px; margin-bottom: 15px; }
@@ -188,11 +187,9 @@
 
         /* ===================================================================
            TEMAS: Oscuro · Blanco · Neón · Nara
-           Cada tema solo define variables y unos pocos detalles propios.
-           Los componentes se escriben una vez para los cuatro (body.th).
            =================================================================== */
 
-        /* --- OSCURO · luz de noche: marrón cacao y ámbar tenue, sin azules --- */
+        /* --- OSCURO --- */
         body.theme-dark {
             color-scheme: dark;
             --bg: #17100E; --bg-img: radial-gradient(90% 340px at 50% -50px, rgba(236, 160, 98, .18), transparent 72%); --bg-repeat: no-repeat;
@@ -211,7 +208,7 @@
             --shadow-card: none; --shadow-modal: 0 24px 60px rgba(0, 0, 0, .6); --bar-h: 14px; --fill-op: .42;
         }
 
-        /* --- BLANCO · hoja de registro: papel con cuadrícula, tinta azul, horas en monoespaciada --- */
+        /* --- BLANCO --- */
         body.theme-light {
             color-scheme: light;
             --bg: #F3F5F9;
@@ -230,7 +227,7 @@
             --shadow-card: none; --shadow-modal: 0 18px 50px rgba(15, 27, 51, .25); --bar-h: 18px; --fill-op: .5;
         }
 
-        /* --- NEÓN · arcade nocturno: violeta profundo, brillo solo en lo importante --- */
+        /* --- NEÓN --- */
         body.theme-neon {
             color-scheme: dark;
             --bg: #070516;
@@ -251,7 +248,7 @@
             --shadow-card: none; --shadow-modal: 0 0 40px rgba(255, 61, 203, .35); --bar-h: 14px; --fill-op: .55;
         }
 
-        /* --- NARA · papel de niebla del parque, tinta sumi, sello bermellón y añil --- */
+        /* --- NARA --- */
         body.theme-nara {
             color-scheme: light;
             --bg: #E4E9DD;
@@ -298,7 +295,7 @@
         body.th .stock-banner { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm); box-shadow: none; }
         body.th .stock-banner.is-empty { background: var(--surface-2); color: var(--muted); }
         body.th .stock-banner.is-alert { background: var(--bad); border-color: var(--bad); color: #fff; }
-        body.th .btn-invite, body.th .btn-migrate { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
+        body.th .btn-invite { background: var(--surface-2); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm); }
         body.th .btn-logout { color: var(--bad); border-color: var(--bad); border-radius: var(--radius-sm); }
         body.th .divider { background: var(--line); }
 
@@ -556,12 +553,7 @@
 
         body.theme-pop .settings-card { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); }
         body.theme-pop .settings-col label { color: var(--ink); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
-        body.theme-pop .stock-banner { border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: .05em; padding: 14px 10px; }
-        body.theme-pop .stock-banner:active { transform: translate(3px, 3px); box-shadow: none; }
-        body.theme-pop .btn-invite, body.theme-pop .btn-migrate { border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); font-family: var(--display); font-weight: 400; font-size: 22px; letter-spacing: .05em; padding: 13px 10px; }
-        body.theme-pop .btn-invite { background: var(--green); }
-        body.theme-pop .btn-migrate { background: var(--pink); color: var(--ink); }
-        body.theme-pop .settings-card > button[onclick="logout()"] { background: #fff !important; color: var(--red) !important; border: 3px solid var(--red) !important; border-radius: 4px !important; box-shadow: 3px 3px 0 var(--red); font-family: var(--display); font-weight: 400 !important; font-size: 22px; letter-spacing: .05em; }
+        body.theme-pop .btn-logout { background: #fff !important; color: var(--red) !important; border: 3px solid var(--red) !important; border-radius: 4px !important; box-shadow: 3px 3px 0 var(--red); font-family: var(--display); font-weight: 400 !important; font-size: 22px; letter-spacing: .05em; }
         body.theme-pop .theme-title { color: var(--ink); font-weight: 800; letter-spacing: .08em; }
         body.theme-pop .theme-btn { background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; font-family: var(--display); font-weight: 400; font-size: 21px; letter-spacing: .05em; box-shadow: var(--shadow-sm); }
         body.theme-pop .theme-btn[aria-pressed="true"] { background: var(--red); color: #fff; border-color: var(--ink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
@@ -576,7 +568,6 @@
         body.theme-pop .modal-body p { color: var(--ink) !important; }
         body.theme-pop .admin-row { background: #fff; border: 3px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow-sm); }
     
-        /* ===== POP ART: piezas nuevas (mismo lenguaje visual que el resto del tema) ===== */
         body.theme-pop .empty-note, body.theme-pop .admin-note, body.theme-pop .auth-note { color: var(--ink); }
         body.theme-pop .st-section { color: var(--ink); font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .04em; text-shadow: 2px 2px 0 var(--yellow); }
         body.theme-pop .st-preview, body.theme-pop .st-insight, body.theme-pop .st-state, body.theme-pop .st-date, body.theme-pop .st-price { color: var(--ink); font-weight: 800; }
@@ -595,41 +586,8 @@
         body.theme-pop .layout-bar button:active { transform: translate(3px, 3px); box-shadow: none; }
         body.theme-pop #modalSubtitle { font-weight: bold; }
 
-        /* ===== ADMINISTRADOR ===== */
-        body.hide-pasada .btn-manual, body.hide-caca .btn-poop, body.hide-vitd #btnVitD,
-        body.hide-stock #stockBanner, body.hide-invitar .btn-invite, body.hide-migrar .btn-migrate { display: none !important; }
-        .admin-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; border: 2px solid #333; border-radius: 10px; background: #222; margin-bottom: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
-        .admin-row input { width: 22px; height: 22px; flex: none; accent-color: #4CAF50; }
-    
-        /* ===== NOMBRE DEL BEBÉ ===== */
-        .baby-name { text-align: center; width: 100%; font-size: 34px; font-weight: 900; letter-spacing: .02em; margin-bottom: 25px; margin-top: 5px; color: #4CAF50; text-transform: uppercase; }
-        .baby-name:empty { display: none; }
         body.theme-pop .baby-name { color: #fff; font-family: var(--display); font-weight: 400; font-size: 56px; letter-spacing: .06em; -webkit-text-stroke: 2.5px var(--ink); paint-order: stroke fill; text-shadow: 4px 4px 0 var(--ink); margin-top: 5px; margin-bottom: 25px; }
 
-        /* ===== BLOQUES PERSONALIZABLES ===== */
-        .layout-hint { display: none; flex: 1 1 100%; font-size: 12px; color: #aaa; margin: 0 0 2px; }
-        body.layout-editing .layout-hint { display: block; }
-        
-        .block-handle { display: none; align-items: center; gap: 8px; background: #1e1e1e; border: 2px dashed #555; border-radius: 12px; padding: 8px 8px 8px 4px; }
-        .block-drag { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; padding: 6px 0; }
-        .block-grip { font-size: 26px; line-height: 1; padding: 0 8px; color: #888; }
-        .block-name { font-weight: bold; font-size: 15px; }
-        .block-handle button { flex: none; width: 38px; height: 38px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #eee; font-size: 17px; cursor: pointer; touch-action: manipulation; }
-        body.layout-editing .block-handle { display: flex; }
-        body.layout-editing .block-body { display: none; }
-        body.layout-editing .block { margin-bottom: 10px; }
-        .block.is-hidden { display: none; }
-        body.layout-editing .block.is-hidden { display: block; opacity: .5; }
-        .block.dragging .block-handle { border-style: solid; border-color: #4CAF50; box-shadow: 0 8px 20px rgba(0, 0, 0, .5); }
-
-        body.theme-pop .layout-hint { color: var(--ink); font-weight: 700; }
-        body.theme-pop.layout-editing #layoutBtn { background: var(--red); color: #fff; border-color: var(--ink);}
-        body.theme-pop .block-handle { background: #fff; border: 3px dashed var(--ink); border-radius: 4px; }
-        body.theme-pop .block-handle button { background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; }
-        body.theme-pop .block-name { font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: .04em; }
-        body.theme-pop .block-grip { color: var(--ink); }
-        body.theme-pop .block.dragging .block-handle { border-style: solid; box-shadow: var(--shadow-sm); }
-        
     </style>
 </head>
 <body>
@@ -643,7 +601,7 @@
             var body = document.body;
             body.classList.remove('th', 'theme-dark', 'theme-pop', 'theme-light', 'theme-neon', 'theme-nara');
             body.classList.add('theme-' + t);
-            if (t !== 'pop') body.classList.add('th');   // Pop art tiene su propio bloque de estilos
+            if (t !== 'pop') body.classList.add('th');
             var meta = document.querySelector('meta[name="theme-color"]');
             if (meta) meta.setAttribute('content', THEME_COLORS[t]);
             document.querySelectorAll('.theme-btn[data-theme]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-theme') === t ? 'true' : 'false'); });
@@ -708,7 +666,6 @@
     <!-- APP -->
     <div id="appScreen" class="container" style="display: none;">
 
-        <!-- Modo personalizar: aviso arriba y barra de acciones siempre visible abajo -->
         <div class="layout-banner" id="layoutBanner">
             <b>Personalizar inicio</b>
             <span class="layout-hint">Arrastra ⠿ para ordenar y usa 👁 para ocultar. Los cambios se guardan al pulsar Aceptar.</span>
@@ -777,6 +734,17 @@
                     <ul class="history-list" id="historyList"></ul>
                 </div>
             </div>
+
+            <!-- NUEVO BLOQUE: UTILIDADES (STOCK E INVITACIONES) -->
+            <div class="block" data-block="utilidades" data-title="🧰 Utilidades">
+                <div class="block-body">
+                    <div class="section-title">🧰 Utilidades</div>
+                    <div class="settings-card">
+                        <div class="stock-banner" id="stockBanner" onclick="openStockModal()">📦 Stock y gastos</div>
+                        <button class="btn-invite" onclick="openInviteModal()" style="margin-top: 15px;">👨‍👩‍👧 Enviar invitación a pareja</button>
+                    </div>
+                </div>
+            </div>
             
             <div class="block" data-block="ajustes" data-title="⚙️ Ajustes">
                 <div class="block-body">
@@ -821,30 +789,14 @@
                                 </select>
                             </div>
                         </div>
-                        
-                        <div class="stock-banner" id="stockBanner" onclick="openStockModal()">📦 Stock y gastos</div>
-                        <button class="btn-invite" onclick="openInviteModal()">👨‍👩‍‍👧 Enviar invitación a pareja</button>
-                        <button class="btn-migrate" onclick="migrateOldData()" style="margin-top: 5px;">🔄 Recuperar datos antiguos</button>
-                        <button class="btn-logout" onclick="logout()">Cerrar sesión de la cuenta</button>
 
                         <div style="margin-top: 15px;">
-                            <div id="adminClaim" hidden>
-                                <span class="theme-title">👑 Dueño de la app</span>
-                                <button type="button" class="theme-btn" style="width:100%; flex:none; margin-bottom:12px;" onclick="claimAdmin()">Hacerme dueño de la app</button>
-                            </div>
-                            <div id="adminPanel" hidden>
-                                <span class="theme-title">👑 Panel de dueño (master)</span>
-                                <p class="admin-note" style="font-size:12px; margin:0 0 10px;">Solo tú ves este panel. Marcado = visible para todos los usuarios de la app. Desmarca una opción para quitarla.</p>
-                                <div id="adminToggles"></div>
-                                
-                            </div>
                             <span class="theme-title">🎨 Tema</span>
                             <div class="theme-options" style="margin-bottom: 15px;">
                                 <button type="button" class="theme-btn" data-theme="dark" aria-pressed="true" onclick="setTheme('dark')">🌙 Oscuro</button>
                                 <button type="button" class="theme-btn" data-theme="light" aria-pressed="false" onclick="setTheme('light')">☀️ Blanco</button>
                                 <button type="button" class="theme-btn" data-theme="neon" aria-pressed="false" onclick="setTheme('neon')">⚡ Neón</button>
                                 <button type="button" class="theme-btn" data-theme="pop" aria-pressed="false" onclick="setTheme('pop')">💥 Pop art</button>
-                                <!-- BOTÓN DE NARA YA ESTÁ AQUÍ -->
                                 <button type="button" class="theme-btn" data-theme="nara" aria-pressed="false" onclick="setTheme('nara')" style="grid-column: span 2;">🌸 Nara (Japón)</button>
                             </div>
                             
@@ -853,6 +805,18 @@
                                 <button type="button" class="auth-btn auth-btn-outline" id="layoutBtn" onclick="enterLayoutEdit()" style="margin:0;">✥ Personalizar pantalla de inicio</button>
                             </div>
 
+                            <div id="adminClaim" hidden>
+                                <span class="theme-title">👑 Dueño de la app</span>
+                                <button type="button" class="theme-btn" style="width:100%; flex:none; margin-bottom:12px;" onclick="claimAdmin()">Hacerme dueño de la app</button>
+                            </div>
+                            <div id="adminPanel" hidden>
+                                <span class="theme-title">👑 Panel de dueño (master)</span>
+                                <p class="admin-note" style="font-size:12px; margin:0 0 10px;">Solo tú ves este panel. Marcado = visible para todos los usuarios de la app. Desmarca una opción para quitarla.</p>
+                                <div id="adminToggles" style="margin-bottom: 15px;"></div>
+                            </div>
+
+                            <!-- CERRAR SESIÓN SIEMPRE AL FINAL -->
+                            <button class="btn-logout" onclick="logout()">Cerrar sesión de la cuenta</button>
                         </div>
                     </div>
                 </div>
@@ -861,7 +825,7 @@
     </div>
 
     <!-- Modales -->
-    <div class="modal-overlay" id="inviteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">👨‍👩‍‍👧 Invitar Familiar</div><button class="close-btn" onclick="closeModal('inviteModal')">&times;</button></div><div class="modal-body"><p class="invite-text">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p><div class="invite-code" id="myFamilyCode">Cargando enlace...</div><button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button></div></div></div>
+    <div class="modal-overlay" id="inviteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">👨‍👩‍👧 Invitar Familiar</div><button class="close-btn" onclick="closeModal('inviteModal')">&times;</button></div><div class="modal-body"><p class="invite-text">Envía este enlace a tu pareja. Al abrirlo e iniciar sesión, vuestras cuentas se vincularán automáticamente.</p><div class="invite-code" id="myFamilyCode">Cargando enlace...</div><button class="auth-btn auth-btn-primary" id="btnCopyInvite" style="margin-bottom: 0;">📲 Compartir Enlace</button></div></div></div>
 
     <div class="modal-overlay" id="historyModal"><div class="modal-content"><div class="modal-header"><div class="modal-title" id="modalTitle">Fecha</div><button class="close-btn" onclick="closeModal('historyModal')">&times;</button></div><div id="modalSubtitle" class="modal-subtitle"></div><div class="modal-body"><ul class="history-list" id="modalHistoryList"></ul></div></div></div>
     
@@ -1021,15 +985,6 @@
         }
         function logout() { if (layoutEditing) cancelLayoutEdit(); auth.signOut(); }
 
-        function migrateOldData() {
-            if(!currentUser || !currentFamilyId) return;
-            if(confirm("¿Seguro que quieres recuperar los datos antiguos?")) {
-                db.ref('registros_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/registros').update(snap.val()); });
-                db.ref('vitamina_d_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/vitamina_d').update(snap.val()); });
-                db.ref('stock_leche_nara').once('value').then(snap => { if(snap.exists()) db.ref('familias/' + currentFamilyId + '/stock_leche').update(snap.val()); alert("¡Tus datos antiguos se han copiado con éxito!"); });
-            }
-        }
-
         function openInviteModal() {
             const bName = encodeURIComponent(babyProfile.nombre); const inviteLink = window.location.origin + window.location.pathname + "?invite=" + currentFamilyId + "&name=" + bName;
             document.getElementById('myFamilyCode').innerText = inviteLink;
@@ -1053,6 +1008,7 @@
                 }
             });
 
+            // Guardar cambios al editar el nombre en ajustes
             document.getElementById('nameInputApp').onchange = (e) => profileRef.update({ nombre: e.target.value.trim() || 'Bebé' });
             document.getElementById('ageSelect').onchange = (e) => profileRef.update({ edad: parseInt(e.target.value) });
             document.getElementById('weightInput').onchange = (e) => profileRef.update({ peso: parseFloat(e.target.value) || 0 });
@@ -1110,7 +1066,6 @@
             banner.className = 'stock-banner'; banner.innerHTML = "📦 Stock y gastos";
             if (stockRecords.length === 0) { banner.classList.add('is-empty'); return; }
             const last = stockRecords[0]; const daysDiff = Math.floor((Date.now() - last.timestamp) / (1000 * 60 * 60 * 24));
-            // aviso: no hay bote en uso (el último ya está gastado) o lleva más de una semana abierto
             if (last.consumedTs || daysDiff > 7) banner.classList.add('is-alert');
         }
 
@@ -1236,8 +1191,6 @@
         function daysBetween(a, b) { return Math.max(1, Math.round((b - a) / DAY_MS)); }
         function perUnit(r) { const c = parseInt(r.count) || 0, p = parseFloat(r.price) || 0; return c > 0 ? (p / c).toFixed(3) : '0.000'; }
 
-        // Las listas van de más nuevo a más antiguo. Un bote/paquete termina cuando se marca "Gastado";
-        // si no se marcó pero ya hay otro más nuevo, se da por terminado al abrir ese. El último sin marcar está "en uso".
         function endOf(list, i) {
             if (list[i].consumedTs) return list[i].consumedTs;
             return i > 0 ? list[i - 1].timestamp : null;
@@ -1322,7 +1275,6 @@
 
         function openStockModal() { renderStockModal(); document.getElementById('stockModal').style.display = 'flex'; }
 
-        // "Gastado" no borra nada: guarda cuándo se acabó (y se puede deshacer con "Reabrir").
         function toggleConsumed(kind, key, event) {
             if (event) event.stopPropagation();
             const list = kind === 'diaper' ? diaperRecords : stockRecords;
@@ -1349,14 +1301,13 @@
 
         function deleteDiapers(dbKey, event) { if (event) event.stopPropagation(); if (confirm("¿Borrar este paquete? Úsalo solo si lo registrasteis por error. Si ya se acabó, pulsa «Gastado».")) diaperRef.child(dbKey).remove(); }
 
-        // --- ADMINISTRADOR (opciones que se pueden ocultar a toda la familia) ---
+        // --- ADMINISTRADOR ---
         const ADMIN_FEATURES = [
             { key: 'pasada',  label: '✏️ Editar' },
             { key: 'caca',    label: '💩 Caca' },
             { key: 'vitd',    label: '☀️ Vitamina D' },
             { key: 'stock',   label: '📦 Stock y gastos (leche y pañales)' },
-            { key: 'invitar', label: '👨‍👩‍👧 Invitar a pareja' },
-            { key: 'migrar',  label: '🔄 Recuperar datos antiguos' }
+            { key: 'invitar', label: '👨‍👩‍👧 Invitar a pareja' }
         ];
         let appSettings = { owner: null, ocultar: {} };
         const MASTER_LINK = new URLSearchParams(window.location.search).has('master');
@@ -1406,7 +1357,7 @@
         }
 
         // --- DISEÑO PERSONALIZABLE (bloques ordenables) ---
-        const BLOCK_KEYS = ['resumen', 'toma', 'acciones', 'calendario', 'historial', 'ajustes'];
+        const BLOCK_KEYS = ['resumen', 'toma', 'acciones', 'calendario', 'historial', 'utilidades', 'ajustes'];
         let layout = { order: BLOCK_KEYS.slice(), hidden: [] };
         let layoutEditing = false;
 
@@ -1450,14 +1401,13 @@
             applyLayout();
         }
         function toggleBlock(key) {
-            if (key === 'ajustes') return;   // si se ocultara, no habría forma de volver a Personalizar
+            if (key === 'ajustes') return;   
             const i = layout.hidden.indexOf(key);
             if (i >= 0) layout.hidden.splice(i, 1); else layout.hidden.push(key);
             applyLayout();
         }
         function resetLayout() { layout = { order: BLOCK_KEYS.slice(), hidden: [] }; applyLayout(); }
 
-        // Los cambios se ven al momento, pero solo se guardan al pulsar Aceptar; Cancelar vuelve a como estaba.
         let layoutBackup = null;
         function setAjustesOpen(open) {
             document.getElementById('ajustesContent').style.display = open ? 'block' : 'none';
@@ -1475,7 +1425,6 @@
         function acceptLayoutEdit() { saveLayout(); endLayoutEdit(); }
         function cancelLayoutEdit() { if (!layoutEditing) return; if (layoutBackup) layout = layoutBackup; endLayoutEdit(); }
 
-        /* Arrastrar bloques */
         function startBlockDrag(e, el) {
             if (!layoutEditing) return;
             e.preventDefault();
